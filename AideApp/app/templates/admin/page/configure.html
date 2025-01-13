@@ -1,0 +1,582 @@
+{% extends 'admin/share/master.html' %}
+{% block body %}
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-wallet icon-gradient bg-plum-plate">
+                </i>
+            </div>
+            <h3>AIDE Custom Configuration</h3>
+        </div>
+        <div class="page-title-actions">
+            <button type="button" data-toggle="tooltip" title="" data-placement="bottom" class="btn-shadow mr-3 btn btn-dark" data-original-title="Example Tooltip">
+                <i class="fa fa-star"></i>
+            </button>
+            <div class="d-inline-block dropdown">
+                <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn-shadow dropdown-toggle btn btn-info">
+                    <span class="btn-icon-wrapper pr-2 opacity-7">
+                        <i class="fa fa-business-time fa-w-20"></i>
+                    </span>
+                    Buttons
+                </button>
+                <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a href="javascript:void(0);" class="nav-link">
+                                <i class="nav-link-icon lnr-inbox"></i>
+                                <span>
+                                    Inbox
+                                </span>
+                                <div class="ml-auto badge badge-pill badge-secondary">86</div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0);" class="nav-link">
+                                <i class="nav-link-icon lnr-book"></i>
+                                <span>
+                                    Book
+                                </span>
+                                <div class="ml-auto badge badge-pill badge-danger">5</div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0);" class="nav-link">
+                                <i class="nav-link-icon lnr-picture"></i>
+                                <span>
+                                    Picture
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a disabled="" href="javascript:void(0);" class="nav-link disabled">
+                                <i class="nav-link-icon lnr-file-empty"></i>
+                                <span>
+                                    File Disabled
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>    </div>
+</div>
+<div class="main-card mb-12 card">
+    <div class="card-body">
+        <!-- <h1>AIDE Custom Configuration</h1> -->
+        <form class="needs-validation" novalidate="" id="configForm">
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <h4>Environment Settings</h4>
+                    <div class="divider"></div>
+                    <label>UPAC Settings Directory</label>
+                    <input type="text" class="form-control" id="upac_settings" placeholder="/etc/aide/aide.settings.d" required>
+                    <br>
+                    <label>Path Environment Variable</label>
+                    <input type="text" class="form-control" id="environment_path" placeholder="/bin:/usr/bin" required>
+                
+                    <br>
+                    <br>
+                   
+                    <h4>Rules</h4>
+                    <div class="divider"></div>
+                    <!-- <lable>Predefined Rules</lable> -->
+                    <table>
+                        <tr>
+                            <th>Rule Name</th>
+                            <th>Attributes</th>
+                            <th>Description</th>
+                            <th>Select</th>
+                        </tr>
+                        <tr>
+                            <td>NORMAL</td>
+                            <td>p+i+n+u+g+s+m+c+sha256</td>
+                            <td>A commonly used rule for normal checks.</td>
+                            <td><input type="checkbox" id="normal_rule_button" name="normal_rule_button" value="true" style="margin-left: 12px"></td>
+                        </tr>
+                        <tr>
+                            <td>DATAONLY</td>
+                            <td>p+u+g+s+xattrs+sha256</td>
+                            <td>Checks file contents only, ignoring metadata like inode and access times.</td>
+                            <!-- <td><button type="checked" class="btn btn-primary" id="dataonly_rule_button">Add</button></td> -->
+                            <td><input type="checkbox" id="dataonly_rule_button" name="dataonly_rule_button" value="true" style="margin-left: 12px"></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <label>Available Rule Attributes</label>
+                    <table>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>p</td>
+                            <td>Permissions</td>
+                        </tr>
+                        <tr>
+                            <td>i</td>
+                            <td>Inode</td>
+                        </tr>
+                        <tr>
+                            <td>n</td>
+                            <td>Number of links</td>
+                        </tr>
+                        <tr>
+                            <td>u</td>
+                            <td>User</td>
+                        </tr>
+                        <tr>
+                            <td>g</td>
+                            <td>Group</td>
+                        </tr>
+                        <tr>
+                            <td>s</td>
+                            <td>Size</td>
+                        </tr>
+                        <tr>
+                            <td>b</td>
+                            <td>Block count</td>
+                        </tr>
+                        <tr>
+                            <td>m</td>
+                            <td>Modification time</td>
+                        </tr>
+                        <tr>
+                            <td>a</td>
+                            <td>Access time</td>
+                        </tr>
+                        <tr>
+                            <td>c</td>
+                            <td>Change time</td>
+                        </tr>
+                        <tr>
+                            <td>xattrs</td>
+                            <td>Extended file attributes</td>
+                        </tr>
+                        <tr>
+                            <td>md5</td>
+                            <td>MD5 checksum</td>
+                        </tr>
+                        <tr>
+                            <td>sha256</td>
+                            <td>SHA-256 checksum</td>
+                        </tr>
+                        <tr>
+                            <td>sha512</td>
+                            <td>SHA-512 checksum</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <label>Rules</label>
+                    <input type="text" class="form-control" id="custom_rules" placeholder="Define your own rules here." required>
+
+
+                
+                
+                </div>
+                <br><br>
+                <div class="col-md-4 mb-3">
+                    <h4>Database Configurations</h4>
+                    <div class="divider"></div>
+                    <label>Database Directory</label>
+                    <input type="text" class="form-control" id="database" placeholder="/var/lib/aide/aide.db" required>
+                    <br>
+                    <label>Database Output Directory</label>
+                    <input type="text" class="form-control" id="database_out" placeholder="/var/lib/aide/aide.db.new" required>
+                    <br>
+                    <label>New Database Directory</label>
+                    <input type="text" class="form-control" id="database_new" placeholder="/var/lib/aide/aide.db.new" required>
+                    <br>
+                    <input type="checkbox" id="gzip_db_out" name="compressDatabaseOutput" value="true" style="margin-right: 6px; margin-left: 6px"><label>Compress output Database using gzip.</label>
+                    <br>
+                    <br>
+                    <h4>Directories</h4>
+                    <div class="divider"></div>
+                    <label>Include Directories</label>
+                    <input type="text" class="form-control" id="include_directories" placeholder="/boot /bin" required><br>
+                    <label>Exclude Directories</label>
+                    <input type="text" class="form-control" id="exclude_directories" placeholder="!/usr/src !/usr/tmp" required>
+
+                    <br>
+                    <h4>Checksum Algorithms</h4>
+                    <div class="divider"></div>
+                    <div>
+                        <input type="checkbox" id="whirlpool" name="whirlpool" value="true">
+                        <label style="margin-right: 10px;">WHIRLPOOL</label>
+
+                        <input type="checkbox" id="sha1" name="sha1" value="true">
+                        <label style="margin-right: 10px;">SHA1</label>
+
+                        <input type="checkbox" id="sha256" name="sha256" value="true">
+                        <label style="margin-right: 10px;">SHA256</label>
+
+                        <input type="checkbox" id="sha512" name="sha512" value="true">
+                        <label style="margin-right: 10px;">SHA512</label>    
+                    </div>
+                    <div>
+                        <input type="checkbox" id="rmd160" name="rmd160" value="true">
+                        <label style="margin-right: 10px;">RMD160</label>
+
+                        <input type="checkbox" id="tiger" name="tiger" value="true">
+                        <label style="margin-right: 10px;">TIGER</label>
+
+                        <input type="checkbox" id="crc32" name="crc32" value="true">
+                        <label style="margin-right: 10px;">CRC32</label>
+
+                        <input type="checkbox" id="haval" name="haval" value="true">
+                        <label style="margin-right: 10px;">HAVAL</label>
+
+                        <input type="checkbox" id="md5" name="md5" value="true">
+                        <label style="margin-right: 10px;">MD5</label>
+                    </div>
+                    
+                    <!-- <input type="text" class="form-control" id="checksum_algorithms" placeholder="SHA512 SHA256" required> -->
+                    <br>
+                    <h4>File name</h4>
+                    <div class="divider"></div>
+                    <label>Set configuration file name</label>
+                    <input type="text" class="form-control" id="config_file_name" placeholder="custom.aide.conf" required>
+                    
+                </div>
+                <br><br>
+                <div class="col-md-4 mb-3">
+                    <h4>Report and Logging Settings</h4>
+                    <div class="divider"></div>
+                    <label>Report URL </label>
+                    <input type="text" class="form-control" id="report_url" placeholder="file:/var/log/aide.log" required>
+                    <br>
+                    <label>Log Level</label>
+                    <input type="text" class="form-control" id="log_level" placeholder="">
+                    <p>If there are multiple 
+                        <b>log_level</b>
+                        <!-- <button type="button" aria-expanded="false" aria-controls="exampleAccordion1" data-toggle="collapse" href="#collapseExample" class="m-0 p-0 btn btn-link collaps">Toggle item</button> -->
+                         lines then the first one is used. Can be left blank. The following log levels are available:</p>
+                    <ul >
+                        <li><b>error</b>: show unrecoverable issues that have to be handled by the user. Errors are fatal to the AIDE process.</li>
+                        <li><b>warning</b>: additionally show recoverable issues that most likely lead to unexpected behaviour and should be handled by the user.</li>
+                        <li><b>notice</b>: additionally show recoverable issues that sometimes lead to unexpected behaviour and might be handled by the user.</li>
+                        <li><b>info</b>: additionally show informational messages.</li>
+                        <li><b>compare</b>: additionally show messages to help to debug file comparison and (special) attribute handling.</li>
+                    </ul>
+                    <br>
+                    <label>Report Level</label>
+                    <input type="text" class="form-control" id="report_level" placeholder="">
+                    <p>Can be left blank. The following report levels are available:</p>
+                    <ul>
+                        <li><b>minimal</b>: print single line whether AIDE found differences to the database.</li>
+                        <li><b>summary</b>: additionally print number of added, removed and changed files.</li>
+                        <li><b>database_attributes</b>: additionally print database checksums.</li>
+                        <li><b>list_entries</b>: additionally print lists of added, removed and changed entries.</li>
+                        <li><b>changed_attributes</b>: additionally print details about changed entries.</li>
+                    </ul>
+                    <br>
+                    <label>Report Base16</label>
+                    <p>Base16 encode the checksums in the report. The default is to report checksums in base64 encoding. Default value is <b>false</b></p>
+                    <!-- <input type="radio" class="form-control" id="base16True" name="report_base16" value="True"><label>True</label> -->
+                    <fieldset class="position-relative form-group">
+                        <div class="position-relative form-check">
+                            <label class="form-check-label" for="base64-true">
+                                <input id="base64-true" name="radio1" type="radio" class="form-check-input" value="true"> 
+                                True
+                            </label>
+                        </div>
+                        <div class="position-relative form-check">
+                            <label class="form-check-label" for="base64-false">
+                                <input id="base64-false" name="radio1" type="radio" class="form-check-input" value="false"> 
+                                False
+                            </label>
+                        </div>
+                    </fieldset>
+                   
+                    <label>Additional Options</label><br>
+                    <input type="checkbox" id="report_summarize_changes" name="additional_options" value="true"><label>Summarize Changes in Report</label><br>
+                    <input type="checkbox" id="report_grouped" name="additional_options" value="true"><label>Group Files in Report</label><br>
+                    <input type="checkbox" id="database_add_metadata" name="additional_options" value="true"><label>Add Metadata to Database</label>
+                </div>
+                <br><br>
+           <!-- <div class="col-md-4 mb-3">
+                    <h2>Rules</h2>
+                    <lable>Predefined Rules</lable>
+                    <table>
+                        <tr>
+                            <th>Rule Name</th>
+                            <th>Attributes</th>
+                            <th>Description</th>
+                            <th>Select</th>
+                        </tr>
+                        <tr>
+                            <td>NORMAL</td>
+                            <td>p+i+n+u+g+s+m+c+sha256</td>
+                            <td>A commonly used rule for normal checks.</td>
+                            <td><button class="btn btn-primary" onclick="normalButton()" id="normal_rule_button">Add</button></td>
+                        </tr>
+                        <tr>
+                            <td>DATAONLY</td>
+                            <td>p+u+g+s+xattrs+sha256</td>
+                            <td>Checks file contents only, ignoring metadata like inode and access times.</td>
+                            <td><button class="btn btn-primary" onclick="dataButton()" id="dataonly_rule_button">Add</button></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <label>Available Rule Attributes</label>
+                    <table>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>p</td>
+                            <td>Permissions</td>
+                        </tr>
+                        <tr>
+                            <td>i</td>
+                            <td>Inode</td>
+                        </tr>
+                        <tr>
+                            <td>n</td>
+                            <td>Number of links</td>
+                        </tr>
+                        <tr>
+                            <td>u</td>
+                            <td>User</td>
+                        </tr>
+                        <tr>
+                            <td>g</td>
+                            <td>Group</td>
+                        </tr>
+                        <tr>
+                            <td>s</td>
+                            <td>Size</td>
+                        </tr>
+                        <tr>
+                            <td>b</td>
+                            <td>Block count</td>
+                        </tr>
+                        <tr>
+                            <td>m</td>
+                            <td>Modification time</td>
+                        </tr>
+                        <tr>
+                            <td>a</td>
+                            <td>Access time</td>
+                        </tr>
+                        <tr>
+                            <td>c</td>
+                            <td>Change time</td>
+                        </tr>
+                        <tr>
+                            <td>xattrs</td>
+                            <td>Extended file attributes</td>
+                        </tr>
+                        <tr>
+                            <td>md5</td>
+                            <td>MD5 checksum</td>
+                        </tr>
+                        <tr>
+                            <td>sha256</td>
+                            <td>SHA-256 checksum</td>
+                        </tr>
+                        <tr>
+                            <td>sha512</td>
+                            <td>SHA-512 checksum</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <label>Rules</label>
+                    <input type="text" class="form-control" id="custom_rules" placeholder="Define your own rules here." required>
+                </div>
+                <br><br>
+                <div class="col-md-4 mb-3">
+                    <h2>Directories</h2>
+                    <label>Include Directories</label>
+                    <input type="text" class="form-control" id="include_directories" placeholder="/boot /bin" required><br>
+                    <label>Exclude Directories</label>
+                    <input type="text" class="form-control" id="exclude_directories" placeholder="!/usr/src !/usr/tmp" required>
+                </div>
+                <br><br>
+                <div class="col-md-4 mb-3">
+                    <h2>Checksum Algorithms</h2>
+                    <label>Checksum Algorithms</label>
+                    <input type="text" class="form-control" id="checksum_algorithms" placeholder="SHA512 SHA256" required>
+                </div>
+                <br><br>
+                <div class="col-md-4 mb-3">
+                    <h2>File name</h2>
+                    <label>Set configuration file name</label>
+                    <input type="text" class="form-control" id="config_file_name" placeholder="custom.aide.conf" required>
+                </div> -->
+            </div>         
+            <button class="btn btn-warning">Preview</button>  
+            <button class="btn btn-primary" type="submit">Create</button>
+        </form>
+        <br>        
+    </div>
+</div> 
+<br><br>
+<div class="main-card mb-12 card">
+    <div class="card-body">
+        <h1>Documentation</h1>
+        <p>For more information on how to write rules and configure AIDE, please refer to the <a>AIDE Configuration Documentation</a>.</p>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Environment Settings
+    var upac_settings = document.getElementById('upac_settings');
+    var environment_path = document.getElementById('environment_path');
+
+    // const selectedValue = document.querySelector('input[name="radio1"]:checked')?.value;
+    let selectedBase16 = ''
+    document.querySelectorAll('input[name="radio1"]').forEach((radio) => {
+    radio.addEventListener('change', (event) => {
+        selectedBase16 = event.target.value;
+        });
+    });
+    
+
+
+    //Database Configuration
+    var database = document.getElementById('database');
+    var database_out = document.getElementById('database_out');
+    var database_new = document.getElementById('database_new');
+    var gzip_db_out = document.getElementById('gzip_db_out').checked ? "yes" : "no";
+    document.getElementById('gzip_db_out').addEventListener('change', function () {
+        gzip_db_out = this.checked ? "yes" : "no";
+        console.log("gzip db out", gzip_db_out)
+    })
+    var normal_rule_button = document.getElementById('normal_rule_button').checked;
+    document.getElementById('normal_rule_button').addEventListener('change', function() {
+        normal_rule_button = this.checked;
+        console.log("normal_rule_button",normal_rule_button)
+    });
+    var dataonly_rule_button = document.getElementById('dataonly_rule_button').checked;
+    document.getElementById('dataonly_rule_button').addEventListener('change', function() {
+        dataonly_rule_button = this.checked;
+        console.log("dataonly_rule_button",dataonly_rule_button)
+    })
+
+    var report_url = document.getElementById('report_url');
+    var log_level = document.getElementById('log_level');
+    var report_level = document.getElementById('report_level');
+
+
+    // let report_base16 = document.getElementById('base16True').checked;
+    let report_summarize_changes = document.getElementById('report_summarize_changes').checked;
+    let report_grouped = document.getElementById('report_grouped').checked;
+    let database_add_metadata = document.getElementById('database_add_metadata').checked;
+
+    // document.getElementById('base16True').addEventListener('change', function() {
+    //     report_base16 = this.checked;
+    // })
+    document.getElementById('report_summarize_changes').addEventListener('change', function () {
+        report_summarize_changes = this.checked;
+    });
+
+    document.getElementById('report_grouped').addEventListener('change', function () {
+        report_grouped = this.checked;
+    });
+    document.getElementById('database_add_metadata').addEventListener('change', function () {
+        database_add_metadata = this.checked;
+    });
+
+
+    var custom_rules = document.getElementById('custom_rules');
+
+    // Directories
+    var include_directories = document.getElementById('include_directories');
+    var exclude_directories = document.getElementById('exclude_directories');
+
+    
+    const algorithms = ['md5', 'sha1', 'sha256', 'sha512', 'rmd160', 'tiger', 'crc32', 'haval', 'whirlpool'];
+
+    let selectedAlgorithms = {};
+    let checksum_algorithms = '';
+    algorithms.forEach((algorithm) => {
+        const checkbox = document.getElementById(algorithm);
+        selectedAlgorithms[algorithm] = checkbox.checked; 
+
+        checkbox.addEventListener('change', function () {
+            selectedAlgorithms[algorithm] = this.checked; 
+            console.log(algorithm, this.checked);
+            updateChecksum(); // Gọi hàm cập nhật chuỗi checksum
+        });
+    });
+
+    function updateChecksum() {
+    const activeAlgorithms = Object.keys(selectedAlgorithms)
+        .filter((key) => selectedAlgorithms[key]) 
+        .map((key) => key.toUpperCase()); 
+
+        checksum_algorithms = activeAlgorithms.join('+'); 
+    console.log('Checksum:  ', checksum_algorithms); 
+}
+
+
+    // File name
+    var config_file_name = document.getElementById('config_file_name');
+
+    // Form
+    var configForm = document.getElementById('configForm');
+
+    configForm.addEventListener('submit', function(event) {
+        console.log("click click submit!")
+        event.preventDefault();
+        var configFormData = new FormData();
+        configFormData.append('dataonly_rule_button', dataonly_rule_button);
+        configFormData.append('normal_rule_button', normal_rule_button);
+        configFormData.append('upac_settings',upac_settings.value);
+        configFormData.append('environment_path',environment_path.value);
+        configFormData.append('database',database.value);
+        configFormData.append('database_out',database_out.value);
+        configFormData.append('database_new',database_new.value);
+        configFormData.append('gzip_db_out',gzip_db_out);
+        configFormData.append('report_url',report_url.value);
+        configFormData.append('log_level',log_level.value);
+        configFormData.append('report_level',report_level.value);
+        configFormData.append('report_base16',selectedBase16);
+        configFormData.append('report_summarize_changes',report_summarize_changes);
+        configFormData.append('report_grouped',report_grouped);
+        configFormData.append('database_add_metadata',database_add_metadata);
+        configFormData.append('custom_rules',custom_rules.value);
+        configFormData.append('include_directories',include_directories.value);
+        configFormData.append('exclude_directories',exclude_directories.value);
+        configFormData.append('checksum_algorithms',checksum_algorithms);
+        configFormData.append('config_file_name',config_file_name.value);
+        
+        configForm.reset();
+        
+        fetch('/config', {
+            method: 'POST',
+            body: configFormData,
+        })
+            .then((response) => {
+                if(!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if(data.error){
+                    toastr.error(`Error: ${data.error}`)
+                    console.log(data.error)
+                }else {
+                    toastr.success('Config file created successfully!')
+                }
+            })
+            .catch((error) => {
+                toastr.error(`Error: ${error.message}`);
+            });
+    });
+});
+
+
+function normalButton () {
+    document.getElementById('custom_rules').innerHTML="NORMAL = p+i+n+u+g+s+m+c+sha256";
+}
+function dataButton() {
+    document.getElementById('custom_rules').innerHTML="DATAONLY = p+u+g+s+xattrs+sha256";
+}
+</script>
+{% endblock %}

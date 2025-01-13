@@ -22,5 +22,6 @@ app.register_blueprint(routes_blueprint)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    with app.app_context():
+        app.run(debug=True)
     print(app.config['SQLALCHEMY_DATABASE_URI'])

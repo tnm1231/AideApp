@@ -1,18 +1,12 @@
 from flask import render_template, request, jsonify
-import subprocess
 from flask.views import MethodView
 from flask import Blueprint
-import os
 from .tasks import run_scan_task
-from celery.result import AsyncResult
-from .tasks import celery
-from datetime import datetime
-from app.models.models import db, TaskRecord
-from celery import Celery
-from uuid import uuid4
-
+from app.models.models import db, TaskRecord, ResultScan
+from app.routes.taskHandle import TaskStatusView
 
 routes_blueprint = Blueprint("routes", __name__)
+# redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 class CheckView(MethodView):
     def get(self):
@@ -28,11 +22,11 @@ class CheckView(MethodView):
         # validate_error = self.validate_paths(specific_file)
         # if validate_error:
         #     return validate_error
-        
+
         # validate_error = self.validate_paths(custom_config)
         # if validate_error:
         #     return validate_error
-        
+
         validate_error = self.checkType(check_type)
         if validate_error:
             return validate_error
@@ -47,71 +41,52 @@ class CheckView(MethodView):
             command.extend(["--limit", specific_file])
         elif check_type == "detailCheck":
             command.extend(["--config", default_config])
-            command.extend(["--verbose=5"])
+            command.extend(["--log-level=warning"])
         elif check_type == "customConfig" and custom_config:
             command.extend(["--config", custom_config])
         elif check_type == "customConfigAndFile" and custom_config and specific_file:
             command.extend(["--config", custom_config, "--limit", specific_file])
-        task_id = str(uuid4()) 
+
+        task = run_scan_task.delay(command)
         task_record = TaskRecord (
-            task_id = task_id,
+            task_id = task.id,
             name=task_name,
             check_type=check_type,
             specific_file=specific_file,
             custom_config=custom_config,
-            status="Started",
-            progress=1
+            status=task.state,
+            progress=0
         )
-
         db.session.add(task_record)
         db.session.commit()
-        task = run_scan_task.delay(command)
-        update = self.updateStatus(task_id)
-        print(task.get())
-        return task.get()
-    
-    def updateStatus(self, task_id):
-        # task = TaskRecord.query.get(task_id)
-        task = TaskRecord.query.filter_by(task_id=task_id).first()
-        try: 
-            if task:
-                task.status = "Completed"
-                db.session.commit()
-                return {'success': True, 'message': 'Task completed'}
-            else:
-                return {'success': False, 'message': 'Task not found'}
-        except Exception as e:
-            return {'success': False, 'error': str(e)}
+        # print("task task hihi: ",task.get())
+        result = task.get()
+        view = TaskStatusView
+        print("result in check", result)
+        view.save_result(task.id, result)
+        # if "pid" in result:
+        #     print("Process  ID (PID):", result["pid"])
+        # else:
+        #     print("PID not found in result. Task may have failed")
+        # print("state after save: ",task.state)
+
+        self.updateState(task.id, task.state)
+
+        return jsonify({"task_id": task.id, "status": "Task created"}), 202
+
+    def updateState(self, task_id, state ):
+        print("vào được update")
+        task_record = TaskRecord.query.filter_by(task_id=task_id).first()
         
+        if task_record:
+            task_record.status = state
+            db.session.commit()
+
     def checkType(self, check_type):
         valid_check_types = [
-            "customConfigAndFile", "customConfig", 
+            "customConfigAndFile", "customConfig",
             "detailCheck", "specificFile", "fullSystem"
         ]
         if check_type not in valid_check_types:
             return jsonify({'error': f"Check type '{check_type}' is not valid."}), 400
         return None
-
-
-# class này chưa chạy đc 
-class ResultAnalysis(MethodView):
-    def saveResult(self, result):
-        return None
-
-
-class TaskStatusView(MethodView):
-    def get(self, task_id):
-        task = AsyncResult(task_id, app=celery)
-
-        if task.state == 'PENDING':
-            response = {"status": "Pending", "progress": 0}
-        elif task.state == 'SUCCESS':
-            response = {"status": "Completed", "result": task.result}
-        elif task.state == 'FAILURE':
-            response = {"status": "Failed", "error": str(task.result)}
-        else:
-            response = {"status": task.state}
-
-        return jsonify(response)        
-    
-

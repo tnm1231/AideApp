@@ -18,6 +18,12 @@ def create_app():
     app.config.update(
         CELERY_BROKER_URL='redis://localhost:6379/0',  # Thay bằng cấu hình của bạn
         CELERY_RESULT_BACKEND='redis://localhost:6379/0',  # Thay bằng cấu hình của bạn
+        CELERY_ACCEPT_CONTENT=['json'],  # Content types for task communication
+        CELERY_TASK_SERIALIZER='json',  # How tasks are serialized
+        CELERY_RESULT_SERIALIZER='json',  # How task results are serialized
+        CELERY_TIMEZONE='UTC',    # Set the timezone for Celery
+        task_track_started=True,
+        CELERYD_PREFETCH_MULTIPLIER=1
     )
     
     # Khởi tạo Celery
@@ -26,4 +32,4 @@ def create_app():
     # Đăng ký Blueprint
     app.register_blueprint(routes_blueprint)
 
-    return app, celery
+    return app, celery  
