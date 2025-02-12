@@ -500,6 +500,7 @@
                 })
                     .then(response => {
                         if (!response.ok) {
+                            toastr.error("Failed to fetch result of scan")
                             throw new Error("Failed to fetch task data");
                         }
                         return response.json();
@@ -545,7 +546,10 @@
             // Handle the "Confirm Delete" button
             document.getElementById("confirmDelete").onclick = function () {
                 deleteTask(taskId); 
-                window.location.reload();     
+                setTimeout(function() {
+                    location.reload();
+                }, 500);
+                   
             };
             
            
@@ -670,9 +674,11 @@
             fetch('/compare-aide-database', { method: 'POST' })
             .then(response => response.json())
             .then(data => {
+                toastr.success("Running compare command successfully!");
                 console.log(data);
             })
             .catch(error => {
+                toastr.error("Error running command: ", error);
                 console.log("Error running command: ", error);
             });
         })

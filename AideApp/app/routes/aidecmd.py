@@ -40,4 +40,5 @@ def compare():
         print("compare error: ", result.get("error"))
     else:
         print("compare output: ", result.get("output"))
+    print("output compare: ", result)
     return jsonify(result)

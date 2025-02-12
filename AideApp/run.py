@@ -3,12 +3,13 @@ from flask import Flask
 from app.models.models import db
 from app.routes import routes_blueprint
 from flask_migrate import Migrate
+from app import create_app
 
-# app = create_app()
+app, celery = create_app()
 # app = Flask(__name__)
 app = Flask(__name__, template_folder="app/templates", static_folder="app/static")
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aide_checks.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aide_checks.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aide_checks.db'  
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -24,4 +25,4 @@ app.register_blueprint(routes_blueprint)
 if __name__ == "__main__":
     with app.app_context():
         app.run(debug=True)
-    print(app.config['SQLALCHEMY_DATABASE_URI'])
+    # print(app.config['SQLALCHEMY_DATABASE_URI'])

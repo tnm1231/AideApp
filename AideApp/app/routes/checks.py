@@ -4,10 +4,11 @@ from flask import Blueprint
 from .tasks import run_scan_task
 from app.models.models import db, TaskRecord, ResultScan
 from app.routes.taskHandle import TaskStatusView
+from .tasks import wait_for_pid, task_pid_map
+import time
 
 routes_blueprint = Blueprint("routes", __name__)
 # redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
-
 class CheckView(MethodView):
     def get(self):
         task = TaskRecord.query.all()
@@ -59,17 +60,15 @@ class CheckView(MethodView):
         )
         db.session.add(task_record)
         db.session.commit()
-        # print("task task hihi: ",task.get())
+        print("task id in check: ", task.id)
+        # time.sleep(5)
+        # pid = wait_for_pid(task.id, timeout=10)
+        # print("Retrieved PID: ", pid)
+        
         result = task.get()
         view = TaskStatusView
-        print("result in check", result)
         view.save_result(task.id, result)
-        # if "pid" in result:
-        #     print("Process  ID (PID):", result["pid"])
-        # else:
-        #     print("PID not found in result. Task may have failed")
-        # print("state after save: ",task.state)
-
+       
         self.updateState(task.id, task.state)
 
         return jsonify({"task_id": task.id, "status": "Task created"}), 202

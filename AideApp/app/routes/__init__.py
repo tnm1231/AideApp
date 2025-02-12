@@ -5,6 +5,7 @@ from .taskHandle import TaskStatusView, task_pause, task_resume
 from .tasks import task_status
 from .aidecmd import compare
 from .aideConfig import CustomConfigView
+from .aideConfig import check_config
 
 routes_blueprint = Blueprint('routes', __name__)
 
@@ -33,6 +34,7 @@ routes_blueprint.add_url_rule('/task-status/<string:task_id>', view_func=task_st
 
 config_view = CustomConfigView.as_view('config')
 routes_blueprint.add_url_rule('/config', view_func=config_view, methods=['GET', 'POST'])
+routes_blueprint.add_url_rule('/check-config', view_func=check_config, methods=['POST'])
 
 
 routes_blueprint.add_url_rule('/compare-aide-database', 'compare', compare, methods=['POST'])

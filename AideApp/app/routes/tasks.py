@@ -9,12 +9,19 @@ from app.models.models import db, TaskRecord
 from app.routes.taskHandle import TaskStatusView
 import redis
 import time
-from .taskHandle import updatePid
 
 celery = Celery('tasks', broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
-
+class ObservableDict(dict):
+    def __setitem__(self, key, value):
+        # Gọi phương thức gốc để thêm key-value vào dict
+        super().__setitem__(key, value)
+        # In ra thông báo khi có thay đổi
+        print(f"New entry added to task_pid_map: {key} -> {value}")
+        print(f"Updated task_pid_map: {self}")
+        
+task_pid_map = ObservableDict()
 
 @celery.task(bind=True)
 def long_running_task(self, task_id):
@@ -101,6 +108,7 @@ def task_status(task_id):
     
 @celery.task(bind=True)
 def run_scan_task(self, command):
+    print("------------------------------------------------")
     task_id = self.request.id
     print("task id", task_id)
     # task_result = AsyncResult(task_id)
@@ -114,20 +122,21 @@ def run_scan_task(self, command):
             stderr=subprocess.PIPE,
             text=True
         )   
+        pid = result.pid
+        task_pid_map[task_id] = pid
+        # print("task_pid_map: ",task_pid_map)
+        # print("process id trong run scan task", pid)
+        # updatePid.delay(task_id, pid)
+        # updatePid.apply_async(args=[task_id, pid])
+
+
         stdout, stderr = result.communicate(timeout=20000)
         logging.debug(f"Command output: {stdout}")
         
         logging.debug(f"Command error: {stderr}")
-        pid = result.pid
-        print("process id", pid)
-        # updatePid(task_id, pid)
-        # logging.debug(f"process id: {result.pid}")
-        # print("process id", result.pid)
+       
         print("task result khong co strip bo khoang trang : ",result.stdout)
 
-        # print("task result hihi : ",result.stdout.strip())
-        # scan_result = result.stdout.strip()
-        # view.save_result(task_id, scan_result)
         return {
             "output": stdout.strip(),
             "error": stderr.strip(),
@@ -141,3 +150,31 @@ def run_scan_task(self, command):
     except Exception as e:
         logging.error(f"Unexpected error: {e}")
         return {"error": str(e)}  
+
+
+def wait_for_pid(task_id, timeout=10000, interval=10):
+    print("vào được get task id")
+    # print("task pid map",task_pid_map)
+    # pid = task_pid_map.get(task_id)
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        pid = task_pid_map.get(task_id)
+        if pid:
+            print("pid trnog get map task",pid)
+            return int(pid) 
+        time.sleep(interval)
+    return None
+    # if pid:
+    #     print("Process ID in get_task_pid:", pid)
+    #     return pid
+    # else:
+    #     return "Task ID not found or task hasn't started yet."
+
+# def updatePid(self, task_id, pid):
+        # print("vào được update pid")
+        # task_record = TaskRecord.query.filter_by(task_id=task_id).first()
+        # if task_record:
+        #     task_record.pid = pid
+        #     db.session.commit()   
+
+
