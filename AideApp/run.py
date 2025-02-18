@@ -10,7 +10,6 @@ app, celery = create_app()
 app = Flask(__name__, template_folder="app/templates", static_folder="app/static")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aide_checks.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aide_checks.db'  
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

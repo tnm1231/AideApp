@@ -1,13 +1,11 @@
 from flask import render_template, request, jsonify
 from flask.views import MethodView
-from flask import Blueprint
 from .tasks import run_scan_task
 from app.models.models import db, TaskRecord, ResultScan
 from app.routes.taskHandle import TaskStatusView
 from .tasks import wait_for_pid, task_pid_map
 import time
 
-routes_blueprint = Blueprint("routes", __name__)
 # redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 class CheckView(MethodView):
     def get(self):

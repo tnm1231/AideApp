@@ -3,6 +3,7 @@ from flask import render_template, request, redirect, url_for, flash, send_file
 from flask.views import MethodView
 import subprocess
 from flask import jsonify
+import re
 # from datetime import datetime
 # import os
 
@@ -86,63 +87,58 @@ from flask import jsonify
 #             # flash(f"Error saving configuration: {str(e)}", "danger")
 #         return render_template("admin/page/configure.html")
 
-def check_aide_config_inline(config_content):
-    #  """Chạy AIDE kiểm tra config mà không lưu file"""
+
+
+def run_aide_check(config_lines):
+    """
+    Chạy AIDE kiểm tra config và xử lý từng lỗi bằng cách comment dòng lỗi.
+    """
     errors = []
-    lines = config_content.strip().split("\n")
+    modified_config = config_lines[:]  # Sao chép danh sách dòng config
+    while True:
+        # Chạy kiểm tra với toàn bộ file config
+        config_text = "\n".join(modified_config)
+        result = subprocess.run(
+            ["aide", "--config-check", "--config", "-"],
+            input=config_text, capture_output=True, text=True
+        )
 
-    # cleaned_config = "\n".join(line.strip() for line in lines if line.strip() and not line.strip().startswith("#"))
+        output = result.stderr.strip() or result.stdout.strip()
 
-    for index, line in enumerate(lines, start=1):
-        line = line.strip()
-        
-        if not line or line.startswith("#"):  
-            continue
+        # Nếu không có lỗi nào thì thoát vòng lặp
+        if not output:
+            break
 
-        try:
-            result = subprocess.run(
-                ["aide", "--config-check", "--config", "-"],  # Dùng '-' để nhận input từ stdin
-                input=line, capture_output=True, text=True
-            )
+        # print("🔥 AIDE OUTPUT 🔥")
+        # print(output)
 
-            output = result.stderr.strip()
-            if output:
-                errors.append(f"Line {index}: {output}")
-        
-        except Exception as e:
-            errors.append(f"Error executing AIDE: {str(e)}")
-    
+        # Trích xuất số dòng bị lỗi từ thông báo của AIDE
+        match = re.search(r'\(stdin\):(\d+):', output)
+        if not match:
+            errors.append(f"Unknown error format from AIDE: {output}")
+            break  # Dừng nếu không thể tìm được số dòng lỗi
+
+        error_line = int(match.group(1))  # Lấy số dòng bị lỗi
+        errors.append(f"Line {error_line}: {output}")
+
+        # Comment dòng lỗi đó
+        if 0 < error_line <= len(modified_config):
+            modified_config[error_line - 1] = f"# {modified_config[error_line - 1]}  # COMMENTED BY SCRIPT"
+
     return errors
 
-              # AIDE sẽ báo lỗi trong stderr
-
-    # try:
-    #     # Chạy AIDE kiểm tra trực tiếp nội dung config qua stdin
-    #     result = subprocess.run(
-    #         ["aide", "--config-check", "--config", "-"],  # Dùng '-' để nhận input từ stdin
-    #         input=cleaned_config, capture_output=True, text=True
-    #     )
-    #     output = result.stderr  # AIDE sẽ báo lỗi trong stderr
-
-    #     errors = []
-    #     for line in output.split("\n"):
-    #         if "error" in line.lower() or "invalid" in line.lower():
-    #             errors.append(line.strip())  # Lưu lỗi từng dòng
-    #     print("errors", errors)
-    #     return errors
-
-    # except Exception as e:
-    #     return [f"Error executing AIDE: {str(e)}"]
-
 def check_config():
-    print("vao duocw check config")
+    print("Vào được check config")
     data = request.json
     config_content = data.get("config_text", "").strip()  # Lấy nội dung config
 
     if not config_content:
         return jsonify({"errors": ["No configuration provided"]})
 
-    errors = check_aide_config_inline(config_content)
+    # errors = run_aide_check(config_content)
+    config_lines = config_content.split("\n")
+    errors = run_aide_check(config_lines)
+
     return jsonify({"errors": errors})
 
 

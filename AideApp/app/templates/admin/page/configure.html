@@ -174,12 +174,7 @@
                     </table>
                     <br>
                     <label>Rules</label>
-                    <input type="text" class="form-control" id="custom_rules" placeholder="Define your own rules here."
-                        required>
-
-
-
-
+                    <input type="text" class="form-control" id="custom_rules" placeholder="Define your own rules here." >
                 </div>
                 <br><br>
                 <div class="col-md-4 mb-3">
@@ -204,37 +199,69 @@
 
                     <h4>Directories</h4>
                     <div class="divider"></div>
-                    <label>Directories wil be checked with rule (NORMAL) </label>
 
-                    <div class="row d-flex align-items-center">
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" id="include_directories" placeholder="/boot "
-                                required>
+                    <div class="form-row">
+                        <div class="col-md-5"> 
+                            <label>Directory</label>
+                            <input type="text" class="form-control" id="include_directories" placeholder="/boot " required>
                         </div>
-                        <div class="col-md-4 d-flex justify-content-md-start justify-content-center">
-                            <button class="btn btn-outline-info" id="addDirectoryBtn" type="button">Include</button>
+                        <div class="col-md-3"> 
+                            <div class="position-relative form-group">
+                                <label for="exampleSelect">Select</label>
+                                <select name="select" id="includeSelect" class="form-control">
+                                    <option value="">None</option>
+                                    <option value="f R">Only Files</option>
+                                    <option value="d R">Only Directories</option>
+                                    <option value="R">Both</option>
+                                </select>
+                            </div>
                         </div>
+                        <div class="col-md-4"> 
+                            <label>Rule</label>
+                            <input type="text" class="form-control" id="include_rule" placeholder="R-m-c" required>
+                        </div>
+                        <div class="col-md-9">
+                            <input id="addDirDemo" type="text" class="form-control" readonly placeholder="">
+                        </div> 
+                        <div class="col-md-2" style="margin-top: 5px; margin-left: 6px;">
+                            <button class="mb-2 mr-2 btn-transition btn btn-outline-info" id="addDirectoryBtn" type="button">
+                                Include
+                            </button>
+                        </div>
+
                     </div>
+                    
 
-                    <div class="row" style="margin-top: 12px; margin-left: 2px;" id="directoryList">
+                    <div class="form-row" style="margin-top: 12px; margin-left: 2px;" id="directoryList">
                         <!-- <button class="mb-2 mr-2 btn-transition btn btn-outline-info " type="button">/root <i class="pe-7s-close btn-icon-wrapper"> </i></button> -->
                     </div>
 
 
-                    <label>Exclude Directories</label>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" id="exclude_directories" placeholder="/boot"
-                                required>
+                    <div class="form-row">
+                        <div class="col-md-8"> 
+                            <label>Exclude Directories</label>
+                            <input type="text" class="form-control" id="exclude_directories" placeholder="!/tmp" required>
                         </div>
-                        <div class="col-md-4">
-                            <button class="mb-2 mr-2 btn-transition btn btn-outline-warning" id="excludeDirectoryBtn"
-                                type="button">Exclude</button>
+                        <div class="col-md-4"> 
+                            <div class="position-relative form-group">
+                                <label for="exampleSelect">Select</label>
+                                <select name="select" id="excludeSelect" class="form-control">
+                                    <option value="">None</option>
+                                    <option value="f R">Only Files</option>
+                                    <option value="d R">Only Directories</option>
+                                    <option value="R">Both</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <input id="exDirDemo" type="text" class="form-control" readonly placeholder="">
+                        </div> 
+                        <div class="col-md-2" style="margin-top: 5px; margin-left: 6px;">
+                            <button class="mb-2 mr-2 btn-transition btn btn-outline-warning" id="excludeDirectoryBtn" type="button">Exclude</button>
                         </div>
                     </div>
-
-                    <div class="row" style="margin-top: 12px; margin-left: 2px;" id="directoryListExclude">
-                        <!-- <button class="mb-2 mr-2 btn-transition btn btn-outline-info " type="button">/root <i class="pe-7s-close btn-icon-wrapper"> </i></button> -->
+                    <div class="form-row" style="margin-top: 12px; margin-left: 2px;" id="directoryListExclude">
+                        <!-- <button class="mb-2 mr-2 btn-transition btn btn-outline-warning" type="button">/root <i class="pe-7s-close btn-icon-wrapper"> </i></button> -->
                     </div>
 
                     <br>
@@ -479,9 +506,9 @@
 </div>
 {% endblock %}
 {% block modal %}
-<div class="modal fade show" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+<div class="modal bd-example-modal-lg fade show" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
     style="display: none; padding-right: 15px;" aria-modal="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color:lavenderblush">
                 <h5 class="modal-title" id="exampleModalLongTitle" style="font-weight: bold;">Aide configuration file preview</h5>
@@ -490,16 +517,34 @@
                 </button>
             </div>
             <div class="modal-body" id="previewConfig">
-                <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                    laoreet rutrum faucibus dolor auctor.</p>
-                <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                    consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                    eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                    laoreet rutrum faucibus dolor auctor.</p>
-                <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                    consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                <!-- NORMAL = p+i+n+u+g+s+m+c+sha256
+                <br>
+                DATAONLY = p+u+g+s+xattrs+sha256<br>
+                <br>
+                @@x_include_setenv UPAC_settingsd /etc/aide/aide.settings.d<br>
+                @@x_include_setenv PATH /bin:/usr/bin<br>
+                @@define DBDIR /var/lib/aide/aide.db<br>
+                @@define LOGDIR /var/lib/aide/aide.db.new<br>
+                database_in=file:/var/lib/aide/aide.db<br>
+                database_out=file:/var/lib/aide/aide.db.new<br>
+                database_new=file:/var/lib/aide/aide.db.new<br>
+                gzip_dbout=yes<br>
+                report_url=file:/var/log/aide.log<br>
+                log_level=warning<br>
+                report_level=minimal -->
+             
+            </div>
+            <!-- <div class="col-lg-12" style="background-color:red">
+               ERROR
+            </div> -->
+            <div class="col-lg-12" style="background-color:gainsboro; white-space: nowrap;" id="errorConfig">
+                <!-- <p style="color:red">
+                    ERROR: (stdin):18: invalid log level: 'warning@@' (line: 'log_level=warning@@')
+                </p>
+                <p style="color:red">
+                    ERROR: (stdin):18: invalid log level: 'warning@@' (line: 'log_level=warning@@')
+                </p>
+                  -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -515,10 +560,67 @@
     document.addEventListener('DOMContentLoaded', function () {
 
 
+        function updateCommand() {
+            const directory = document.getElementById('include_directories').value;
+            const rule = document.getElementById('include_rule').value;
+            const select = document.getElementById('includeSelect').value;
+
+            const command = `${directory} ${select} ${rule}`;
+
+            document.getElementById('addDirDemo').value = command;
+        }
+
+        document.getElementById('include_directories').addEventListener('input', updateCommand);
+        document.getElementById('includeSelect').addEventListener('change', updateCommand);
+        document.getElementById('include_rule').addEventListener('input', updateCommand);
+
+        document.getElementById('include_directories').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateCommand();
+            }
+        });
+        document.getElementById('include_rule').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateCommand();
+            }
+        });
+        document.getElementById('includeSelect').addEventListener('change', updateCommand);
+        
+
+
+        
+        function updateCommandEx() {
+            const directory = document.getElementById('exclude_directories').value;
+            // const rule = document.getElementById('include_rule').value;
+            const select = document.getElementById('excludeSelect').value;
+
+            const command = `${directory} ${select}`;
+
+            document.getElementById('exDirDemo').value = command;
+        }
+
+        document.getElementById('exclude_directories').addEventListener('input', updateCommandEx);
+        document.getElementById('excludeSelect').addEventListener('change', updateCommandEx);
+        // document.getElementById('include_rule').addEventListener('input', updateCommand);
+
+        document.getElementById('exclude_directories').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateCommandEx();
+            }
+        });
+        // document.getElementById('include_rule').addEventListener('keypress', function(e) {
+        //     if (e.key === 'Enter') {
+        //         updateCommand();
+        //     }
+        // });
+        document.getElementById('excludeSelect').addEventListener('change', updateCommand);
+
+
+
 
         let includeDir = [];
         document.getElementById("addDirectoryBtn").addEventListener("click", function () {
-            var inputField = document.getElementById("include_directories");
+            var inputField = document.getElementById("addDirDemo");
             var inputValue = inputField.value.trim();
 
             if (inputValue === "") {
@@ -546,7 +648,7 @@
         });
         let excludeDir = [];
         document.getElementById("excludeDirectoryBtn").addEventListener("click", function () {
-            var inputField = document.getElementById("exclude_directories");
+            var inputField = document.getElementById("exDirDemo");
             var inputValue = inputField.value.trim().replace(/^!+/, ""); // Xóa tất cả dấu ! ở đầu chuỗi
             // var inputValue = inputField.value.trim();
 
@@ -675,6 +777,7 @@
             previewField = document.getElementById("previewConfig");
             previewField.innerHTML = "";
             let text = "";
+          
 
             var dbDir = database.value.trim();
             if(dbDir !== ""){
@@ -742,6 +845,11 @@
                 text += "database_add_metadata=" + database_add_metadata + "\n\n";
             }
 
+            var customRules = custom_rules.value.trim();
+            if(customRules !== ""){
+                text += customRules + "\n\n";
+            }
+
             if(normal_rule_button === true){
                 text += "NORMAL = p+i+n+u+g+s+m+c+sha256\n";
             }
@@ -752,7 +860,7 @@
             if(typeof includeDir !== 'undefined' && Array.isArray(includeDir) && includeDir.length > 0){
                 text += "# Next decide what directories/files you want in the database.\n";
                 includeDir.forEach((dir) => {
-                    text += dir + " NORMAL\n";
+                    text += dir + "\n";
                 });
             }
             // text=+ "\n";
@@ -771,7 +879,23 @@
             }
 
             // Replace newline characters with <br>
-            previewField.innerHTML = text.replace(/\n/g, "<br>");
+            // previewField.innerHTML = text.replace(/\n/g, "<br>");
+            // Chia text thành từng dòng
+        let lines = text.split("\n");
+
+        // Nếu dòng cuối cùng trống, xóa nó đi
+        if (lines[lines.length - 1] === "") {
+            lines.pop();
+        }
+
+        // Đánh số thứ tự nhưng giữ các dòng trống ở giữa
+        let numberedText = lines.map((line, index) => line !== "" ? `${index + 1}  &nbsp;  ${line}` : "").join("<br>");
+
+
+            
+
+
+            previewField.innerHTML = numberedText;
 
             document.getElementById("checkConfig").addEventListener("click", function () {
                 fetch('/check-config', {
@@ -783,19 +907,20 @@
                 })
                     .then(response => response.json())
                     .then((data) => {
-                        // let errorList = document.getElementById("errorList")
-                        // if (data.error) {
-                        //     // toastr.error(`Error: ${data.error}`)
-                        //     console.log(data.error)
-                        // } else {
-                        //     toastr.success('Config file is valid!')
-                        // }
+                        console.log("data: ",data);
                         if (data.errors.length === 0){
                             toastr.success('Config file is valid!')
                         } else {
+                            let errorContainer = document.getElementById('errorConfig');
+                            errorContainer.innerHTML = "";
+
                             data.errors.forEach((error) => {
-                                console.log(`Error: ${error}`)
-                            })
+                                // console.log(`Error: ${error}`);
+                                let p = document.createElement('p');
+                                p.style.color = "red";
+                                p.innerHTML = `${error}`; 
+                                errorContainer.appendChild(p);
+                             })
                         }
                     })
                     .catch((error) => {
@@ -803,7 +928,7 @@
                     });
             });
 
-            console.log(text);
+            // console.log(text);
 
         });
 
