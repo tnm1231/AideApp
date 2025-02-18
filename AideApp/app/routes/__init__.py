@@ -7,7 +7,6 @@ from .aidecmd import compare
 from .aideConfig import CustomConfigView
 from .aideConfig import check_config
 from .mail_and_cronjob import MailView
-from .test_mail_and_cronjob import TestMailView
 
 routes_blueprint = Blueprint('routes', __name__)
 
@@ -43,4 +42,3 @@ routes_blueprint.add_url_rule('/compare-aide-database', 'compare', compare, meth
 
 # Mail configuration
 routes_blueprint.add_url_rule('/mail', view_func=MailView.as_view('mail'))
-# routes_blueprint.add_url_rule('/mail', view_func=TestMailView.as_view('mail'))

@@ -1,7 +1,7 @@
 {% extends 'admin/share/master.html' %}
 {% block body %}
 <div class="container mt-4">
-    <h2 class="mb-3">Chỉnh sửa cấu hình AIDE</h2>
+    <h2 class="mb-3">Mail And Cronjob Setting</h2>
 
     <!-- Hiển thị thông báo -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -17,7 +17,7 @@
     <form method="POST">
         <!-- CONFIG -->
         <div class="position-relative form-group">
-            <label for="CONFIG">Tệp cấu hình chính</label>
+            <label for="CONFIG">Main Configuration File</label>
             <input type="text" class="form-control" name="CONFIG"
                    value="{{ config.CONFIG }}"
                    placeholder="/etc/aide/aide.conf">
@@ -25,16 +25,16 @@
 
         <!-- CRON_DAILY_RUN -->
         <div class="position-relative form-group">
-            <label for="CRON_DAILY_RUN">CRON_DAILY_RUN (Bật chạy hằng ngày?)</label>
+            <label for="CRON_DAILY_RUN">Enable Daily AIDE Run?</label>
             <select class="form-control" name="CRON_DAILY_RUN">
-                <option value="yes" {% if config.CRON_DAILY_RUN == 'yes' %} selected {% endif %}>yes</option>
                 <option value="no"  {% if config.CRON_DAILY_RUN == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.CRON_DAILY_RUN == 'yes' %} selected {% endif %}>yes</option>
             </select>
         </div>
 
         <!-- FQDN -->
         <div class="position-relative form-group">
-            <label for="FQDN">FQDN</label>
+            <label for="FQDN">Fully Qualified Domain Name (FQDN)</label>
             <input type="text" class="form-control" name="FQDN"
                    value="{{ config.FQDN }}"
                    placeholder="AIDEServer">
@@ -42,7 +42,7 @@
 
         <!-- MAILSUBJ -->
         <div class="position-relative form-group">
-            <label for="MAILSUBJ">Chủ đề Email</label>
+            <label for="MAILSUBJ">Email Subject</label>
             <input type="text" class="form-control" name="MAILSUBJ"
                    value="{{ config.MAILSUBJ }}"
                    placeholder="Daily AIDE report for $FQDN">
@@ -50,7 +50,7 @@
 
         <!-- MAILTO -->
         <div class="position-relative form-group">
-            <label for="MAILTO">Địa chỉ Email nhận báo cáo</label>
+            <label for="MAILTO">Recipient Email Address</label>
             <input type="email" class="form-control" name="MAILTO"
                    value="{{ config.MAILTO }}"
                    placeholder="example@example.com">
@@ -58,7 +58,7 @@
 
         <!-- MAILCMD -->
         <div class="position-relative form-group">
-            <label for="MAILCMD">Lệnh gửi Email</label>
+            <label for="MAILCMD">Email Sending Command</label>
             <input type="text" class="form-control" name="MAILCMD"
                    value="{{ config.MAILCMD }}"
                    placeholder="s-nail">
@@ -66,7 +66,7 @@
 
         <!-- MAILWIDTH -->
         <div class="position-relative form-group">
-            <label for="MAILWIDTH">Chiều rộng Email</label>
+            <label for="MAILWIDTH">Email Width</label>
             <input type="number" class="form-control" name="MAILWIDTH"
                    value="{{ config.MAILWIDTH }}"
                    placeholder="990">
@@ -74,7 +74,7 @@
 
         <!-- QUIETREPORTS -->
         <div class="position-relative form-group">
-            <label for="QUIETREPORTS">QUIETREPORTS</label>
+            <label for="QUIETREPORTS">Suppress Reports When No Changes?</label>
             <select class="form-control" name="QUIETREPORTS">
                 <option value="no"  {% if config.QUIETREPORTS == 'no'  %} selected {% endif %}>no</option>
                 <option value="yes" {% if config.QUIETREPORTS == 'yes' %} selected {% endif %}>yes</option>
@@ -177,7 +177,7 @@
                    placeholder="/path/to/script.sh">
         </div>
 
-        <button type="submit" class="btn btn-primary">Lưu Cấu Hình</button>
+        <button type="submit" class="btn btn-primary">Save Configuration</button>
     </form>
 </div>
 {% endblock %}

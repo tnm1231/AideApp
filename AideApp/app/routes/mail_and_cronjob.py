@@ -3,7 +3,8 @@ from flask import render_template, request, redirect, url_for, flash
 from flask.views import MethodView
 
 # Đường dẫn tới file cấu hình AIDE
-AIDE_CONFIG_PATH = '/var/www/html/AideApp/AideApp/aide'
+# AIDE_CONFIG_PATH = '/var/www/html/AideApp/AideApp/aide'
+AIDE_CONFIG_PATH = '/etc/default/aide'
 
 class MailView(MethodView):
     def get(self):
