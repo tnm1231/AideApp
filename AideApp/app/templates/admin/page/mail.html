@@ -1,0 +1,77 @@
+{% extends 'admin/share/master.html' %}
+{% block body %}
+<div class="container mt-4">
+    <h2 class="mb-3">Chỉnh sửa cấu hình AIDE</h2>
+
+    <!-- Hiển thị thông báo -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <div class="position-relative form-group">
+            <label for="CONFIG">Tệp cấu hình chính</label>
+            <input type="text" class="form-control" name="CONFIG" value="{{ config.CONFIG }}" placeholder="/etc/aide/aide.conf">
+        </div>
+
+        <div class="position-relative form-group">
+            <label for="FQDN">FQDN</label>
+            <input type="text" class="form-control" name="FQDN" value="{{ config.FQDN }}" placeholder="AIDEServer">
+        </div>
+
+        <div class="position-relative form-group">
+            <label for="MAILSUBJ">Chủ đề Email</label>
+            <input type="text" class="form-control" name="MAILSUBJ" value="{{ config.MAILSUBJ }}" placeholder="Daily AIDE report for $FQDN">
+        </div>
+
+        <div class="position-relative form-group">
+            <label for="MAILTO">Địa chỉ Email nhận báo cáo</label>
+            <input type="email" class="form-control" name="MAILTO" value="{{ config.MAILTO }}" placeholder="example@example.com">
+        </div>
+
+        <div class="position-relative form-group">
+            <label for="MAILCMD">Lệnh gửi Email</label>
+            <input type="text" class="form-control" name="MAILCMD" value="{{ config.MAILCMD }}" placeholder="s-nail">
+        </div>
+
+        <div class="position-relative form-group">
+            <label for="MAILWIDTH">Chiều rộng Email</label>
+            <input type="number" class="form-control" name="MAILWIDTH" value="{{ config.MAILWIDTH }}" placeholder="990">
+        </div>
+
+        <div class="position-relative form-group">
+            <label for="COMMAND">Lệnh AIDE</label>
+            <select class="form-control" name="COMMAND">
+                <option value="update" {% if config.COMMAND == 'update' %} selected {% endif %}>update</option>
+                <option value="check" {% if config.COMMAND == 'check' %} selected {% endif %}>check</option>
+            </select>
+        </div>
+
+        <div class="position-relative form-group">
+            <label for="COPYNEWDB">Copy Database mới</label>
+            <select class="form-control" name="COPYNEWDB">
+                <option value="no" {% if config.COPYNEWDB == 'no' %} selected {% endif %}>Không</option>
+                <option value="yes" {% if config.COPYNEWDB == 'yes' %} selected {% endif %}>Có</option>
+                <option value="ifnochange" {% if config.COPYNEWDB == 'ifnochange' %} selected {% endif %}>Chỉ khi không thay đổi</option>
+            </select>
+        </div>
+
+        <div class="position-relative form-group">
+            <label for="AIDEARGS">Tham số AIDE</label>
+            <input type="text" class="form-control" name="AIDEARGS" value="{{ config.AIDEARGS }}" placeholder="-V4">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu Cấu Hình</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

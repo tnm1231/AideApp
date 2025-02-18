@@ -1,12 +1,13 @@
 from flask import Blueprint, render_template
 from .checks import CheckView
 from .homes import HomeView
-from .home2 import getViewHome
 from .taskHandle import TaskStatusView, task_pause, task_resume
 from .tasks import task_status
 from .aidecmd import compare
 from .aideConfig import CustomConfigView
 from .aideConfig import check_config
+from .mail_and_cronjob import MailView
+from .test_mail_and_cronjob import TestMailView
 
 routes_blueprint = Blueprint('routes', __name__)
 
@@ -40,12 +41,6 @@ routes_blueprint.add_url_rule('/check-config', view_func=check_config, methods=[
 
 routes_blueprint.add_url_rule('/compare-aide-database', 'compare', compare, methods=['POST'])
 
-# routes_blueprint.add_url_rule('/tasks', view_func=TaskAPI.as_view('tasks')
-# routes_blueprint.add_url_rule('/tasks/<task_id>', view_func=TaskAPI.as_view('task_status'))
-# routes_blueprint.add_url_rule('tasks/<task_id>/control', view_func=TaskControlAPI.as_view('task_control'))
-# routes_blueprint.add_url_rule('/check', view_func=CheckView.as_view('checks'))
-
-
-
-
-#route mail
+# Mail configuration
+routes_blueprint.add_url_rule('/mail', view_func=MailView.as_view('mail'))
+# routes_blueprint.add_url_rule('/mail', view_func=TestMailView.as_view('mail'))
