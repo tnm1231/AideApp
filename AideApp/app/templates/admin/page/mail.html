@@ -177,11 +177,128 @@
                    placeholder="/path/to/script.sh">
         </div>
 
+        <div class="form-row"> 
+            <input type="checkbox" id="cronJobCheck"  value="true" style="margin-right: 6px; margin-left: 7px">  
+            <label style="margin-top: 8px;"> Set cron job for this scan</label>
+        </div>
+        <div id="cronJob" style="display: none;">
+            <label style="margin-top: 8px; font-weight: bold;">Quick Schedule</label>
+            <div class="form-row">
+                <button id="startup" class="col-md-1 mb-2 mr-2 btn btn-primary">Startup</button>
+                <button id="hourly" class="col-md-1 mb-2 mr-2 btn btn-primary">Hourly</button>
+                <button id="daily" class="col-md-1 mb-2 mr-2 btn btn-primary">Daily</button>
+                <button id="weekly" class="col-md-1 mb-2 mr-2 btn btn-primary">Weekly</button>
+                <button id="monthly" class="col-md-1 mb-2 mr-2 btn btn-primary">Monthly</button>
+                <button id="yearly" class="col-md-1 mb-2 mr-2 btn btn-primary">Yearly</button>
+            </div>
+            <div class="form-row">
+                <div class="col-md-2 mb-3">
+                    <label for="minute">Minute</label>
+                    <input type="number" id="minute" class="form-control" placeholder="*" min="0" max="59" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="hour">Hour</label>
+                    <input type="number" id="hour" class="form-control" placeholder="*" min="0" max="23" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="day">Day</label>
+                    <input type="number" id="day" class="form-control" placeholder="*" min="1" max="31" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="month">Month</label>
+                    <input type="number" id="month" class="form-control" placeholder="*" min="1" max="12" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="week">Week</label>
+                    <input type="number" id="week" class="form-control" placeholder="*" min="0" max="6" required>
+                </div>  
+                <div class="col-md-1 mb-3">
+                    <button class="mb-2 mr-2 btn btn-primary" style="margin-top: 33px; margin-left: 20px">Set</button> 
+                </div> 
+            </div>
+            <div class="form-row">
+                <div class="col-md-12 mb-3">
+                    <label>Job</label>
+                    <input id="cronjobDemo" type="text" class="form-control" readonly placeholder="">
+                </div> 
+            </div>
+
         <button type="submit" class="btn btn-primary">Save Configuration</button>
     </form>
 </div>
 {% endblock %}
 
 {% block script %}
+<script>
+  
+    document.addEventListener('DOMContentLoaded', function () {
 
+        //cron job 
+        document.getElementById("cronJobCheck").addEventListener("change", function() {
+            var cronJobDiv = document.getElementById("cronJob");
+            if (this.checked) {
+                cronJobDiv.style.display = "block";
+            } else {
+                cronJobDiv.style.display = "none";
+            }
+        });
+        let cronjobDemo = document.getElementById('cronjobDemo');
+        let minute = document.getElementById('minute');
+        let hour = document.getElementById('hour');
+        let day = document.getElementById('day');
+        let month = document.getElementById('month');
+        let week = document.getElementById('week');
+
+        document.getElementById('startup').addEventListener('click', function() {
+            event.preventDefault(); 
+            cronjobDemo.value = '@reboot /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+        document.getElementById('hourly').addEventListener('click', function() {
+            event.preventDefault(); 
+            minute.value = '0';
+            hour.value = '*';
+            day.value = '*';
+            month.value = '*';
+            week.value = '*';
+            cronjobDemo.value = '0 * * * * /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+        document.getElementById('daily').addEventListener('click', function() {
+            event.preventDefault(); 
+            minute.value = '0';
+            hour.value = '0';
+            day.value = '*';
+            month.value = '*';
+            week.value = '*';
+            cronjobDemo.value = '0 0 * * * /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+        document.getElementById('weekly').addEventListener('click', function() {
+            event.preventDefault(); 
+            minute.value = '0';
+            hour.value = '0';
+            day.value = '*';
+            month.value = '*';
+            week.value = '0';
+            cronjobDemo.value = '0 0 * * 0 /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+        document.getElementById('monthly').addEventListener('click', function() {
+            event.preventDefault(); 
+            minute.value = '0';
+            hour.value = '0';
+            day.value = '1';
+            month.value = '*';
+            week.value = '*';
+            cronjobDemo.value = '0 0 1 * * /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+        document.getElementById('yearly').addEventListener('click', function() {
+            event.preventDefault(); 
+            minute.value = '0';
+            hour.value = '0';
+            day.value = '1';
+            month.value = '1';
+            week.value = '*';
+            cronjobDemo.value = '0 0 1 1 * /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+
+    });  
+</script>
 {% endblock %}
