@@ -15,36 +15,91 @@
     {% endwith %}
 
     <form method="POST">
+        <!-- CONFIG -->
         <div class="position-relative form-group">
             <label for="CONFIG">Tệp cấu hình chính</label>
-            <input type="text" class="form-control" name="CONFIG" value="{{ config.CONFIG }}" placeholder="/etc/aide/aide.conf">
+            <input type="text" class="form-control" name="CONFIG"
+                   value="{{ config.CONFIG }}"
+                   placeholder="/etc/aide/aide.conf">
         </div>
 
+        <!-- CRON_DAILY_RUN -->
+        <div class="position-relative form-group">
+            <label for="CRON_DAILY_RUN">CRON_DAILY_RUN (Bật chạy hằng ngày?)</label>
+            <select class="form-control" name="CRON_DAILY_RUN">
+                <option value="yes" {% if config.CRON_DAILY_RUN == 'yes' %} selected {% endif %}>yes</option>
+                <option value="no"  {% if config.CRON_DAILY_RUN == 'no'  %} selected {% endif %}>no</option>
+            </select>
+        </div>
+
+        <!-- FQDN -->
         <div class="position-relative form-group">
             <label for="FQDN">FQDN</label>
-            <input type="text" class="form-control" name="FQDN" value="{{ config.FQDN }}" placeholder="AIDEServer">
+            <input type="text" class="form-control" name="FQDN"
+                   value="{{ config.FQDN }}"
+                   placeholder="AIDEServer">
         </div>
 
+        <!-- MAILSUBJ -->
         <div class="position-relative form-group">
             <label for="MAILSUBJ">Chủ đề Email</label>
-            <input type="text" class="form-control" name="MAILSUBJ" value="{{ config.MAILSUBJ }}" placeholder="Daily AIDE report for $FQDN">
+            <input type="text" class="form-control" name="MAILSUBJ"
+                   value="{{ config.MAILSUBJ }}"
+                   placeholder="Daily AIDE report for $FQDN">
         </div>
 
+        <!-- MAILTO -->
         <div class="position-relative form-group">
             <label for="MAILTO">Địa chỉ Email nhận báo cáo</label>
-            <input type="email" class="form-control" name="MAILTO" value="{{ config.MAILTO }}" placeholder="example@example.com">
+            <input type="email" class="form-control" name="MAILTO"
+                   value="{{ config.MAILTO }}"
+                   placeholder="example@example.com">
         </div>
 
+        <!-- MAILCMD -->
         <div class="position-relative form-group">
             <label for="MAILCMD">Lệnh gửi Email</label>
-            <input type="text" class="form-control" name="MAILCMD" value="{{ config.MAILCMD }}" placeholder="s-nail">
+            <input type="text" class="form-control" name="MAILCMD"
+                   value="{{ config.MAILCMD }}"
+                   placeholder="s-nail">
         </div>
 
+        <!-- MAILWIDTH -->
         <div class="position-relative form-group">
             <label for="MAILWIDTH">Chiều rộng Email</label>
-            <input type="number" class="form-control" name="MAILWIDTH" value="{{ config.MAILWIDTH }}" placeholder="990">
+            <input type="number" class="form-control" name="MAILWIDTH"
+                   value="{{ config.MAILWIDTH }}"
+                   placeholder="990">
         </div>
 
+        <!-- QUIETREPORTS -->
+        <div class="position-relative form-group">
+            <label for="QUIETREPORTS">QUIETREPORTS</label>
+            <select class="form-control" name="QUIETREPORTS">
+                <option value="no"  {% if config.QUIETREPORTS == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.QUIETREPORTS == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- SILENTREPORTS -->
+        <div class="position-relative form-group">
+            <label for="SILENTREPORTS">SILENTREPORTS</label>
+            <select class="form-control" name="SILENTREPORTS">
+                <option value="no"  {% if config.SILENTREPORTS == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.SILENTREPORTS == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- FIGLET -->
+        <div class="position-relative form-group">
+            <label for="FIGLET">FIGLET</label>
+            <select class="form-control" name="FIGLET">
+                <option value="yes" {% if config.FIGLET == 'yes' %} selected {% endif %}>yes</option>
+                <option value="no"  {% if config.FIGLET == 'no'  %} selected {% endif %}>no</option>
+            </select>
+        </div>
+
+        <!-- COMMAND -->
         <div class="position-relative form-group">
             <label for="COMMAND">Lệnh AIDE</label>
             <select class="form-control" name="COMMAND">
@@ -53,6 +108,7 @@
             </select>
         </div>
 
+        <!-- COPYNEWDB -->
         <div class="position-relative form-group">
             <label for="COPYNEWDB">Copy Database mới</label>
             <select class="form-control" name="COPYNEWDB">
@@ -62,9 +118,63 @@
             </select>
         </div>
 
+        <!-- TRUNCATEDETAILS -->
+        <div class="position-relative form-group">
+            <label for="TRUNCATEDETAILS">TRUNCATEDETAILS</label>
+            <select class="form-control" name="TRUNCATEDETAILS">
+                <option value="no"  {% if config.TRUNCATEDETAILS == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.TRUNCATEDETAILS == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- FILTERUPDATES -->
+        <div class="position-relative form-group">
+            <label for="FILTERUPDATES">FILTERUPDATES</label>
+            <select class="form-control" name="FILTERUPDATES">
+                <option value="no"  {% if config.FILTERUPDATES == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.FILTERUPDATES == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- FILTERINSTALLATIONS -->
+        <div class="position-relative form-group">
+            <label for="FILTERINSTALLATIONS">FILTERINSTALLATIONS</label>
+            <select class="form-control" name="FILTERINSTALLATIONS">
+                <option value="no"  {% if config.FILTERINSTALLATIONS == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.FILTERINSTALLATIONS == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- LINES -->
+        <div class="position-relative form-group">
+            <label for="LINES">LINES</label>
+            <input type="number" class="form-control" name="LINES"
+                   value="{{ config.LINES }}"
+                   placeholder="1000">
+        </div>
+
+        <!-- NOISE -->
+        <div class="position-relative form-group">
+            <label for="NOISE">NOISE (Regex)</label>
+            <input type="text" class="form-control" name="NOISE"
+                   value="{{ config.NOISE }}"
+                   placeholder="VD: ^/var/log/.*">
+        </div>
+
+        <!-- AIDEARGS -->
         <div class="position-relative form-group">
             <label for="AIDEARGS">Tham số AIDE</label>
-            <input type="text" class="form-control" name="AIDEARGS" value="{{ config.AIDEARGS }}" placeholder="-V4">
+            <input type="text" class="form-control" name="AIDEARGS"
+                   value="{{ config.AIDEARGS }}"
+                   placeholder="-V4">
+        </div>
+
+        <!-- CRONEXITHOOK -->
+        <div class="position-relative form-group">
+            <label for="CRONEXITHOOK">CRONEXITHOOK</label>
+            <input type="text" class="form-control" name="CRONEXITHOOK"
+                   value="{{ config.CRONEXITHOOK }}"
+                   placeholder="/path/to/script.sh">
         </div>
 
         <button type="submit" class="btn btn-primary">Lưu Cấu Hình</button>
