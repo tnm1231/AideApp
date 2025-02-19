@@ -48,7 +48,7 @@
                                 <!-- FQDN -->
                                 <div class="position-relative form-group">
                                     <label for="FQDN">Fully Qualified Domain Name (FQDN)</label>
-                                    <input type="text" class="form-control" name="FQDN" value="{{ config.FQDN }}"
+                                    <input id="FQDN" type="text" class="form-control" name="FQDN" value="{{ config.FQDN }}"
                                         placeholder="AIDEServer">
                                 </div>
 
@@ -57,7 +57,7 @@
                                 <!-- MAILSUBJ -->
                                 <div class="position-relative form-group">
                                     <label for="MAILSUBJ">Email Subject</label>
-                                    <input type="text" class="form-control" name="MAILSUBJ"
+                                    <input id="MAILSUBJ" type="text" class="form-control" name="MAILSUBJ"
                                         value="{{ config.MAILSUBJ }}" placeholder="Daily AIDE report for $FQDN">
                                 </div>
                             </div>
@@ -250,23 +250,23 @@
                             <div class="form-row">
                                 <div class="col-md-2 mb-3">
                                     <label for="minute">Minute</label>
-                                    <input type="number" id="minute" class="form-control" placeholder="*" min="0" max="59" required>
+                                    <input type="number" id="minute" class="form-control" placeholder="*" min="0" max="59" />
                                 </div>
                                 <div class="col-md-2 mb-3">
                                     <label for="hour">Hour</label>
-                                    <input type="number" id="hour" class="form-control" placeholder="*" min="0" max="23" required>
+                                    <input type="number" id="hour" class="form-control" placeholder="*" min="0" max="23" />
                                 </div>
                                 <div class="col-md-2 mb-3">
                                     <label for="day">Day</label>
-                                    <input type="number" id="day" class="form-control" placeholder="*" min="1" max="31" required>
+                                    <input type="number" id="day" class="form-control" placeholder="*" min="1" max="31" />
                                 </div>
                                 <div class="col-md-2 mb-3">
                                     <label for="month">Month</label>
-                                    <input type="number" id="month" class="form-control" placeholder="*" min="1" max="12" required>
+                                    <input type="number" id="month" class="form-control" placeholder="*" min="1" max="12" />
                                 </div>
                                 <div class="col-md-2 mb-3">
                                     <label for="week">Week</label>
-                                    <input type="number" id="week" class="form-control" placeholder="*" min="0" max="6" required>
+                                    <input type="number" id="week" class="form-control" placeholder="*" min="0" max="6" />
                                 </div>  
                                 <div class="col-md-1 mb-3">
                                     <button class="mb-2 mr-2 btn btn-primary" style="margin-top: 33px; margin-left: 20px">Set</button> 
@@ -293,6 +293,23 @@
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
+            
+            const fqdnInput = document.getElementById("FQDN");
+            const mailSubjInput = document.getElementById("MAILSUBJ");
+        
+            function updateMailSubj() {
+                const fqdnValue = fqdnInput.value || "AIDEServer"; // Default value if empty
+                mailSubjInput.value = `Daily AIDE report for ${fqdnValue}`;
+            }
+        
+            // Initialize MAILSUBJ with current FQDN value
+            updateMailSubj();
+        
+            // Update MAILSUBJ whenever FQDN changes
+            fqdnInput.addEventListener("input", updateMailSubj);
+
+
+
 
             //cron job 
             document.getElementById("cronJobCheck").addEventListener("change", function () {
