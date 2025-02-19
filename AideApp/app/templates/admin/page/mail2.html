@@ -1,0 +1,304 @@
+{% extends 'admin/share/master.html' %}
+{% block body %}
+<div class="container mt-4">
+    <h2 class="mb-3">Mail And Cronjob Setting</h2>
+
+    <!-- Hiển thị thông báo -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <!-- CONFIG -->
+        <div class="position-relative form-group">
+            <label for="CONFIG">Main Configuration File</label>
+            <input type="text" class="form-control" name="CONFIG"
+                   value="{{ config.CONFIG }}"
+                   placeholder="/etc/aide/aide.conf">
+        </div>
+
+        <!-- CRON_DAILY_RUN -->
+        <div class="position-relative form-group">
+            <label for="CRON_DAILY_RUN">Enable Daily AIDE Run?</label>
+            <select class="form-control" name="CRON_DAILY_RUN">
+                <option value="no"  {% if config.CRON_DAILY_RUN == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.CRON_DAILY_RUN == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- FQDN -->
+        <div class="position-relative form-group">
+            <label for="FQDN">Fully Qualified Domain Name (FQDN)</label>
+            <input type="text" class="form-control" name="FQDN"
+                   value="{{ config.FQDN }}"
+                   placeholder="AIDEServer">
+        </div>
+
+        <!-- MAILSUBJ -->
+        <div class="position-relative form-group">
+            <label for="MAILSUBJ">Email Subject</label>
+            <input type="text" class="form-control" name="MAILSUBJ"
+                   value="{{ config.MAILSUBJ }}"
+                   placeholder="Daily AIDE report for $FQDN">
+        </div>
+
+        <!-- MAILTO -->
+        <div class="position-relative form-group">
+            <label for="MAILTO">Recipient Email Address</label>
+            <input type="email" class="form-control" name="MAILTO"
+                   value="{{ config.MAILTO }}"
+                   placeholder="example@example.com">
+        </div>
+
+        <!-- MAILCMD -->
+        <div class="position-relative form-group">
+            <label for="MAILCMD">Email Sending Command</label>
+            <input type="text" class="form-control" name="MAILCMD"
+                   value="{{ config.MAILCMD }}"
+                   placeholder="s-nail">
+        </div>
+
+        <!-- MAILWIDTH -->
+        <div class="position-relative form-group">
+            <label for="MAILWIDTH">Email Width</label>
+            <input type="number" class="form-control" name="MAILWIDTH"
+                   value="{{ config.MAILWIDTH }}"
+                   placeholder="990">
+        </div>
+
+        <!-- QUIETREPORTS -->
+        <div class="position-relative form-group">
+            <label for="QUIETREPORTS">Suppress Reports When No Changes?</label>
+            <select class="form-control" name="QUIETREPORTS">
+                <option value="no"  {% if config.QUIETREPORTS == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.QUIETREPORTS == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- SILENTREPORTS -->
+        <div class="position-relative form-group">
+            <label for="SILENTREPORTS">SILENTREPORTS</label>
+            <select class="form-control" name="SILENTREPORTS">
+                <option value="no"  {% if config.SILENTREPORTS == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.SILENTREPORTS == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- FIGLET -->
+        <div class="position-relative form-group">
+            <label for="FIGLET">FIGLET</label>
+            <select class="form-control" name="FIGLET">
+                <option value="yes" {% if config.FIGLET == 'yes' %} selected {% endif %}>yes</option>
+                <option value="no"  {% if config.FIGLET == 'no'  %} selected {% endif %}>no</option>
+            </select>
+        </div>
+
+        <!-- COMMAND -->
+        <div class="position-relative form-group">
+            <label for="COMMAND">COMMAND</label>
+            <select class="form-control" name="COMMAND">
+                <option value="update" {% if config.COMMAND == 'update' %} selected {% endif %}>update</option>
+                <option value="check" {% if config.COMMAND == 'check' %} selected {% endif %}>check</option>
+            </select>
+        </div>
+
+        <!-- COPYNEWDB -->
+        <div class="position-relative form-group">
+            <label for="COPYNEWDB">COPYNEWDB</label>
+            <select class="form-control" name="COPYNEWDB">
+                <option value="no" {% if config.COPYNEWDB == 'no' %} selected {% endif %}>Không</option>
+                <option value="yes" {% if config.COPYNEWDB == 'yes' %} selected {% endif %}>Có</option>
+                <option value="ifnochange" {% if config.COPYNEWDB == 'ifnochange' %} selected {% endif %}>Chỉ khi không thay đổi</option>
+            </select>
+        </div>
+
+        <!-- TRUNCATEDETAILS -->
+        <div class="position-relative form-group">
+            <label for="TRUNCATEDETAILS">TRUNCATEDETAILS</label>
+            <select class="form-control" name="TRUNCATEDETAILS">
+                <option value="no"  {% if config.TRUNCATEDETAILS == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.TRUNCATEDETAILS == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- FILTERUPDATES -->
+        <div class="position-relative form-group">
+            <label for="FILTERUPDATES">FILTERUPDATES</label>
+            <select class="form-control" name="FILTERUPDATES">
+                <option value="no"  {% if config.FILTERUPDATES == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.FILTERUPDATES == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- FILTERINSTALLATIONS -->
+        <div class="position-relative form-group">
+            <label for="FILTERINSTALLATIONS">FILTERINSTALLATIONS</label>
+            <select class="form-control" name="FILTERINSTALLATIONS">
+                <option value="no"  {% if config.FILTERINSTALLATIONS == 'no'  %} selected {% endif %}>no</option>
+                <option value="yes" {% if config.FILTERINSTALLATIONS == 'yes' %} selected {% endif %}>yes</option>
+            </select>
+        </div>
+
+        <!-- LINES -->
+        <div class="position-relative form-group">
+            <label for="LINES">LINES</label>
+            <input type="number" class="form-control" name="LINES"
+                   value="{{ config.LINES }}"
+                   placeholder="1000">
+        </div>
+
+        <!-- NOISE -->
+        <div class="position-relative form-group">
+            <label for="NOISE">NOISE (Regex)</label>
+            <input type="text" class="form-control" name="NOISE"
+                   value="{{ config.NOISE }}"
+                   placeholder="VD: ^/var/log/.*">
+        </div>
+
+        <!-- AIDEARGS -->
+        <div class="position-relative form-group">
+            <label for="AIDEARGS">Tham số AIDE</label>
+            <input type="text" class="form-control" name="AIDEARGS"
+                   value="{{ config.AIDEARGS }}"
+                   placeholder="-V4">
+        </div>
+
+        <!-- CRONEXITHOOK -->
+        <div class="position-relative form-group">
+            <label for="CRONEXITHOOK">CRONEXITHOOK</label>
+            <input type="text" class="form-control" name="CRONEXITHOOK"
+                   value="{{ config.CRONEXITHOOK }}"
+                   placeholder="/path/to/script.sh">
+        </div>
+
+        <div class="form-row"> 
+            <input type="checkbox" id="cronJobCheck"  value="true" style="margin-right: 6px; margin-left: 7px">  
+            <label style="margin-top: 8px;"> Set cron job for this scan</label>
+        </div>
+        <div id="cronJob" style="display: none;">
+            <label style="margin-top: 8px; font-weight: bold;">Quick Schedule</label>
+            <div class="form-row">
+                <button id="startup" class="col-md-1 mb-2 mr-2 btn btn-primary">Startup</button>
+                <button id="hourly" class="col-md-1 mb-2 mr-2 btn btn-primary">Hourly</button>
+                <button id="daily" class="col-md-1 mb-2 mr-2 btn btn-primary">Daily</button>
+                <button id="weekly" class="col-md-1 mb-2 mr-2 btn btn-primary">Weekly</button>
+                <button id="monthly" class="col-md-1 mb-2 mr-2 btn btn-primary">Monthly</button>
+                <button id="yearly" class="col-md-1 mb-2 mr-2 btn btn-primary">Yearly</button>
+            </div>
+            <div class="form-row">
+                <div class="col-md-2 mb-3">
+                    <label for="minute">Minute</label>
+                    <input type="number" id="minute" class="form-control" placeholder="*" min="0" max="59" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="hour">Hour</label>
+                    <input type="number" id="hour" class="form-control" placeholder="*" min="0" max="23" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="day">Day</label>
+                    <input type="number" id="day" class="form-control" placeholder="*" min="1" max="31" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="month">Month</label>
+                    <input type="number" id="month" class="form-control" placeholder="*" min="1" max="12" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="week">Week</label>
+                    <input type="number" id="week" class="form-control" placeholder="*" min="0" max="6" required>
+                </div>  
+                <div class="col-md-1 mb-3">
+                    <button class="mb-2 mr-2 btn btn-primary" style="margin-top: 33px; margin-left: 20px">Set</button> 
+                </div> 
+            </div>
+            <div class="form-row">
+                <div class="col-md-12 mb-3">
+                    <label>Job</label>
+                    <input id="cronjobDemo" type="text" class="form-control" readonly placeholder="">
+                </div> 
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Configuration</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+  
+    document.addEventListener('DOMContentLoaded', function () {
+
+        //cron job 
+        document.getElementById("cronJobCheck").addEventListener("change", function() {
+            var cronJobDiv = document.getElementById("cronJob");
+            if (this.checked) {
+                cronJobDiv.style.display = "block";
+            } else {
+                cronJobDiv.style.display = "none";
+            }
+        });
+        let cronjobDemo = document.getElementById('cronjobDemo');
+        let minute = document.getElementById('minute');
+        let hour = document.getElementById('hour');
+        let day = document.getElementById('day');
+        let month = document.getElementById('month');
+        let week = document.getElementById('week');
+
+        document.getElementById('startup').addEventListener('click', function() {
+            event.preventDefault(); 
+            cronjobDemo.value = '@reboot /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+        document.getElementById('hourly').addEventListener('click', function() {
+            event.preventDefault(); 
+            minute.value = '0';
+            hour.value = '*';
+            day.value = '*';
+            month.value = '*';
+            week.value = '*';
+            cronjobDemo.value = '0 * * * * /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+        document.getElementById('daily').addEventListener('click', function() {
+            event.preventDefault(); 
+            minute.value = '0';
+            hour.value = '0';
+            day.value = '*';
+            month.value = '*';
+            week.value = '*';
+            cronjobDemo.value = '0 0 * * * /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+        document.getElementById('weekly').addEventListener('click', function() {
+            event.preventDefault(); 
+            minute.value = '0';
+            hour.value = '0';
+            day.value = '*';
+            month.value = '*';
+            week.value = '0';
+            cronjobDemo.value = '0 0 * * 0 /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+        document.getElementById('monthly').addEventListener('click', function() {
+            event.preventDefault(); 
+            minute.value = '0';
+            hour.value = '0';
+            day.value = '1';
+            month.value = '*';
+            week.value = '*';
+            cronjobDemo.value = '0 0 1 * * /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+        document.getElementById('yearly').addEventListener('click', function() {
+            event.preventDefault(); 
+            minute.value = '0';
+            hour.value = '0';
+            day.value = '1';
+            month.value = '1';
+            week.value = '*';
+            cronjobDemo.value = '0 0 1 1 * /usr/share/aide/bin/dailyaidecheck --crondaily';
+        });
+
+    });  
+</script>
+{% endblock %}
