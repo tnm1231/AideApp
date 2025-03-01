@@ -99,7 +99,7 @@
                             <td><input type="checkbox" id="normal_rule_button" name="normal_rule_button" value="true"
                                     style="margin-left: 12px"></td>
                         </tr>
-                        <tr>
+                        <tr></tr>
                             <td>DATAONLY</td>
                             <td>p+u+g+s+xattrs+sha256</td>
                             <td>Checks file contents only, ignoring metadata like inode and access times.</td>
@@ -247,9 +247,8 @@
                                 <label for="exampleSelect">Select</label>
                                 <select name="select" id="excludeSelect" class="form-control">
                                     <option value="">None</option>
-                                    <option value="f R">Only Files</option>
-                                    <option value="d R">Only Directories</option>
-                                    <option value="R">Both</option>
+                                    <option value="f">Only Files</option>
+                                    <option value="d">Only Directories</option>
                                 </select>
                             </div>
                         </div>

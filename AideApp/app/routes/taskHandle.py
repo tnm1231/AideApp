@@ -7,7 +7,7 @@ import redis
 import re 
 import logging
 import time
-
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -130,47 +130,104 @@ class TaskStatusView(MethodView):
                 return jsonify({"error": "Task not found"}), 404
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-        
+    
     def save_result(task_id, scan_result):
         print("task id in save result", task_id)
         try:
             if task_id is None or not scan_result or 'output' not in scan_result:
-                raise ValueError("Task ID or scan result is not valid!")
+                raise ValueError("Task ID hoặc scan result không hợp lệ!")
 
-            output = scan_result['output']
+            # Kiểm tra JSON hợp lệ
+            try:
+                output = json.loads(scan_result['output'])
+            except json.JSONDecodeError as e:
+                print(f"Invalid JSON format: {scan_result['output']}")
+                raise ValueError(f"Lỗi JSON: {e}")
 
-            total_entries = re.search(r"Total number of entries:\s+(\d+)", output)
-            added_entries = re.search(r"Added entries:\s+(\d+)", output)
-            removed_entries = re.search(r"Removed entries:\s+(\d+)", output)
-            changed_entries = re.search(r"Changed entries:\s+(\d+)", output)
+            # Trích xuất thông tin số lượng entry
+            number_of_entries = output.get("number_of_entries", {})
+            total_entries = number_of_entries.get("total", 0)
+            added_entries = number_of_entries.get("added", 0)
+            removed_entries = number_of_entries.get("removed", 0)
+            changed_entries = number_of_entries.get("changed", 0)
 
-            print ("total_entries: ",total_entries, ",added_entries: ",added_entries, ",removed_entries: ", removed_entries,",changed_entries:", changed_entries)
+            # Lấy danh sách file/directory
+            added_files = output.get("added", {})
+            removed_files = output.get("removed", {})
+            changed_files = output.get("changed", {})  # Đổi từ "different_attributes" sang "changed" nếu đúng
 
+            # Lấy thông tin thuật toán hash của DB
+            databases = output.get("databases", {})
+            algorithm_data = json.dumps(databases, indent=2) if databases else "{}"
+
+            # Lấy timestamp kết thúc
+            end_timestamp = output.get("end_time", None)
+
+            print("Tổng entries:", total_entries, 
+                "Thêm:", added_entries, 
+                "Xóa:", removed_entries, 
+                "Thay đổi:", changed_entries)
+
+            # Lưu vào database
             result = ResultScan(
                 task_id=task_id,
-                total_entries=int(total_entries.group(1)) if total_entries else None,
-                added_entries=int(added_entries.group(1)) if added_entries else None,
-                removed_entries=int(removed_entries.group(1)) if removed_entries else None,
-                changed_entries=int(changed_entries.group(1)) if changed_entries else None
+                total_entries=total_entries,
+                added_entries=added_entries,
+                removed_entries=removed_entries,
+                changed_entries=changed_entries,
+                timestamp=end_timestamp,
+                algorithm=algorithm_data,
+                added_files=json.dumps(added_files, indent=2) if added_files else "{}",
+                removed_files=json.dumps(removed_files, indent=2) if removed_files else "{}",
+                changed_files=json.dumps(changed_files, indent=2) if changed_files else "{}"
             )
-            # added_files = re.findall(r"^f\+.+", output, re.MULTILINE)
-            # added_dirs = re.findall(r"^d\+.+", output, re.MULTILINE)
-            added_file_dir = re.findall(r"^[fd]\+.+", output, re.MULTILINE)
-
-            removed_files= re.findall(r"^f\-.+", output, re.MULTILINE)
-            changed_files = re.findall(r"^f\~.+", output, re.MULTILINE)
-
-            algorithm_data = re.search(r"The attributes of the \(uncompressed\) database\(s\):\n-+\n(.*?)(?=\nEnd timestamp:|\Z)", output, re.DOTALL)
-            end_timestamp = re.search(r"End timestamp:.*", output)
-           
-            result.timestamp = end_timestamp.group(0) if end_timestamp else None
-            result.algorithm = algorithm_data.group(1).strip() if algorithm_data else None
-            result.added_files = "\n".join(added_file_dir) if added_file_dir else None
-            result.removed_files = "\n".join(removed_files) if removed_files else None
-            result.changed_files = "\n".join(changed_files) if changed_files else None
 
             db.session.add(result)
             db.session.commit()
 
         except Exception as e:
-            print(f"Error in save result to database!: {e}")   
+            print(f"Lỗi khi lưu vào database: {e}")
+    
+    # def save_result(task_id, scan_result):
+        # print("task id in save result", task_id)
+        # try:
+        #     if task_id is None or not scan_result or 'output' not in scan_result:
+        #         raise ValueError("Task ID or scan result is not valid!")
+
+        #     output = scan_result['output']
+
+        #     total_entries = re.search(r"Total number of entries:\s+(\d+)", output)
+        #     added_entries = re.search(r"Added entries:\s+(\d+)", output)
+        #     removed_entries = re.search(r"Removed entries:\s+(\d+)", output)
+        #     changed_entries = re.search(r"Changed entries:\s+(\d+)", output)
+
+        #     print ("total_entries: ",total_entries, ",added_entries: ",added_entries, ",removed_entries: ", removed_entries,",changed_entries:", changed_entries)
+
+        #     result = ResultScan(
+        #         task_id=task_id,
+        #         total_entries=int(total_entries.group(1)) if total_entries else None,
+        #         added_entries=int(added_entries.group(1)) if added_entries else None,
+        #         removed_entries=int(removed_entries.group(1)) if removed_entries else None,
+        #         changed_entries=int(changed_entries.group(1)) if changed_entries else None
+        #     )
+        #     # added_files = re.findall(r"^f\+.+", output, re.MULTILINE)
+        #     # added_dirs = re.findall(r"^d\+.+", output, re.MULTILINE)
+        #     added_file_dir = re.findall(r"^[fd]\+.+", output, re.MULTILINE)
+
+        #     removed_files= re.findall(r"^f\-.+", output, re.MULTILINE)
+        #     changed_files = re.findall(r"^f\~.+", output, re.MULTILINE)
+
+        #     algorithm_data = re.search(r"The attributes of the \(uncompressed\) database\(s\):\n-+\n(.*?)(?=\nEnd timestamp:|\Z)", output, re.DOTALL)
+        #     end_timestamp = re.search(r"End timestamp:.*", output)
+           
+        #     result.timestamp = end_timestamp.group(0) if end_timestamp else None
+        #     result.algorithm = algorithm_data.group(1).strip() if algorithm_data else None
+        #     result.added_files = "\n".join(added_file_dir) if added_file_dir else None
+        #     result.removed_files = "\n".join(removed_files) if removed_files else None
+        #     result.changed_files = "\n".join(changed_files) if changed_files else None
+
+        #     db.session.add(result)
+        #     db.session.commit()
+
+        # except Exception as e:
+        #     print(f"Error in save result to database!: {e}")   

@@ -27,7 +27,7 @@ class TaskRecord(db.Model):
     def mapping_check_type(self):
         mapping = {
             "fullSystem" : "Full System",
-            "specificFile" : "Specific File",
+            "specificFile" : "Specific File/Directory",
             "detailCheck": "Detail Check",
             "customConfig": "Custom Config",
             "customConfigAndFile": "Custom Config And File"
@@ -57,4 +57,20 @@ class ResultScan(db.Model):
 
     def __repr__(self):
         return f'<ResultScan {self.id}>'
+
+class CronJob(db.Model):
+    __tablename__ = 'cron_job'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=True)
+    config_file = db.Column(db.String(255), nullable=True)
+    minute = db.Column(db.String(5), default='*')
+    hour = db.Column(db.String(5), default='*')
+    day = db.Column(db.String(5), default='*')
+    month = db.Column(db.String(5), default='*')
+    weekday = db.Column(db.String(5), default='*')
+    startup = db.Column(db.String(5), default='no')
+
+    def __repr__(self):
+        return f'<CronJob {self.id}>'
+
 

@@ -9,6 +9,7 @@ from app.models.models import db, TaskRecord
 from app.routes.taskHandle import TaskStatusView
 import redis
 import time
+import json
 
 celery = Celery('tasks', broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -111,8 +112,7 @@ def run_scan_task(self, command):
     print("------------------------------------------------")
     task_id = self.request.id
     print("task id", task_id)
-    # task_result = AsyncResult(task_id)
-    # view = TaskStatusView
+
     if not isinstance(command, list) or not all(isinstance(arg, str) for arg in command):
         return {"error": "Invalid command format"}
     try:
@@ -124,21 +124,22 @@ def run_scan_task(self, command):
         )   
         pid = result.pid
         task_pid_map[task_id] = pid
-        # print("task_pid_map: ",task_pid_map)
-        # print("process id trong run scan task", pid)
-        # updatePid.delay(task_id, pid)
-        # updatePid.apply_async(args=[task_id, pid])
-
 
         stdout, stderr = result.communicate(timeout=20000)
         logging.debug(f"Command output: {stdout}")
-        
         logging.debug(f"Command error: {stderr}")
-       
-        print("task result khong co strip bo khoang trang : ",result.stdout)
+
+        print("task result không có strip bỏ khoảng trắng:", stdout)
+
+        # Kiểm tra nếu kết quả là JSON
+        try:
+            output_data = json.loads(stdout.strip())
+            print("output data", output_data)
+        except json.JSONDecodeError as e:
+            return {"error": f"Failed to parse JSON output: {e}"}
 
         return {
-            "output": stdout.strip(),
+            "output": output_data,  # Trả về object JSON thay vì chuỗi
             "error": stderr.strip(),
         }
     except subprocess.TimeoutExpired:
@@ -149,7 +150,50 @@ def run_scan_task(self, command):
         return {"error": f"Command not found: {e}"}
     except Exception as e:
         logging.error(f"Unexpected error: {e}")
-        return {"error": str(e)}  
+        return {"error": str(e)}
+# def run_scan_task(self, command):
+#     print("------------------------------------------------")
+#     task_id = self.request.id
+#     print("task id", task_id)
+#     # task_result = AsyncResult(task_id)
+#     # view = TaskStatusView
+#     if not isinstance(command, list) or not all(isinstance(arg, str) for arg in command):
+#         return {"error": "Invalid command format"}
+#     try:
+#         result = subprocess.Popen(
+#             command,
+#             stdout=subprocess.PIPE,
+#             stderr=subprocess.PIPE,
+#             text=True
+#         )   
+#         pid = result.pid
+#         task_pid_map[task_id] = pid
+#         # print("task_pid_map: ",task_pid_map)
+#         # print("process id trong run scan task", pid)
+#         # updatePid.delay(task_id, pid)
+#         # updatePid.apply_async(args=[task_id, pid])
+
+
+#         stdout, stderr = result.communicate(timeout=20000)
+#         logging.debug(f"Command output: {stdout}")
+        
+#         logging.debug(f"Command error: {stderr}")
+       
+#         print("task result khong co strip bo khoang trang : ",result.stdout)
+
+#         return {
+#             "output": stdout.strip(),
+#             "error": stderr.strip(),
+#         }
+#     except subprocess.TimeoutExpired:
+#         logging.error("Command timed out.")
+#         return {"error": "Command timed out. Please try again with a smaller scope."}
+#     except FileNotFoundError as e:
+#         logging.error(f"Command not found: {e}")
+#         return {"error": f"Command not found: {e}"}
+#     except Exception as e:
+#         logging.error(f"Unexpected error: {e}")
+#         return {"error": str(e)}  
 
 
 def wait_for_pid(task_id, timeout=10000, interval=10):

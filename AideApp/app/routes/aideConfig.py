@@ -5,7 +5,7 @@ import subprocess
 from flask import jsonify
 import re
 # from datetime import datetime
-# import os
+import os
 
 
 # class CustomConfigView(MethodView):
@@ -109,8 +109,7 @@ def run_aide_check(config_lines):
         if not output:
             break
 
-        # print("🔥 AIDE OUTPUT 🔥")
-        # print(output)
+     
 
         # Trích xuất số dòng bị lỗi từ thông báo của AIDE
         match = re.search(r'\(stdin\):(\d+):', output)
@@ -126,6 +125,55 @@ def run_aide_check(config_lines):
             modified_config[error_line - 1] = f"# {modified_config[error_line - 1]}  # COMMENTED BY SCRIPT"
 
     return errors
+CONFIG_DIR = "/etc/aide/"
+def get_config_files():
+    try:
+        files = [f for f in os.listdir(CONFIG_DIR) if os.path.isfile(os.path.join(CONFIG_DIR, f))]
+        return files
+    except Exception as e:
+        return []
+def select_config_files():
+    files = get_config_files() 
+    return jsonify({"files": files})
+
+def view_configs():
+    files = get_config_files()
+    return render_template("admin/page/configView.html", files=files)
+
+def get_config_content():
+    filename = request.args.get("filename")
+    file_path = os.path.join(CONFIG_DIR, filename)
+
+    if not filename or not os.path.exists(file_path):
+        return jsonify({"errors": "File not found"}), 404
+    try:
+        with open(file_path, "r") as f:
+            content = f.read()
+            return jsonify({"filename": filename,"content": content})
+    except Exception as e:
+        return jsonify({"errors": str(e)}), 500
+    
+def delete_config_file():
+    filename = request.args.get("filename")
+    
+    if not filename:
+        return jsonify({"error": "Missing filename"}), 400
+
+    # Bảo vệ chống truy cập file ngoài CONFIG_DIR
+    safe_path = os.path.abspath(os.path.join(CONFIG_DIR, filename))
+    if not safe_path.startswith(CONFIG_DIR):
+        return jsonify({"error": "Invalid file path"}), 403
+
+    # Kiểm tra file có tồn tại không
+    if not os.path.exists(safe_path):
+        return jsonify({"error": "File not found"}), 404
+
+    try:
+        os.remove(safe_path)
+        return jsonify({"success": "File deleted successfully."})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 def check_config():
     print("Vào được check config")
@@ -213,6 +261,7 @@ class CustomConfigView(MethodView):
                     f.write(f"log_level={log_level}\n")
                 if report_level:
                     f.write(f"report_level={report_level}\n")
+                f.write(f"report_format=json\n")  
                 f.write(f"report_base16={report_base16}\n")
                 f.write(f"report_summarize_changes={report_summarize_changes}\n")
                 f.write(f"report_grouped={report_grouped}\n")

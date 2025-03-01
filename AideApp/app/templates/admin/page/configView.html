@@ -1,0 +1,143 @@
+{% extends 'admin/share/master.html' %}
+{% block body %}
+<div class="tab-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="main-card mb-12 card">
+                <div class="card-body"><h5 class="card-title">View Configuration Files</h5>
+                    {% for file in files %}
+                        <div class="font-icon-wrapper font-icon-lg" id="file-{{ file }}">
+                            <div class="">
+                                <button type="button" class="close delete-config"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                                data-toggle="modal"
+                                data-target="#deleteConfigModal"
+                                data-file="{{ file }}">
+                                <span aria-hidden="true">×</span>
+                                </button>    
+                            </div>                                   
+                            <i class="fa fa-fw view-content" style="font-size: 100px;" data-file2="{{ file }}" aria-hidden="true" title="Click to view config file"></i> 
+                            <p style="font-weight: bold;">{{ file }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row" >
+        <div class="col-md-12">
+            <div class="main-card mb-3 card" id="fileContent">
+                <!-- <div class="card-body">
+                    <h5 class="card-title">Basic Example</h5>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block modal%}
+<div class="modal fade show" id="deleteConfigModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-modal="true" style="display: none; padding-left: 15px; margin-top: 8%;  margin-top: 9%;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Delete Scan Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure to delete this scan permanently?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmDeleteConfig">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>  
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Gắn sự kiện click cho tất cả icon có class "file-icon"
+        document.querySelectorAll(".view-content").forEach(icon => {
+            icon.addEventListener("click", function () {
+                let fileName = this.getAttribute("data-file2"); 
+                fetchFileContent(fileName);
+            });
+        });
+    });
+
+    function fetchFileContent(fileName) {
+        fetch(`/get-config-content?filename=${encodeURIComponent(fileName)}`)
+            .then(response => response.json())
+            .then(data => {
+                let fileList = document.getElementById('fileContent');
+                fileList.innerHTML = ""; // Xóa nội dung cũ
+
+                if (data.error) {
+                    toastr.error("Error loading file.", data.error);
+                } else {
+                    // Kiểm tra nếu nội dung không tồn tại
+                    let fileContent = data.content ? data.content.replace(/\r?\n/g, "<br>") : "No content available.";
+
+                    fileList.innerHTML = `
+                        <div class="card-body">
+                            <h5 class="card-title">${data.filename}</h5>
+                            <p>${fileContent}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching file:', error);
+                toastr.error("An unexpected error occurred.");
+            });
+        }
+    document.addEventListener("DOMContentLoaded", function() {
+    let selectedFile = null; // Biến lưu file cần xóa
+
+    // Gán sự kiện click cho tất cả nút delete
+        document.querySelectorAll('.delete-config').forEach(button => {
+            button.addEventListener('click', function() {
+                selectedFile = this.getAttribute('data-file'); // Lấy tên file từ thuộc tính data-file
+            });
+        });
+
+        // Gán sự kiện xác nhận xóa
+        document.getElementById('confirmDeleteConfig').addEventListener('click', function() {
+            if (selectedFile) {
+                deleteConfigFile(selectedFile);
+                }
+            });
+        });
+
+    function deleteConfigFile(fileName) {
+        fetch(`/delete-config-file?filename=${encodeURIComponent(fileName)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    toastr.error("Error deleting file.", data.error);
+                } else {
+                    toastr.success("File deleted successfully.");
+                    setTimeout(function() {
+                    location.reload();
+                    }, 600); // Tải lại trang
+                    // document.getElementById(`file-${fileName}`).remove(); // Xóa trực tiếp trên giao diện
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting file:', error);
+                toastr.error("An unexpected error occurred.");
+            });
+    }
+        
+    // });
+</script>
+{% endblock %}

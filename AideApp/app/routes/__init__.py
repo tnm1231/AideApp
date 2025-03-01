@@ -6,7 +6,10 @@ from .taskHandle import TaskStatusView, task_pause, task_resume
 from .tasks import task_status
 from .aidecmd import compare
 from .aideConfig import CustomConfigView
-from .aideConfig import check_config
+from .aideConfig import check_config, view_configs, get_config_content, delete_config_file, select_config_files
+# from .cronJob import run_aide_cronjob
+from .mail_and_cronjob import MailView
+from .cronJob import CronJobView
 
 routes_blueprint = Blueprint('routes', __name__)
 
@@ -36,10 +39,23 @@ routes_blueprint.add_url_rule('/task-status/<string:task_id>', view_func=task_st
 config_view = CustomConfigView.as_view('config')
 routes_blueprint.add_url_rule('/config', view_func=config_view, methods=['GET', 'POST'])
 routes_blueprint.add_url_rule('/check-config', view_func=check_config, methods=['POST'])
+#list config file 
+routes_blueprint.add_url_rule('/select-config', view_func=select_config_files, methods=['GET'])
+routes_blueprint.add_url_rule('/view-config', view_func=view_configs, methods=['GET'])
+routes_blueprint.add_url_rule('/get-config-content', view_func=get_config_content, methods=['GET'])
+routes_blueprint.add_url_rule('/delete-config-file', view_func=delete_config_file, methods=['GET'])
+
+#crobjob
+# routes_blueprint.add_url_rule('/cronjob', view_func=run_aide_cronjob, methods=['POST'])
+routes_blueprint.add_url_rule('/cron-job', view_func=CronJobView.as_view("cron_job"))  # Use CronJobView
+# routes_blueprint.add_url_rule('/cron-job', view_func=CronJobView.as_view("cron_job"))  # Use the new class name
+
+
 
 
 routes_blueprint.add_url_rule('/compare-aide-database', 'compare', compare, methods=['POST'])
 
+routes_blueprint.add_url_rule('/mail', view_func=MailView.as_view('mail'))
 # routes_blueprint.add_url_rule('/tasks', view_func=TaskAPI.as_view('tasks')
 # routes_blueprint.add_url_rule('/tasks/<task_id>', view_func=TaskAPI.as_view('task_status'))
 # routes_blueprint.add_url_rule('tasks/<task_id>/control', view_func=TaskControlAPI.as_view('task_control'))

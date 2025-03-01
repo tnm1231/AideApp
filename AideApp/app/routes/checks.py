@@ -1,16 +1,19 @@
 from flask import render_template, request, jsonify
 from flask.views import MethodView
 from .tasks import run_scan_task
-from app.models.models import db, TaskRecord, ResultScan
+from app.models.models import db, TaskRecord, ResultScan, CronJob
 from app.routes.taskHandle import TaskStatusView
 from .tasks import wait_for_pid, task_pid_map
 import time
+from datetime import datetime
+import pytz
 
 # redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 class CheckView(MethodView):
     def get(self):
         task = TaskRecord.query.all()
-        return render_template("admin/page/checker.html", tasks=task )
+        cronJob = CronJob.query.all()
+        return render_template("admin/page/checker.html", tasks=task, cronJobs=cronJob) 
 
     def post(self):
         task_name = request.form.get('taskName')
@@ -47,6 +50,8 @@ class CheckView(MethodView):
             command.extend(["--config", custom_config, "--limit", specific_file])
 
         task = run_scan_task.delay(command)
+        vietnam_tz = pytz.timezone("Asia/Ho_Chi_Minh")
+        vietnam_time = datetime.now(vietnam_tz)
         task_record = TaskRecord (
             task_id = task.id,
             name=task_name,
@@ -54,7 +59,8 @@ class CheckView(MethodView):
             specific_file=specific_file,
             custom_config=custom_config,
             status=task.state,
-            progress=0
+            progress=0,
+            created_at=vietnam_time
         )
         db.session.add(task_record)
         db.session.commit()
@@ -64,6 +70,7 @@ class CheckView(MethodView):
         # print("Retrieved PID: ", pid)
         
         result = task.get()
+        print("result in check", result)
         view = TaskStatusView
         view.save_result(task.id, result)
        
