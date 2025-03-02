@@ -32,6 +32,27 @@ def run_command(command):
         logging.error(f"Unexpected error: {e}")
         return {"error": str(e)}
 
+
+def compare():
+    print("compare")
+    command = ["aide", "--compare", "--config=/etc/aide/aide.conf"]
+    try:
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        print("output compare", result.stdout.strip())
+        return {"output": result.stdout.strip(), "error": result.stderr.strip(), "returncode": result.returncode}
+    except Exception as e:
+        return {"error": str(e)}
+
+def update():
+    print("update")
+    command = ["aide", "--updates", "--config=/etc/aide/aide.conf"]
+    try:
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        print("output compare", result.stdout.strip())
+        return {"output": result.stdout.strip(), "error": result.stderr.strip(), "returncode": result.returncode}
+    except Exception as e:
+        return {"error": str(e)}
+
 # def compare():
 #     command = ["aide", "--config=/etc/aide/aide.conf", "--compare"]
 #     print("Vo duoc compare")
@@ -44,25 +65,25 @@ def run_command(command):
 #     return jsonify(result)
 
 
-def compare():
-    print("compare")
-    try:
-        result = subprocess.run(
-            ["aide", "--config=/etc/aide/aide.conf", "--compare"],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=35000
-        )
-        output, error = result.stdout.strip(), result.stderr.strip()
+# def compare():
+#     print("compare")
+#     try:
+#         result = subprocess.run(
+#             ["aide", "--config=/etc/aide/aide.conf", "--compare"],
+#             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=35000
+#         )
+#         output, error = result.stdout.strip(), result.stderr.strip()
 
-        if result.returncode != 0:
-            logging.error(f"Compare failed: {error}")
-            return jsonify({"error": error})
+#         if result.returncode != 0:
+#             logging.error(f"Compare failed: {error}")
+#             return jsonify({"error": error})
         
-        logging.info(f"Compare succeeded: {output}")
-        return jsonify({"output": output})
+#         logging.info(f"Compare succeeded: {output}")
+#         return jsonify({"output": output})
     
-    except subprocess.TimeoutExpired:
-        logging.error("Compare command timed out.")
-        return jsonify({"error": "Command timed out. Please try again."})
-    except Exception as e:
-        logging.error(f"Unexpected error: {e}")
-        return jsonify({"error": str(e)})
+#     except subprocess.TimeoutExpired:
+#         logging.error("Compare command timed out.")
+#         return jsonify({"error": "Command timed out. Please try again."})
+#     except Exception as e:
+#         logging.error(f"Unexpected error: {e}")
+#         return jsonify({"error": str(e)})

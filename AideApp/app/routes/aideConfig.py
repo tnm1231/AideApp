@@ -224,6 +224,7 @@ class CustomConfigView(MethodView):
             gzip_db_out = request.form.get('gzip_db_out', '')   # Ensure boolean value
 
             # Other optional fields
+            checksum_algorithms = request.form.get('checksum_algorithms', '')
             report_url = request.form.get('report_url', '')
             log_level = request.form.get('log_level', '')
             report_level = request.form.get('report_level', '')
@@ -238,7 +239,6 @@ class CustomConfigView(MethodView):
             include_list = [dir.strip() for dir in include_directories.split(',') if dir.strip()]
             exclude_list = [dir.strip() for dir in exclude_directories.split(',') if dir.strip()]
 
-            checksum_algorithms = request.form.get('checksum_algorithms', '')
             # print("Checksume algorithms", checksum_algorithms)
 
             # Write to config file

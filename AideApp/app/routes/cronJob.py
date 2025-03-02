@@ -6,7 +6,7 @@ from flask.views import MethodView
 AIDE_CONFIG_PATH = '/etc/default/aide'
 
 
-class CronJobView(MethodView):  # Rename to avoid conflict
+class CronJobView(MethodView): 
     def get(self):
         return render_template("admin/page/cronJob.html")
 
@@ -64,6 +64,18 @@ class CronJobView(MethodView):  # Rename to avoid conflict
         except Exception as e:
             return jsonify({"error": f"Exception occurred: {str(e)}"}), 500
 
+
+    def delete(self, cronId):
+        try:
+            task = CronJob.query.filter_by(id=cronId).first()
+            if task:
+                db.session.delete(task)
+                db.session.commit()
+                return jsonify({"success": True}), 200
+            else:
+                return jsonify({"error": "Cron job not found"}), 404
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
     # def write_config(self, mail, subject):
     #     config = {
     #         'MAILSUBJ': subject,

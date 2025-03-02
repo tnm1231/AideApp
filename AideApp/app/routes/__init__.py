@@ -47,7 +47,12 @@ routes_blueprint.add_url_rule('/delete-config-file', view_func=delete_config_fil
 
 #crobjob
 # routes_blueprint.add_url_rule('/cronjob', view_func=run_aide_cronjob, methods=['POST'])
-routes_blueprint.add_url_rule('/cron-job', view_func=CronJobView.as_view("cron_job"))  # Use CronJobView
+routes_blueprint.add_url_rule('/cron-job', view_func=CronJobView.as_view("cron_job"), methods=['GET','POST'])
+routes_blueprint.add_url_rule('/cron-job-delete/<string:cronId>', view_func=CronJobView.as_view("cron_job_delete"), methods=['DELETE'])
+
+# routes_blueprint.add_url_rule('/delete-cron-job/<string:cronId>', view_func=CronJobView.as_view("cron_job"), methods=['DELETE'])  # Use CronJobView
+# routes_blueprint.add_url_rule('/delete-task/<string:task_id>', view_func=task_view, methods=['DELETE'])
+
 # routes_blueprint.add_url_rule('/cron-job', view_func=CronJobView.as_view("cron_job"))  # Use the new class name
 
 

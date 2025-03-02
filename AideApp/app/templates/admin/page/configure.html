@@ -814,6 +814,15 @@
                 text += "gzip_dbout=" + gzip_db_out + "\n\n";
             }
 
+
+            // text=+ "\n";
+            var checkSum = checksum_algorithms.trim();
+                        if(checkSum !== ""){
+                            text += "# Checksum Algorithms\n";
+                            text += "Checksums = " + checkSum.toLowerCase() + "\n";
+                        }
+
+
             var reportUrl = report_url.value.trim();
             if(reportUrl !== ""){
                 text += "report_url=" + reportUrl + "\n\n";
@@ -870,12 +879,7 @@
                     text += "!" + dir + "\n";
                 });
             }
-            // text=+ "\n";
-            var checkSum = checksum_algorithms.trim();
-            if(checkSum !== ""){
-                text += "# Checksum Algorithms\n";
-                text += "Checksums = " + checkSum.toLowerCase() + "\n";
-            }
+           
 
             // Replace newline characters with <br>
             // previewField.innerHTML = text.replace(/\n/g, "<br>");
