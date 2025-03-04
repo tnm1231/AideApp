@@ -4,7 +4,7 @@ from .homes import HomeView
 from .home2 import getViewHome
 from .taskHandle import TaskStatusView, task_pause, task_resume
 from .tasks import task_status
-from .aidecmd import compare
+from .aidecmd import compare, update
 from .aideConfig import CustomConfigView
 from .aideConfig import check_config, view_configs, get_config_content, delete_config_file, select_config_files
 # from .cronJob import run_aide_cronjob
@@ -59,6 +59,7 @@ routes_blueprint.add_url_rule('/cron-job-delete/<string:cronId>', view_func=Cron
 
 
 routes_blueprint.add_url_rule('/compare-aide-database', 'compare', compare, methods=['POST'])
+routes_blueprint.add_url_rule('/update-aide-database', 'update', update, methods=['POST'])
 
 routes_blueprint.add_url_rule('/mail', view_func=MailView.as_view('mail'))
 # routes_blueprint.add_url_rule('/tasks', view_func=TaskAPI.as_view('tasks')

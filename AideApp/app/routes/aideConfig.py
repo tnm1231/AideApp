@@ -216,24 +216,26 @@ class CustomConfigView(MethodView):
             normal_rule = rules.get('normal_rule_button','')
             dataonly_rule = rules.get('dataonly_rule_button', '')
             
-            upac_settings = request.form.get('upac_settings', '')
-            environment_path = request.form.get('environment_path', '')
-            database = request.form.get('database', '')
-            database_out = request.form.get('database_out', '')
-            database_new = request.form.get('database_new', '')
+            # upac_settings = request.form.get('upac_settings', '')
+            # environment_path = request.form.get('environment_path', '')
+            # database = request.form.get('database', '')
+            # database_out = request.form.get('database_out', '')
+            # database_new = request.form.get('database_new', '')
             gzip_db_out = request.form.get('gzip_db_out', '')   # Ensure boolean value
 
             # Other optional fields
             checksum_algorithms = request.form.get('checksum_algorithms', '')
-            report_url = request.form.get('report_url', '')
-            log_level = request.form.get('log_level', '')
-            report_level = request.form.get('report_level', '')
+            # report_url = request.form.get('report_url', '')
+            # log_level = request.form.get('log_level', '')
+            # report_level = request.form.get('report_level', '')
             report_base16 = request.form.get('report_base16', '') or 'false'
-            print("report_base16", report_base16)
+            # print("report_base16", report_base16)
             report_summarize_changes = request.form.get('report_summarize_changes', 'no')
             report_grouped = request.form.get('report_grouped', 'no')
             database_add_metadata = request.form.get('database_add_metadata', 'no')
             custom_rules = request.form.get('custom_rules', '')
+            rule_list = [dir.strip() for rule in custom_rules.split(',') if rule.strip()]
+            
             include_directories = request.form.get('include_directories', '')
             exclude_directories = request.form.get('exclude_directories', '')
             include_list = [dir.strip() for dir in include_directories.split(',') if dir.strip()]
@@ -243,41 +245,37 @@ class CustomConfigView(MethodView):
 
             # Write to config file
             with open(config_file_path, "w") as f:
-              
-                f.write(f"@@x_include_setenv UPAC_settingsd {upac_settings}\n")
-                f.write(f"@@x_include_setenv PATH {environment_path}\n")
-                f.write(f"@@define DBDIR {database}\n")
-                f.write(f"@@define LOGDIR {database_out}\n")
-                f.write(f"database_in=file:{database}\n")
-                f.write(f"database_out=file:{database_out}\n")
-                f.write(f"database_new=file:{database_new}\n")
+                f.write(f"@@x_include_setenv UPAC_settingsd /etc/aide/aide.settings.d\n")
+                f.write(f"@@x_include_setenv PATH /bin:/usr/bins\n")
+                f.write(f"@@define DBDIR /var/lib/aide/aide.db\n")
+                f.write(f"@@define LOGDIR /var/lib/aide/aide.db.new\n")
+                f.write(f"database_in=file:DBDIR\n")
+                f.write(f"database_out=file:LOGDIR\n")
+                f.write(f"database_new=file:LOGDIR\n")
+                f.write(f"log_level=warning\n")
+                f.write(f"report_level=changed_attributes\n")
+                f.write(f"report_format=json\n")  
                 if normal_rule:  # Kiểm tra nếu không rỗng
                     f.write(f"NORMAL = {normal_rule}\n")
                 if dataonly_rule:  # Kiểm tra nếu không rỗng
                     f.write(f"DATAONLY = {dataonly_rule}\n")
                 f.write(f"gzip_dbout={gzip_db_out}\n")
-                f.write(f"report_url={report_url}\n")
-                if log_level:
-                    f.write(f"log_level={log_level}\n")
-                if report_level:
-                    f.write(f"report_level={report_level}\n")
-                f.write(f"report_format=json\n")  
+                # f.write(f"report_url={report_url}\n")
+               
                 f.write(f"report_base16={report_base16}\n")
                 f.write(f"report_summarize_changes={report_summarize_changes}\n")
                 f.write(f"report_grouped={report_grouped}\n")
                 f.write(f"database_add_metadata={database_add_metadata}\n")
-                if custom_rules:
-                    f.write("# Custom Rules\n")
-                    f.write(custom_rules + "\n")
+                f.write("# Custom Rules\n")
+                for rule in rule_list:
+                    f.write(rule + "\n")
                 f.write("# Directories\n")
-                # f.write(include_directories + "\n")
                 for directory in include_list:
                     f.write(directory + " NORMAL" "\n")
-                # f.write(exclude_directories + "\n")
                 for directory in exclude_list:
                     f.write("!"+ directory + "\n")
+                f.write("# Checksum Algorithms\n")
                 if checksum_algorithms.strip():
-                    f.write("# Checksum Algorithms\n")
                     f.write("Checksums = " + checksum_algorithms.lower() + "\n")
 
             return {"success": "Configuration saved successfully."}, 200

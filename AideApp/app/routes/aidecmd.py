@@ -45,7 +45,7 @@ def compare():
 
 def update():
     print("update")
-    command = ["aide", "--updates", "--config=/etc/aide/aide.conf"]
+    command = ["aideinit"]
     try:
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         print("output compare", result.stdout.strip())

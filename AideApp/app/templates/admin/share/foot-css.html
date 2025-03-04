@@ -3,4 +3,35 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="{{ url_for('static', filename='assets/scripts/main.js') }}"></script>
 <script src="{{ url_for('static', filename='assets/scripts/admin.js') }}"></script>
-
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const updateButton = document.getElementById('UpdateDatebase');
+    updateButton.addEventListener("click", function(){
+        fetch('/update-aide-database', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            toastr.success("Running update command successfully!");
+            console.log(data);
+        })
+        .catch(error => {
+            toastr.error("Error running command: ", error);
+            console.log("Error running command: ", error);
+        });
+    })
+})
+    //  const compareButton = document.getElementById('CompareDatabase');
+    //     compareButton.addEventListener("click", function(){
+    //         console.log("Runnning compare command!")
+    //         fetch('/compare-aide-database', { method: 'POST' })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             toastr.success("Running compare command successfully!");
+    //             console.log(data);
+    //         })
+    //         .catch(error => {
+    //             toastr.error("Error running command: ", error);
+    //             console.log("Error running command: ", error);
+    //         });
+    //     })
+     
+</script>
