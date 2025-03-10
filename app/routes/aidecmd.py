@@ -4,7 +4,6 @@ import threading
 from flask import Flask, request, jsonify
 import os
 import json
-import pexpect
 
 
 # from flask_cors import CORS  
