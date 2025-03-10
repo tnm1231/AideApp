@@ -1,0 +1,92 @@
+{
+  "start_time": "2025-03-09 11:49:38 -0400",
+  "aide_version": "0.18.8",
+  "outline": "AIDE found differences between the two databases!!",
+  "report_ignore_e2fsattrs": "EINV",
+  "number_of_entries": {
+    "total": 20,
+    "added": 1,
+    "removed": 7,
+    "changed": 2
+  },
+  "added": {
+    "/var/www/html/.htaccess": "f+++++++++++++++++"
+  },
+  "removed": {
+    "/var/www/html/upload/4ac403f90af40d7e4e96cbbd9b705937": "d-----------------",
+    "/var/www/html/upload/4ac403f90af40d7e4e96cbbd9b705937/.htaccess": "f-----------------",
+    "/var/www/html/upload/80b68f9c57a80a52d7649bdb4ef80597": "d-----------------",
+    "/var/www/html/upload/82605fbbf8e0fe9c386159fe42f45fb2": "d-----------------",
+    "/var/www/html/upload/82605fbbf8e0fe9c386159fe42f45fb2/info1.php": "f-----------------",
+    "/var/www/html/upload/82605fbbf8e0fe9c386159fe42f45fb2/info2.php": "f-----------------",
+    "/var/www/html/upload/c0cb2dc1d4ecb0cc0cc1fa956b345436": "d-----------------"
+  },
+  "changed": {
+    "/var/www/html": "d =....amc..  .   ",
+    "/var/www/html/upload": "d =....amc.n  .   "
+  },
+  "details": {
+    "/var/www/html": {
+      "access_time": {
+        "old": "2025-03-08 05:07:01 -0500",
+        "new": "2025-03-08 05:20:01 -0500"
+      },
+      "modify_time": {
+        "old": "2025-03-08 05:06:08 -0500",
+        "new": "2025-03-08 05:19:52 -0500"
+      },
+      "change_time": {
+        "old": "2025-03-08 05:06:08 -0500",
+        "new": "2025-03-08 05:19:52 -0500"
+      }
+    },
+    "/var/www/html/upload": {
+      "access_time": {
+        "old": "2025-03-08 05:00:01 -0500",
+        "new": "2025-03-08 05:20:01 -0500"
+      },
+      "modify_time": {
+        "old": "2025-03-08 04:38:25 -0500",
+        "new": "2025-03-08 05:19:59 -0500"
+      },
+      "change_time": {
+        "old": "2025-03-08 04:38:25 -0500",
+        "new": "2025-03-08 05:19:59 -0500"
+      },
+      "link_count": {
+        "old": 6,
+        "new": 2
+      }
+    }
+  },
+  "databases": {
+    "/var/lib/aide/aide.db": {
+      "md5": "aIYE+limT0+VX90kMClmDw==",
+      "sha1": "1KGtOLiVuKnaIFes0RYs16X4g74=",
+      "sha256": "4ErsS1aU/8kPGyzJXjS9wrCb/a8eP7SJxsZq3rgPM7Q=",
+      "sha512": "bF0w7MS1uAEUmiG1T9l+Z+/pop83lkkccyuW0+8oibWVP+VTV/G0N3456yvkSWdR33wwEoYGlntDRqMOQUWhYg==",
+      "rmd160": "uIpAEL6wbcGo7FNfOWBwTuM50DY=",
+      "tiger": "DJLX9ehxcjvKCYj3SuAwOHdT6U+/4GyS",
+      "crc32": "C/+dNw==",
+      "crc32b": "pkrOJQ==",
+      "haval": "aLIy2PtkkVqWWPcCyUkinI4jfnW1bx17adceVSrpooU=",
+      "whirlpool": "0/F+bPQ/1tMZE8PfmbSavaKpd8+/N0yzTmX6CK6U6Old45uB3uIgqB4dbjzVmzbPEHxuO4Z+eQBksPuPDI+JmA==",
+      "gost": "w+nCAmVWOnaulJJ9TD8MZnPatKLiFaFm9a+cTKFkFao="
+    },
+    "/var/lib/aide/aide.db.new": {
+      "md5": "VAeD7HpylNo9j8E4DJhoyg==",
+      "sha1": "WwvJcCOpljYLAd2ptfbPLr5mm8A=",
+      "sha256": "u/MV4xB/SXtGgK/xKXiQNIetPMeOiIEgoUqyUKBvjO8=",
+      "sha512": "zSFbtPLBw5d7bovskVa4Ho0Ijuhw15RpIkjUh/tz0pyGrRHkslgtx0QzGzFDpCNHTf2wx1DFW5T/lVRgRAbdcg==",
+      "rmd160": "zFNhlxrWjvrCo1uyv65kPH4OnEA=",
+      "tiger": "tEiRNWspLmMC8niKiZVmRp9qm2UNewgj",
+      "crc32": "kbsdgw==",
+      "crc32b": "bW3/QA==",
+      "haval": "dytbO9UeZTdE5RMcKTUtDxobCZXrp4sI0Fvb+H91KZ8=",
+      "whirlpool": "+Smupf19kRmYljKsBiqToqGdgtV19vUV0jbURokgbjlOpvrMcQc/6zyhVPoPDODVCeduTPzJwoAlJ4lWHRaiPg==",
+      "gost": "OCtKziJl0IZTi3McVEPNw5yCcIQfsbitrd/qjuVQjHI="
+    }
+  },
+  "end_time": "2025-03-09 11:49:38 -0400",
+  "run_time_seconds": 0
+}

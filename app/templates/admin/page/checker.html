@@ -1,0 +1,2378 @@
+{% extends 'admin/share/master.html' %}
+{% block body %}
+<!-- create task scan -->
+<!-- <div class="main-card mb-12 card">
+        <div class="card-body">
+            <h5 class="card-title">Check File With Aide GUI</h5>
+            <form class="needs-validation" novalidate="" id="checkForm">
+                <div class="form-row">
+                    <div class="col-md-4 mb-3">
+                        <label>Name of Scan</label>
+                        <input type="text" class="form-control" id="inputTaskName" placeholder="Enter name of scan" required="">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="checkType">Check Type</label>
+                        <select class="mb-2 form-control" id="checkType">
+                            <option value="">Choose Check Type</option>
+                            <option value="fullSystem">Full System Check</option>
+                            <option value="specificFile">Check Specific File/Directory</option>
+                            <option value="detailCheck">Detailed Check</option>
+                            <option value="customConfig">Check with Custom Config</option>
+                            <option value="customConfigAndFile">Check with Custom Config to Specific File</option>
+                        </select>                       
+                    </div>
+                    <div class="col-md-4 mb-3" id="inputFileWrapper" style="display: none;">
+                        <label for="inputSpecificFile">Input File</label>
+                        <input type="text" class="form-control" id="inputSpecificFile" placeholder="Enter file name or directory to scan" required="">
+                    </div>
+                    <div class="col-md-4 mb-3" id="inputFileWrapper2" style="display: none;">
+                        <label for="inputCustomConfig">Input Custom Config</label>
+                        <input type="text" class="form-control" id="inputCustomConfig" placeholder="Enter custom config file" required="">
+                    </div>
+                </div>           
+                <button class="btn btn-primary" type="submit">Run</button>
+            </form>
+            <br>        
+        </div>
+    </div>  -->
+
+<!-- //view task -->
+<!-- <div class="row">
+        <div class="col-md-4" id="scanTask">        
+            {% for task in tasks%}
+            <div class="card mb-3 widget-content">
+                <div class="widget-content-outer">
+                    <div class="widget-content-wrapper">
+                        <div class="widget-content-left">
+                            <div class="widget-heading">{{ task.name }}</div>
+                            <div class="widget-subheading">
+                                {{ task.mapping_check_type }} 
+                                {% if task.specific_file %}
+                                - {{ task.specific_file }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="widget-content-right" style="display: flex">
+                            {% if task.status != "SUCCESS" %}   
+                                <button class="mb-2 mr-2 btn-transition btn btn-outline-warning task-action" data-task-id="{{ task.task_id }}" data-status="{{ task.status }}" style="display: block;">
+                                    {% if task.status in ["RESUMED", "PENDING"] %}
+                                        <i class="fa fa-fw" aria-hidden="true" title="Pause Task"></i>
+                                    {% else %}
+                                        <i class="fa fa-fw" aria-hidden="true" title="Resume Task"></i>
+                                    {% endif %}
+                                </button>
+                            {% endif %}
+                            <button class="mb-2 mr-2 btn-transition btn btn-outline-danger delete-task" type="button" data-toggle="modal" data-target="#deleteModal" data-task-id="{{task.task_id}}">
+                                <i class="fa fa-fw" aria-hidden="true" title="Copy to use close"></i>
+                            </button>                      
+                        </div>
+                    </div>
+                    <div class="widget-progress-wrapper">
+                        <div class="progress-bar-lg progress-bar-animated progress">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="47" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div>
+                        </div>
+                        <div class="progress-sub-label">
+                            <div class="sub-label-left">{{ task.created_at }}</div> 
+                            <div class="sub-label-right" data-toggle="modal" style="margin-top: 1%; display: block;">
+                                {% if task.status in ["PENDING", "RESUMED"] %}
+                                    <i class="fa fa-spinner fa-spin" id="spinner-icon" style="font-size: 21px;" style="display: block"></i>      
+                                {% endif %}
+                                {% if task.status == "SUCCESS" %}
+                                    <button class="mb-2 mr-2 btn-transition btn btn-outline-info view-result" type="button" data-toggle="modal" data-target="#viewResult" data-task-id="{{task.task_id}}">View result scan</button>                            
+                                {% endif %}
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div> -->
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="main-card mb-3 card">
+            <div class="card-header">Aide Scanning List</div>
+            <div class="card-header">
+                <br>
+                <div class="btn-actions-pane-left">
+                    <div role="group" class="btn-group-sm nav btn-group">
+                        <a class="btn-pill pl-3 btn btn-info" data-toggle="tab" href="#tab-eg12-0">Recent Scanning</a>
+                        <a class="btn-pill pl-3 btn btn-info" data-toggle="tab" href="#tab-eg12-1">Cron Job</a>
+                    </div>
+                </div>
+                <div class="btn-actions-pane-right">
+                    <div role="group" class="btn-group-sm btn-group">
+                        <button class="active btn btn-focus">Last Week</button>
+                        <button class="btn btn-focus">All Month</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab-eg12-0" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Type</th>
+                                    <th class="text-center">File/Directory</th>
+                                    <th class="text-center">Configuration File</th>
+                                    <th class="text-center">Created at</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in tasks%}
+                                <tr>
+                                    <td class="text-center text-muted">#{{ task.id }}</td>
+                                    <td class="text-center">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left mr-3">
+                                                    <div class="widget-content-left">
+                                                        <img width="40" class="rounded-circle"
+                                                            src="assets/images/avatars/3.jpg" alt="">
+                                                    </div>
+                                                </div>
+                                                <div class="widget-content-left flex2">
+                                                    <div class="widget-heading">{{ task.name }}</div>
+                                                    <!-- <div class="widget-subheading opacity-7">Etiam sit amet orci eget</div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        {{ task.mapping_check_type }}
+                                        <!-- {% if task.specific_file %}
+                                                - {{ task.specific_file }}
+                                                {% endif %} -->
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- {{ task.mapping_check_type }}  -->
+                                        {% if task.specific_file %}
+                                        {{ task.specific_file }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {{ task.custom_config if task.custom_config else "" }}                                    </td>
+                                    <td class="text-center">
+                                        {{ task.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if task.status == "SUCCESS" %}
+                                        <div class="badge badge-success">{{ task.status }}</div>
+                                        {% endif %}
+                                        {% if task.status == "PENDING" %}
+                                        <div class="badge badge-warning">{{ task.status }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if task.status == "SUCCESS" %}
+                                        <button type="button" class="btn btn-primary btn-sm view-result"
+                                            data-toggle="modal" data-target="#viewResult"
+                                            data-task-id="{{task.task_id}}">View Result</button>
+                                        {% endif %}
+                                        <!-- <button class="mb-2 mr-2 btn-transition btn btn-outline-danger delete-task" type="button" data-toggle="modal" data-target="#deleteModal" data-task-id="{{task.task_id}}">
+                                                    <i class="fa fa-fw" aria-hidden="true" title="Copy to use close"></i>
+                                                </button>   -->
+                                        <!-- <button type="button" class="btn btn-danger btn-sm delete-task" data-toggle="modal" data-target="#deleteModal" data-task-id="{{task.task_id}}"><i class="fa fa-fw" aria-hidden="true" title="Copy to use close"></i></button> -->
+                                        <button type="button" class="btn btn-danger btn-sm delete-task"
+                                            data-toggle="modal" data-target="#deleteModal"
+                                            data-task-id="{{task.task_id}}"><i class="fa fa-fw" aria-hidden="true"
+                                                title="Copy to use trash"></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tab-eg12-1" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Job</th>
+                                    <th class="text-center">Time</th>
+                                    <th class="text-center">Last Modified</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cron_job in cronJobs %}
+                                <tr>
+                                    <td class="text-center text-muted">#{{ cron_job.id }}</td>
+                                    <td class="text-center">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left mr-3">
+                                                    <div class="widget-content-left">
+                                                        <img width="40" class="rounded-circle"
+                                                            src="assets/images/avatars/3.jpg" alt="">
+                                                    </div>
+                                                </div>
+                                                <div class="widget-content-left flex2">
+                                                    <div class="widget-heading">{{ cron_job.name }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if cron_job.startup == 'yes' %}
+                                        {% if cron_job.config_file != '' %}
+                                        <code>/usr/share/aide/bin/dailyaidecheck --crondaily --config={{ cron_job.config_file }}</code>
+                                        {% else %}
+                                        <code>/usr/share/aide/bin/dailyaidecheck --crondaily</code>
+                                        {% endif %}
+                                        {% else %}
+                                        {% if cron_job.config_file != '' %}
+                                        <code>/usr/share/aide/bin/dailyaidecheck --crondaily --config={{ cron_job.config_file }}</code>
+                                        {% else %}
+                                        <code> /usr/share/aide/bin/dailyaidecheck --crondaily</code>
+                                        {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if cron_job.startup == 'yes' %}
+                                        <code> @reboot </code>
+                                        {% else %}
+                                        <code>{{ cron_job.minute }} {{ cron_job.hour }} {{ cron_job.day }} {{ cron_job.month }} {{ cron_job.week }}</code>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- {{cron_job.created_at}} -->
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-info btn-sm " data-toggle="modal"
+                                            data-target=""><i class="fa fa-fw" aria-hidden="true"
+                                                title="Copy to use play"></i> Run</button>
+                                        <button type="button" class="btn btn-primary btn-sm " data-toggle="modal"
+                                            data-target=""><i class="fa fa-fw" aria-hidden="true"
+                                                title="Copy to use edit"></i> Edit</button>
+                                        <button type="button" class="btn btn-info btn-sm " data-toggle="modal"
+                                            data-target=""><i class="fa fa-fw" aria-hidden="true"
+                                                title="Copy to use pause"></i> Stop</button>
+                                        <button type="button" class="btn btn-danger btn-sm delete-cron"
+                                            data-cron-id="{{ cron_job.id }}" data-toggle="modal"
+                                            data-target="#deleteModal"><i class="fa fa-fw" aria-hidden="true"
+                                                title="Copy to use trash"></i></button>
+                                        <!-- <button type="button" class="btn btn-danger btn-sm delete-task" c data-task-id="9bda7322-1703-480d-8742-4923936d013e"><i class="fa fa-fw" aria-hidden="true" title="Copy to use trash"></i></button> -->
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="d-block text-center card-footer">
+                <!-- <button class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i class="pe-7s-trash btn-icon-wrapper"> </i></button>
+                    <button class="btn-wide btn btn-success">Save</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block modal %}
+<!-- modal pop-up ensure confirm with their delete -->
+<div class="modal fade show" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-modal="true" style="display: none; padding-left: 15px; margin-top: 8%;  margin-top: 9%;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Scan Confirm</h5>
+                <button type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure to delete this scan permanently?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmDelete">yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-lg" id="showCompareResult" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-modal="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Aide Compare Database Result</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 card text-white bg-success">
+                    <div class="card-header" id="aideStatus"></div>
+                </div>
+
+                <!-- <table class="mb-0 table  table-bordered">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Total</th>
+                               
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">Number of Entries</th>
+                                <td>156</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table> -->
+
+                <!-- 
+                <table class="mb-0 table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Hash Algorithm</th>
+                            <th>/var/lib/aide/aide.db</th>
+                            <th>/var/lib/aide/aide.db.new</th>
+                        </tr>
+                    </thead>
+                    <tbody id="CompareTBody">
+                
+                    </tbody>
+                </table> -->
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <div class="main-card mb-3 card">
+                            <div class="card-body">
+                                <div class="scroll-area-lg">
+                                    <ul class="list-group scrollbar-container ps ps--active-y">
+                                        <div class="table-responsive">
+                                            <table class="mb-0 table table-bordered table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Hash Algorithm</th>
+                                                        <th>/var/lib/aide/aide.db</th>
+                                                        <th>/var/lib/aide/aide.db.new</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="CompareTBody">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                            <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                                        </div>
+                                        <div class="ps__rail-y" style="top: 0px; right: 0px; height: 243px;">
+                                            <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 94px;"></div>
+                                        </div>
+                                    </ul>
+                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                        <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"> </div>
+                                    </div>
+                                    <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                        <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="main-card mb-3 card">
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-outer">
+                                                <div class="widget-content-wrapper">
+                                                    <div class="widget-content-left">
+                                                        <div class="widget-heading">Total number of entries
+                                                        </div>
+                                                        <div class="widget-subheading"></div>
+                                                    </div>
+                                                    <div class="widget-content-right">
+                                                        <div id="totalEntriesCompare" class="widget-numbers text-success">170</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-outer">
+                                                <div class="widget-content-wrapper">
+                                                    <div class="widget-content-left">
+                                                        <div class="widget-heading">Added entries</div>
+                                                        <div class="widget-subheading"></div>
+                                                    </div>
+                                                    <div class="widget-content-right">
+                                                        <div id="addedEntriesCompare" class="widget-numbers text-primary">1</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-outer">
+                                                <div class="widget-content-wrapper">
+                                                    <div class="widget-content-left">
+                                                        <div class="widget-heading">Removed entries</div>
+                                                        <div class="widget-subheading"></div>
+                                                    </div>
+                                                    <div class="widget-content-right">
+                                                        <div id="removedEntriesCompare" class="widget-numbers text-danger">0</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-outer">
+                                                <div class="widget-content-wrapper">
+                                                    <div class="widget-content-left">
+                                                        <div class="widget-heading">Changed entries</div>
+                                                        <div class="widget-subheading"></div>
+                                                    </div>
+                                                    <div class="widget-content-right">
+                                                        <div id="changedEntriesCompare" class="widget-numbers text-warning">1</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="main-card mb-3 card">
+                            <div class="card-body">
+                                <h5 class="card-title">Added entries</h5>
+                                <div class="scroll-area-md">
+                                    <ul class="list-group scrollbar-container ps">
+                                        <table class="mb-0 table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>File</th>
+                                                    <th>Attribute</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="addedEntriesTableCompare"><tr><td style="max-width: 300px;">/home/Phu/TestAide/womanday222</td><td>f+++++++++++++++++</td></tr></tbody>
+                                        </table>
+                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></ul>
+                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                        <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                        </div>
+                                    </div>
+                                    <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                        <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="main-card mb-3 card">
+                            <div class="card-body">
+                                <h5 class="card-title">Removed entries</h5>
+                                <div class="scroll-area-md">
+                                    <ul class="list-group scrollbar-container ps">
+                                        <table class="mb-0 table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>File</th>
+                                                    <th>Attribute</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="removedEntriesTableCompare"></tbody>
+                                        </table>
+                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></ul>
+                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                        <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                        </div>
+                                    </div>
+                                    <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                        <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="main-card mb-3 card">
+                            <div class="card-body">
+                                <h5 class="card-title">Removed entries</h5>
+                                <div class="scroll-area-md">
+                                    <ul class="list-group scrollbar-container ps">
+                                        <table class="mb-0 table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>File</th>
+                                                    <th>Attribute</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="changedEntriesTableCompare"><tr><td style="max-width: 300px;">/home/Phu/TestAide</td><td>d =.....mc..  .   </td></tr></tbody>
+                                        </table>
+                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></ul>
+                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                        <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                        </div>
+                                    </div>
+                                    <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                        <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="main-card mb-3 card">
+                            <div class="card-body"><h5 class="card-title">Detail change</h5>
+                                <table id="detailChangeCompareTable" class="mb-0 table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Time Category</th>
+                                        <th>Path</th>
+                                        <th>Old</th>
+                                        <th>New</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- <tr><th scope="row">1</th><th scope="row">modify_time</th><td rowspan="2" style="max-width: 380px;">/home/Phu/TestAide</td><td style="max-width: 100px;">10:41:39 March 7, 2025</td><td style="max-width: 100px;">15:36:32 March 8, 2025</td></tr><tr><th scope="row">1</th><th scope="row">change_time</th><td style="max-width: 100px;">10:41:39 March 7, 2025</td><td style="max-width: 100px;">15:36:32 March 8, 2025</td></tr> -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="col-md-6">
+                        <div class="main-card mb-3 card">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="widget-content p-0">
+                                        <div class="widget-content-outer">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading">Start Time</div>
+                                                    <div class="widget-subheading" id="startDate"></div>
+                                                </div>
+                                                <div class="widget-content-right">
+                                                    <div class="widget-numbers text-success" id="startTime"></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="widget-content p-0">
+                                        <div class="widget-content-outer">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading">End Time</div>
+                                                    <div class="widget-subheading" id="endDate"></div>
+                                                </div>
+                                                <div class="widget-content-right">
+                                                    <div class="widget-numbers text-primary" id="endTime"></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="widget-content p-0">
+                                        <div class="widget-content-outer">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading">Run Time</div>
+                                                    <!-- <div class="widget-subheading">People Interested</div> -->
+                                                </div>
+                                                <div class="widget-content-right">
+                                                    <div class="widget-numbers text-danger" id="runTime"></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div>AIDE version 0.18.8</div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal view result -->
+<div class="modal fade bd-example-modal-lg" id="viewResult" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-modal="true" style="display: none; ">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Scan Result</h5>
+                <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="scroll-area-lg">
+                    <ul class="list-group scrollbar-container ps--active-y ps">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-outer">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left">
+                                                                <div class="widget-heading">Total number of entries
+                                                                </div>
+                                                                <div class="widget-subheading"></div>
+                                                            </div>
+                                                            <div class="widget-content-right">
+                                                                <div id="totalEntries"
+                                                                    class="widget-numbers text-success"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-outer">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left">
+                                                                <div class="widget-heading">Added entries</div>
+                                                                <div class="widget-subheading"></div>
+                                                            </div>
+                                                            <div class="widget-content-right">
+                                                                <div id="addedEntries"
+                                                                    class="widget-numbers text-primary"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-outer">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left">
+                                                                <div class="widget-heading">Removed entries</div>
+                                                                <div class="widget-subheading"></div>
+                                                            </div>
+                                                            <div class="widget-content-right">
+                                                                <div id="removedEntries"
+                                                                    class="widget-numbers text-danger">1231</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="widget-content p-0">
+                                                    <div class="widget-content-outer">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left">
+                                                                <div class="widget-heading">Changed entries</div>
+                                                                <div class="widget-subheading"></div>
+                                                            </div>
+                                                            <div class="widget-content-right">
+                                                                <div id="changedEntries"
+                                                                    class="widget-numbers text-warning">123</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="display: block">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">The attributes of the (uncompressed) database(s)</h5>
+                                        <div class="widget-subheading" id="dbResult">/var/lib/aide/aide.db</div>
+                                        <br>
+                                        <div class="scroll-area-md">
+                                            <ul class="list-group scrollbar-container ps--active-y ps">
+                                                <table class="mb-0 table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Algorithm</th>
+                                                            <th>Value</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="AlgorithmHash">
+                                                        <!-- <tr>
+                                                            <td>MD5</td>
+                                                            <td>0anQLiND+ROvDkli5JU4QA==</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>SHA1</td>
+                                                            <td>fGy+oEhPYY8fy7XJbYWfTm5l9SM=</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>SHA256</td>
+                                                            <td>LOFi51BQzIIpW9k4obMAdI2BXKJlA/dH5c4ccCk/YQQ=</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>MD5</td>
+                                                            <td>0anQLiND+ROvDkli5JU4QA==</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>SHA1</td>
+                                                            <td>fGy+oEhPYY8fy7XJbYWfTm5l9SM=</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>SHA256</td>
+                                                            <td>LOFi51BQzIIpW9k4obMAdI2BXKJlA/dH5c4ccCk/YQQ=</td>
+                                                        </tr> -->
+                                                    </tbody>
+                                                </table>
+                                            </ul>
+                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                                </div>
+                                            </div>
+                                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6" style="display: block">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Added entries</h5>
+                                        <div class="scroll-area-md">
+                                            <ul class="list-group scrollbar-container ps--active-y ps">
+                                                <table class="mb-0 table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>File</th>
+                                                            <th>Attribute</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="addedEntriesTable">
+                                                       
+                                                    </tbody>
+                                                </table>
+                                            </ul>
+                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                                </div>
+                                            </div>
+                                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="display: block">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Removed entries</h5>
+                                        <div class="scroll-area-md">
+                                            <ul class="list-group scrollbar-container ps--active-y ps">
+                                                <table class="mb-0 table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>File</th>
+                                                            <th>Attribute</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="removedEntriesTable">
+                                                       
+                                                    </tbody>
+                                                </table>
+                                            </ul>
+                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                                </div>
+                                            </div>
+                                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="display: block">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Removed entries</h5>
+                                        <div class="scroll-area-md">
+                                            <ul class="list-group scrollbar-container ps--active-y ps">
+                                                <table class="mb-0 table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>File</th>
+                                                            <th>Attribute</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="changedEntriesTable">
+                                                       
+                                                    </tbody>
+                                                </table>
+                                            </ul>
+                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                                </div>
+                                            </div>
+                                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="main-card mb-3 card">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <div class="widget-content p-0">
+                                                <div class="widget-content-outer">
+                                                    <div class="widget-content-wrapper">
+                                                        <div class="widget-content-left">
+                                                            <div class="widget-heading">Start Time</div>
+                                                            <div class="widget-subheading" id="startDateResult">March 7, 2025</div>
+                                                        </div>
+                                                        <div class="widget-content-right">
+                                                            <div class="widget-numbers text-success" id="startTimeResult">10:41:45</div>
+                                                        </div>
+                                                    </div>
+        
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="widget-content p-0">
+                                                <div class="widget-content-outer">
+                                                    <div class="widget-content-wrapper">
+                                                        <div class="widget-content-left">
+                                                            <div class="widget-heading">End Time</div>
+                                                            <div class="widget-subheading" id="endDateResult">March 7, 2025</div>
+                                                        </div>
+                                                        <div class="widget-content-right">
+                                                            <div class="widget-numbers text-primary" id="endTimeResult">10:41:46</div>
+                                                        </div>
+                                                    </div>
+        
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="widget-content p-0">
+                                                <div class="widget-content-outer">
+                                                    <div class="widget-content-wrapper">
+                                                        <div class="widget-content-left">
+                                                            <div class="widget-heading">Run Time</div>
+                                                            <!-- <div class="widget-subheading">People Interested</div> -->
+                                                        </div>
+                                                        <div class="widget-content-right">
+                                                            <div class="widget-numbers text-danger" id="runTimeResult">1 seconds</div>
+                                                        </div>
+                                                    </div>
+        
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>  
+                            <div class="col-lg-12">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body"><h5 class="card-title">Detail change</h5>
+                                        <table id="detailChangeTable" class="mb-0 table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Time Category</th>
+                                                <th>Path</th>
+                                                <th>Old</th>
+                                                <th>New</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <!-- <tr>
+                                                <th scope="row">modify_time</th>
+                                                <td>/home/Phu/TestAide</td>
+                                                <td>2025-03-06 22:41:39 -0500</td>
+                                                <td>2025-03-08 03:36:32 -0500</td>
+                                            </tr>
+                                            <tr>    
+                                                <th scope="row">change_time</th>
+                                                <td>/home/Phu/TestAide</td>
+                                                <td>2025-03-06 22:41:39 -0500</td>
+                                                <td>2025-03-08 03:36:32 -0500</td>
+                                            </tr> -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>  
+                            <!-- <div class="col-md-4" style="display: block">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Added entries</h5>
+                                        <div class="scroll-area-md">
+                                            <ul class="list-group scrollbar-container ps--active-y ps"
+                                                id="listAddedEntries">
+                                            </ul>
+                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                                </div>
+                                            </div>
+                                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="display: block">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Removed entries</h5>
+                                        <div class="scroll-area-md">
+                                            <ul class="list-group scrollbar-container ps--active-y ps"
+                                                id="listRemovedEntries">
+                                            </ul>
+                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                                </div>
+                                            </div>
+                                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="display: block">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Changed entries</h5>
+                                        <div class="scroll-area-md">
+                                            <ul class="list-group scrollbar-container ps--active-y ps"
+                                                id="listChangedEntries">
+                                            </ul>
+                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
+                                                </div>
+                                            </div>
+                                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                      
+                            <!-- <div class="col-md-6">
+                            <div class="main-card mb-3 card">
+                                <div class="card-body">
+                                    <div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+        
+                                            </div>
+                                        </div>
+                                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                            <div style="position:absolute;width:200%;height:200%;left:0; top:0">
+        
+                                        </div>
+                                    </div>
+                                </div>
+                                    <h5 class="card-title">Pie Chart</h5>
+                                    <canvas id="chart-area" width="604" height="301" style="display: block; height: 201px; width: 403px;" class="chartjs-render-monitor"></canvas>
+                                </div>
+                            </div>
+                        </div>   -->
+                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                            </div>
+                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
+                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;"></div>
+                            </div>
+                       
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div>AIDE version 0.18.8</div>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal create scan task -->
+<div class="modal fade bd-example-modal-lg show" id="createScan" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-modal="true" style="display: none; padding-left: 15px; margin-top: 1%;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Scan Result</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div clas="modal-body">
+                <div class="main-card mb-12 card">
+                    <div class="card-body">
+                        <h5 class="card-title">File Integrity With Aide GUI</h5>
+                        <form class="needs-validation" novalidate="" id="checkForm">
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
+                                    <label>Name of Scan</label>
+                                    <input type="text" class="form-control" id="inputTaskName"
+                                        placeholder="Enter name of scan" required="">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="checkType">Check Type</label>
+                                    <select class="mb-2 form-control" id="checkType">
+                                        <option value="">Choose Check Type</option>
+                                        <option value="fullSystem">Full System Check</option>
+                                        <option value="specificFile">Check Specific File/Directory</option>
+                                        <option value="detailCheck">Detailed Check</option>
+                                        <option value="customConfig">Check with Custom Config</option>
+                                        <option value="customConfigAndFile">Check with Custom Config to Specific File
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3" id="inputFileWrapper" style="display: none;">
+                                    <label for="inputSpecificFile">Input File</label>
+                                    <input type="text" class="form-control" id="inputSpecificFile"
+                                        placeholder="Enter file name or directory to scan" required="">
+                                </div>
+                                <!-- <div class="col-md-4 mb-3" id="inputFileWrapper2" style="display: none;">
+                                    <label for="inputCustomConfig">Input Custom Config</label>
+                                    <input type="text" class="form-control" id="inputCustomConfig"
+                                        placeholder="Enter custom config file" required="">
+                                </div> -->
+                                <div class="col-md-4 mb-3" id="inputFileWrapper2" style="display: none;">
+                                        <div class="position-relative form-group">
+                                            <label>Configuration Template(Optional)</label>
+                                            <select id="createConfigFile" class="form-control" name="configuration">
+                                               <option value="">None</option>
+                                            </select>
+                                        </div>  
+                                        <div>
+                                                <button type="button" class="mb-2 mr-2 btn btn-info" id="viewConfigCreate" data-toggle="modal" data-target="#showConfigCompare">View Config</button>                               
+                                        </div>                                      
+                                </div>
+                                <!-- <div class="col-md-2 mb-3" id="inputFileWrapper2" style="display: none;">
+                                    <button type="button" class="mb-2 mr-2 btn btn-info" id="viewConfig" data-toggle="modal" data-target="#showConfig">View Config</button>                               
+                                </div> -->
+                                 
+
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="command">Command</label>
+                                    <input id="createScanDemo" type="text" class="form-control" readonly="" placeholder="">
+                                    <!-- <input type="text" class="form-control" disabled placeholder=""> -->
+                                </div>
+                            </div>
+                            <!-- <div class="form-row"> 
+                            <input type="checkbox" id="cronJobCheck"  value="true" style="margin-right: 6px; margin-left: 7px">  
+                            <label style="margin-top: 8px;"> Set cron job for this scan</label>
+                        </div>
+                        <div id="cronJob" style="display: none;">
+                            <label style="margin-top: 8px; font-weight: bold;">Quick Schedule</label>
+                            <div class="form-row">
+                                <button id="startup" class="col-md-1 mb-2 mr-2 btn btn-primary">Startup</button>
+                                <button id="hourly" class="col-md-1 mb-2 mr-2 btn btn-primary">Hourly</button>
+                                <button id="daily" class="col-md-1 mb-2 mr-2 btn btn-primary">Daily</button>
+                                <button id="weekly" class="col-md-1 mb-2 mr-2 btn btn-primary">Weekly</button>
+                                <button id="monthly" class="col-md-1 mb-2 mr-2 btn btn-primary">Monthly</button>
+                                <button id="yearly" class="col-md-1 mb-2 mr-2 btn btn-primary">Yearly</button>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-2 mb-3">
+                                    <label for="minute">Minute</label>
+                                    <input type="number" id="minute" class="form-control" placeholder="*" min="0" max="59" required>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="hour">Hour</label>
+                                    <input type="number" id="hour" class="form-control" placeholder="*" min="0" max="23" required>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="day">Day</label>
+                                    <input type="number" id="day" class="form-control" placeholder="*" min="1" max="31" required>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="month">Month</label>
+                                    <input type="number" id="month" class="form-control" placeholder="*" min="1" max="12" required>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label for="week">Week</label>
+                                    <input type="number" id="week" class="form-control" placeholder="*" min="0" max="6" required>
+                                </div>  
+                                <div class="col-md-1 mb-3">
+                                    <button class="mb-2 mr-2 btn btn-primary" style="margin-top: 33px; margin-left: 20px">Set</button> 
+                                </div> 
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-12 mb-3">
+                                    <label>Job</label>
+                                    <input id="cronjobDemo" type="text" class="form-control" readonly placeholder="">
+                                </div> 
+                            </div>
+                        </div> -->
+
+                        </form>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div>AIDE version 0.18.8</div>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="createScanTask" class="btn btn-primary">Run Scan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-lg show" id="createCronJob" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel2" aria-modal="true" style="display: none; padding-left: 15px; margin-top: 1%;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Scan Result</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div clas="modal-body">
+                <div class="main-card mb-12 card">
+                    <div class="card-body">
+                        <h5 class="card-title">Cron Job With Aide GUI</h5>
+                        <form class="needs-validation" novalidate="" id="cronjobForm">
+                            <div id="cronJob">
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-3">
+                                        <label style="margin-top: 8px; font-weight: bold;">Name (Optional)</label>
+                                        <input id="cronName" type="text" class="form-control" placeholder="">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label style="margin-top: 8px; font-weight: bold;">Configuration
+                                            Template(Optional)</label>
+                                        <input id="configFileCompare" type="text" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-12 mb-3">
+                                        <label style="margin-top: 8px; font-weight: bold;">Quick Schedule</label>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <button id="startup" type="button"
+                                            class="col-md-1 mb-2 mr-2 btn btn-primary">Startup</button>
+                                        <button id="hourly" type="button"
+                                            class="col-md-1 mb-2 mr-2 btn btn-primary">Hourly</button>
+                                        <button id="daily" type="button"
+                                            class="col-md-1 mb-2 mr-2 btn btn-primary">Daily</button>
+                                        <button id="weekly" type="button"
+                                            class="col-md-1 mb-2 mr-2 btn btn-primary">Weekly</button>
+                                        <button id="monthly" type="button"
+                                            class="col-md-1 mb-2 mr-2 btn btn-primary">Monthly</button>
+                                        <button id="yearly" type="button"
+                                            class="col-md-1 mb-2 mr-2 btn btn-primary">Yearly</button>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-2 mb-3">
+                                        <label for="minute">Minute</label>
+                                        <!-- <input type="number" id="minute" class="form-control" placeholder="*" min="0" max="59" required> -->
+                                        <input type="text" id="minute" class="form-control" placeholder="*" required>
+
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="hour">Hour</label>
+                                        <!-- <input type="number" id="hour" class="form-control" placeholder="*" min="0" max="23" required> -->
+                                        <input type="text" id="hour" class="form-control" placeholder="*" required>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="day">Day</label>
+                                        <!-- <input type="number" id="day" class="form-control" placeholder="*" min="1" max="31" required> -->
+                                        <input type="text" id="day" class="form-control" placeholder="*" required>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="month">Month</label>
+                                        <!-- <input type="number" id="month" class="form-control" placeholder="*" min="1" max="12" required> -->
+                                        <input type="text" id="month" class="form-control" placeholder="*" required>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="week">Week</label>
+                                        <!-- <input type="number" id="week" class="form-control" placeholder="*" min="0" max="6" required> -->
+
+                                        <input type="text" id="week" class="form-control" placeholder="*" required>
+                                    </div>
+                                    <!-- <div class="col-md-1 mb-3">
+                                        <button class="mb-2 mr-2 btn btn-primary" style="margin-top: 33px; margin-left: 20px">Set</button> 
+                                    </div>  -->
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-12 mb-3">
+                                        <label>Job</label>
+                                        <input id="cronjobDemo" type="text" class="form-control" readonly
+                                            placeholder="">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <input type="checkbox" id="mailingCheck" value="true"
+                                    style="margin-right: 6px; margin-left: 7px">
+                                <label style="margin-top: 8px;">Send Aide Scanning Result Via Email</label>
+                            </div>
+                        </form>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div id="timestamp"></div>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="setCronJob" class="btn btn-primary">Set</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal show compare task -->
+<div class="modal fade bd-example-modal-lg show" id="showConfigCompare" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-modal="true" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel4">Configuration File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" >
+                    <div class="col-md-12">
+                        <div class="main-card mb-3 card" id="fileContent2">
+                            <!-- <div class="card-body">
+                                <h5 class="card-title">Basic Example</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!-- <button type="button" class="btn btn-primary" id="confirmDelete">yes</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade show" id="overWriteNew" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-modal="true" style="display: none; padding-left: 15px; margin-top: 8%;  margin-top: 9%;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Overwrite New Database Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Overwrite existing /var/lib/aide/aide.db.new? </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="ovNewY">Yes</button>
+                <button type="button" class="btn btn-secondary" id="ovNewNo" class="close"
+                    data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade show" id="overWriteOld" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-modal="true" style="display: none; padding-left: 15px; margin-top: 8%;  margin-top: 9%;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Overwrite Old Database Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Overwrite /var/lib/aide/aide.db?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="ovOldU" class="close"
+                    data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-secondary" id="ovOldNo" class="close"
+                    data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var checkTypeDropdown = document.getElementById('checkType');
+        var inputFileWrapper = document.getElementById('inputFileWrapper');
+        var inputFileWrapper2 = document.getElementById('inputFileWrapper2');
+        var checkForm = document.getElementById('checkForm');
+        // var spinner = document.getElementById('spinner');
+        var addedEntriesGet = document.getElementById('addedEntriesDisplay');
+        var removedEntriesGet = document.getElementById('removedEntriesDisplay');
+        var changedEntriesGet = document.getElementById('changedEntriesDisplay');
+        var taskName = document.getElementById('inputTaskName');
+
+        checkTypeDropdown.addEventListener('change', function () {
+            inputFileWrapper.style.display = 'none';
+            inputFileWrapper2.style.display = 'none';
+
+            if (this.value === 'specificFile') {
+                inputFileWrapper.style.display = 'block';
+            } else if (this.value === 'customConfig') {
+                inputFileWrapper2.style.display = 'block';
+            } else if (this.value === 'customConfigAndFile') {
+                inputFileWrapper2.style.display = 'block';
+                inputFileWrapper.style.display = 'block';
+            }
+        });
+
+
+
+
+        //cron job
+        const deleteCron = document.querySelectorAll(".delete-cron");
+        deleteCron.forEach(button => {
+            button.addEventListener("click", function () {
+                const cronId = this.getAttribute("data-cron-id");
+                //  
+                // Handle the "Confirm Delete" button
+                document.getElementById("confirmDelete").onclick = function () {
+                    deleteCronJob(cronId);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 500);
+
+                };
+            });
+        });
+        function deleteCronJob(cronId) {
+            fetch(`/cron-job-delete/${cronId}`, { // Use GET method with action parameter
+                method: "DELETE", // Specify GET instead of DELETE
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        toastr.success("Cron job deleted successfully!");
+                        // const taskCard = document.querySelector(`[data-cron-id="${cronId}"]`).closest(".card");
+                        // taskCard.remove();
+                    } else {
+                        toastr.error("Failed to delete cron job task: " + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.log("Error deleting cron job:", error);
+                    toastr.error("An error occurred while deleting the cron job.");
+                });
+        }
+
+
+
+
+        //let minute = document.getElementById('minute');
+        // let hour = document.getElementById('hour');
+        // let day = document.getElementById('day');
+        // let month = document.getElementById('month');
+        // let week = document.getElementById('week');
+
+        // function updateCronJob() {
+        //     let min = minute.value.trim() || '*';
+        //     let hr = hour.value.trim() || '*';
+        //     let d = day.value.trim() || '*';
+        //     let m = month.value.trim() || '*';
+        //     let w = week.value.trim() || '*';
+
+        //     document.getElementById('cronjobDemo').value = `${min} ${hr} ${d} ${m} ${w} /usr/share/aide/bin/dailyaidecheck --crondaily`;
+        // }
+        // [minute, hour, day, month, week].forEach((input) => {
+        //     input.addEventListener('input', updateCronJob);
+        // });
+        // let configfile = document.getElementById('cronConfigFile');
+        // let cronjobDemo = document.getElementById('cronjobDemo');
+
+        // configfile.addEventListener('input', function () {
+        //     let configValue = configfile.value.trim();
+        //     let existingValue = cronjobDemo.value.trim();
+
+        //     // Kiểm tra xem đã có "--config=" trong chuỗi chưa
+        //     let newValue;
+        //     if (existingValue.includes('--config=')) {
+        //         // Nếu đã có, chỉ cập nhật phần config
+        //         newValue = existingValue.replace(/--config=\S+/, `--config=${configValue}`);
+        //     } else if (configValue) {
+        //         // Nếu chưa có và có giá trị mới, thì thêm vào
+        //         newValue = `${existingValue} --config=${configValue}`;
+        //     } else {
+        //         // Nếu input bị xóa, thì xóa luôn phần config
+        //         newValue = existingValue.replace(/--config=\S+/, '').trim();
+        //     }
+
+        //     cronjobDemo.value = newValue;
+        // });
+
+
+
+
+
+
+        // function updateCronJob(){
+        //     let min = minute.value || '*';
+        //     let hr = hour.value || '*';
+        //     let d = day.value || '*';
+        //     let m = month.value || '*';
+        //     let w = week.value || '*';
+        //     cronjobDemo.value = ${min} ${hr} ${d} ${m} ${w} /usr/share/aide/bin/dailyaidecheck --crondaily;
+        // }
+        // [minute, hour, day, month, week].forEach((input) => {
+        //     input.addEventListener('input', updateCronJob);
+        // });
+
+        // function setCronValues(min, hr, d, m, w) {
+        //     document.getElementById('minute').value = min;
+        //     document.getElementById('hour').value = hr;
+        //     document.getElementById('day').value = d;
+        //     document.getElementById('month').value = m;
+        //     document.getElementById('week').value = w;
+        //     updateCronJob();
+        // }
+
+        // document.getElementById('startup').addEventListener('click', function (event) {
+        //     event.preventDefault();
+        //     setCronValues('', '', '', '', '');
+        //     document.getElementById('cronjobDemo').value = '@reboot /usr/share/aide/bin/dailyaidecheck --crondaily';
+        // });
+
+        // document.getElementById('hourly').addEventListener('click', function (event) {
+        //     event.preventDefault();
+        //     setCronValues('0', '*', '*', '*', '*');
+        // });
+
+        // document.getElementById('daily').addEventListener('click', function (event) {
+        //     event.preventDefault();
+        //     setCronValues('0', '0', '*', '*', '*');
+        // });
+
+        // document.getElementById('weekly').addEventListener('click', function (event) {
+        //     event.preventDefault();
+        //     setCronValues('0', '0', '*', '*', '0');
+        // });
+
+        // document.getElementById('monthly').addEventListener('click', function (event) {
+        //     event.preventDefault();
+        //     setCronValues('0', '0', '1', '*', '*');
+        // });
+
+        // document.getElementById('yearly').addEventListener('click', function (event) {
+        //     event.preventDefault();
+        //     setCronValues('0', '0', '1', '1', '*');
+        // });
+
+        // document.getElementById('setCronJob').addEventListener('click', function (event) {
+        //     event.preventDefault();
+        //     let formData = new FormData();
+        //     formData.append('name', document.getElementById('cronName').value);
+        //     formData.append('configFile', document.getElementById('cronConfigFile').value);
+        //     formData.append('minute', document.getElementById('minute').value);
+        //     formData.append('hour', document.getElementById('hour').value);
+        //     formData.append('day', document.getElementById('day').value);
+        //     formData.append('month', document.getElementById('month').value);
+        //     formData.append('week', document.getElementById('week').value);
+
+        //     // let cronValue = document.getElementById('cronjobDemo').value;
+        //     // formData.append('cronExpression', cronValue);
+
+        //     fetch('/cronjob', {
+        //         method: 'POST',
+        //         body: formData,
+        //     })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.error) {
+        //                 toastr.error(`Error: ${data.error}`);
+        //             } else {
+        //                 toastr.success('Cron job created successfully!');
+        //                 setTimeout(() => location.reload(), 1000);
+        //             }
+        //         })
+        //         .catch(error => toastr.error(`Error: ${error.message}`));
+        // });
+
+
+
+        //create task
+        const createScanTask = document.getElementById('createScanTask');
+
+        createScanTask.addEventListener('click', function () {
+            event.preventDefault();
+            var formData = new FormData();
+            formData.append('checkType', checkTypeDropdown.value);
+            formData.append('taskName', taskName.value);
+            if (inputFileWrapper.style.display === 'block' && document.getElementById('inputSpecificFile').value) {
+                formData.append('specificFile', document.getElementById('inputSpecificFile').value);
+            }
+
+            if (inputFileWrapper2.style.display === 'block' && document.getElementById('createConfigFile').value) {
+                formData.append('customConfig', document.getElementById('createConfigFile').value);
+            }
+            checkForm.reset();
+            setTimeout(function () {
+                location.reload();
+            }, 1000);
+
+            fetch('/check', {
+                method: 'POST',
+                body: formData,
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+
+                    if (data.error) {
+                        toastr.error(`Error: ${data.error}`)
+                        console.log(data.error)
+                    } else {
+                        toastr.success('Scan created successfully!')
+                    }
+                })
+                .catch((error) => {
+                    toastr.error(`Error: ${error.message}`);
+                });
+        });
+
+        function updateCommandCreate() {
+            const taskName = document.getElementById('inputTaskName').value;
+            const checkType = document.getElementById('checkType').value;
+            const inputFile = document.getElementById('inputSpecificFile').value.trim();
+            const configFile = document.getElementById('createConfigFile').value.trim();
+
+
+            let configFilePath = configFile ? `/etc/aide/${configFile}` : "/etc/aide/aide.conf";
+
+            let command = `aide --check --config=${configFilePath}`;
+            
+            if (inputFile) {
+                command += ` --limit=${inputFile}`;
+            }
+
+            document.getElementById('createScanDemo').value = command;
+        }
+
+        document.getElementById('inputSpecificFile').addEventListener('input', updateCommandCreate);
+        document.getElementById('createConfigFile').addEventListener('change', updateCommandCreate);
+        document.getElementById('inputSpecificFile').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                updateCommandCreate();
+            }
+        });
+
+
+
+        
+        document.getElementById('viewConfigCreate').addEventListener('click', function (event) {
+            let fileName = document.getElementById('createConfigFile').value; 
+            console.log(fileName);
+        
+            function fetchFileContent(fileName) {
+                fetch(`/get-config-content?filename=${encodeURIComponent(fileName)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let fileList = document.getElementById('fileContent2');
+                        fileList.innerHTML = ""; 
+        
+                        if (data.error) {
+                            toastr.error("Error loading file.", data.error);
+                        } else {
+                            let fileContent = data.content ? data.content.replace(/\r?\n/g, "<br>") : "No content available.";
+        
+                            fileList.innerHTML = `
+                                <div class="card-body">
+                                    <h5 class="card-title">${data.filename}</h5>
+                                    <p>${fileContent}</p>
+                                </div>
+                            `;
+                        }
+                    })
+                    .catch(error => {
+                        console.log('Error fetching file:', error);
+                        toastr.error("An unexpected error occurred.");
+                    });
+            }
+        
+            fetchFileContent(fileName);
+        });
+        
+        fetch("/select-config")
+            .then(response => response.json())
+            .then(data => {
+                let select = document.getElementById("createConfigFile");
+                if (data.files) {
+                    data.files.forEach(file => {
+                        let option = document.createElement("option");
+                        option.value = file;
+                        option.textContent = file;
+                        select.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => console.error("Error fetching config files:", error));
+        
+
+        //view-result
+        const resultButton = document.querySelectorAll(".view-result");
+        resultButton.forEach(button => {
+            button.addEventListener("click", function () {
+                const taskId = this.getAttribute("data-task-id");
+                console.log("task id", taskId)
+                fetch(`/get-result/${taskId}`, {
+                    method: 'GET'
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            toastr.error("Failed to fetch result of scan")
+                            throw new Error("Failed to fetch task data");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const taskData = data.data;
+                        console.log(taskData.details);
+                        
+                        populateDetailChangeTable(taskData.details, "detailChangeTable");
+
+ 
+                        document.getElementById("totalEntries").innerText = taskData.total_entries;
+                        document.getElementById("addedEntries").innerText = taskData.added_entries;
+                        document.getElementById("removedEntries").innerText = taskData.removed_entries;
+                        document.getElementById("changedEntries").innerText = taskData.changed_entries;
+                        document.getElementById("timestamp").innerText = taskData.timestamp;
+
+
+
+                        const runTime = taskData.run_time;
+                        document.getElementById("runTimeResult").textContent = runTime + " seconds";
+                        const startTime = new Date(taskData.start_time);
+                        const endTime = new Date(taskData.end_time);
+    
+                        const formattedData = formatDateTime(startTime, endTime);
+    
+                        document.getElementById("startDateResult").textContent = formattedData.formattedStartDate;
+                        document.getElementById("startTimeResult").textContent = formattedData.formattedStartTime;
+                        document.getElementById("endDateResult").textContent = formattedData.formattedEndDate;
+                        document.getElementById("endTimeResult").textContent = formattedData.formattedEndTime;
+
+
+           
+                        //updateList("listAddedEntries", taskData.added_files);
+                        //updateList("listRemovedEntries", taskData.removed_files);
+                        //updateList("listChangedEntries", taskData.changed_files);
+
+
+                        console.log(taskData.algorithm);
+                        displayHashes(taskData.algorithm, "AlgorithmHash");
+
+                        displayHashes(taskData.changed_files, "changedEntriesTable");
+                        displayHashes(taskData.added_files, "addedEntriesTable");
+                        displayHashes(taskData.removed_files, "removedEntriesTable");
+                        console.log(taskData.changed_files);
+                        
+                     
+                    })
+            })
+
+        })
+        function populateDetailChangeTable(details, tableId) {
+            const table = document.getElementById(tableId);
+            if (!table) {
+                console.error(`Table with ID '${tableId}' not found!`);
+                return;
+            }
+        
+            const tbody = table.querySelector("tbody");
+            tbody.innerHTML = ""; // Xóa nội dung cũ
+        
+            // Kiểm tra nếu details là chuỗi JSON thì parse
+            if (typeof details === "string") {
+                try {
+                    details = JSON.parse(details);
+                } catch (error) {
+                    console.error("JSON parsing error:", error);
+                    return;
+                }
+            }
+        
+            let index = 1; // Đánh số thứ tự
+        
+            Object.entries(details).forEach(([path, times]) => {
+                let firstRow = true; // Đánh dấu để merge ô Path
+        
+                Object.entries(times).forEach(([key, values]) => {
+                    const row = document.createElement("tr");
+        
+                    // Cột # (số thứ tự)
+                    const thIndex = document.createElement("th");
+                    thIndex.scope = "row";
+                    thIndex.textContent = index;
+                    row.appendChild(thIndex);
+        
+                    // Cột loại thời gian (modify_time, access_time, change_time, ...)
+                    const thType = document.createElement("th");
+                    thType.scope = "row";
+                    thType.textContent = key;
+                    row.appendChild(thType);
+        
+                    // Cột Path (chỉ hiển thị một lần)
+                    if (firstRow) {
+                        const tdPath = document.createElement("td");
+                        tdPath.style.maxWidth = "380px";
+                        tdPath.rowSpan = Object.keys(times).length;
+                        tdPath.textContent = path;
+                        row.appendChild(tdPath);
+                        firstRow = false;
+                    }
+        
+                    // Format thời gian
+                    const oldTime = new Date(values.old);
+                    const newTime = new Date(values.new);
+                    const formattedData = formatDateTime(oldTime, newTime);
+        
+                    const oldTimeFinal = `${formattedData.formattedStartTime} ${formattedData.formattedStartDate}`;
+                    const newTimeFinal = `${formattedData.formattedEndTime} ${formattedData.formattedEndDate}`;
+        
+                    // Cột thời gian cũ (old)
+                    const tdOld = document.createElement("td");
+                    tdOld.style.maxWidth = "100px";
+                    tdOld.textContent = oldTimeFinal;
+                    row.appendChild(tdOld);
+        
+                    // Cột thời gian mới (new)
+                    const tdNew = document.createElement("td");
+                    tdNew.style.maxWidth = "100px";
+                    tdNew.textContent = newTimeFinal;
+                    row.appendChild(tdNew);
+        
+                    // Thêm dòng vào bảng
+                    tbody.appendChild(row);
+                });
+        
+                index++; // Tăng số thứ tự
+            });
+        }
+        function displayEntries(data, tableId) {
+            const tableBody = document.getElementById(tableId);
+            if (!tableBody) {
+                console.error(`❌ Table with ID '${tableId}' not found.`);
+                return;
+            }
+        
+            tableBody.innerHTML = ""; 
+        
+            if (typeof data !== "object" || data === null) {
+                console.error("❌ Invalid data format:", data);
+                return;
+            }
+        
+            Object.entries(data).forEach(([filePath, status]) => {
+                const row = document.createElement("tr");
+        
+                const pathCell = document.createElement("td");
+                pathCell.textContent = filePath;
+                row.appendChild(pathCell);
+        
+                const statusCell = document.createElement("td");
+                statusCell.textContent = status;
+                row.appendChild(statusCell);
+        
+                tableBody.appendChild(row);
+            });
+        }
+        function displayHashes(hashDataArray, tableId) {
+            const tableBody = document.getElementById(tableId);
+            if (!tableBody) {
+                console.error(`❌ Table with ID '${tableId}' not found.`);
+                return;
+            }
+        
+            tableBody.innerHTML = ""; 
+        
+            hashDataArray.forEach(hashString => {
+                try {
+                    const parsedHashes = JSON.parse(hashString);
+        
+                    if (typeof parsedHashes !== "object" || parsedHashes === null) {
+                        console.error("❌ Parsed data is not an object:", parsedHashes);
+                        return;
+                    }
+        
+                    Object.entries(parsedHashes).forEach(([algorithm, hashValue]) => {
+                        const row = document.createElement("tr");
+        
+                        const algorithmCell = document.createElement("td");
+                        algorithmCell.style.maxWidth = "300px";
+
+                        //algorithmCell.textContent = algorithm.toUpperCase();
+                        algorithmCell.textContent = algorithm;
+                        row.appendChild(algorithmCell);
+        
+                        const valueCell = document.createElement("td");
+                        valueCell.textContent = hashValue;
+                        row.appendChild(valueCell);
+        
+                        tableBody.appendChild(row);
+                    });
+        
+                } catch (error) {
+                    console.error("❌ Error parsing JSON:", error, "\nProblematic JSON:", hashString);
+                }
+            });
+        }
+
+        function updateList(elementId, dataList) {
+            const listElement = document.getElementById(elementId);
+            if (!listElement) {
+                console.error(`Element with ID '${elementId}' not found.`);
+                return;
+            }
+        
+            listElement.innerHTML = ""; // Clear the existing list
+        
+            if (Array.isArray(dataList) && dataList.length > 0) {
+                const fragment = document.createDocumentFragment(); // Use fragment for performance
+        
+                dataList.forEach(item => {
+                    if (item === "{" || item === "}") {
+                        return; // Ignore unwanted characters
+                    }
+        
+                    const li = document.createElement("li");
+                    li.textContent = item;
+                    li.className = "list-group-item";
+                    fragment.appendChild(li);
+                });
+        
+                listElement.appendChild(fragment); // Append only once
+            }
+        }
+        
+        // delete task    
+        const deleteButtons = document.querySelectorAll(".delete-task");
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const taskId = this.getAttribute("data-task-id");
+                //  
+                // Handle the "Confirm Delete" button
+                document.getElementById("confirmDelete").onclick = function () {
+                    deleteTask(taskId);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 500);
+
+                };
+
+
+            });
+        });
+        function deleteTask(taskId) {
+            fetch(`/delete-task/${taskId}?action=delete`, { // Use GET method with action parameter
+                method: "DELETE", // Specify GET instead of DELETE
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        toastr.success("Task deleted successfully!");
+                        const taskCard = document.querySelector(`[data-task-id="${taskId}"]`).closest(".card");
+                        taskCard.remove();
+                    } else {
+                        toastr.error("Failed to delete task: " + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.log("Error deleting task:", error);
+                    toastr.error("An error occurred while deleting the task.");
+                });
+        }
+
+        document.addEventListener("click", function (event) {
+            if (event.target.classList.contains("task-action")) {
+                const taskId = event.target.getAttribute("data-task-id");
+                const currentStatus = event.target.getAttribute("data-status");
+                const spinnerIcon = document.getElementById('spinner-icon');
+
+                if (currentStatus === "RESUMED" || currentStatus === "PENDING") {
+                    if (spinnerIcon) {
+                        spinnerIcon.style.display = 'none';
+                    }
+                    updateTaskStatus(taskId, "pause", event.target);
+                }
+                if (currentStatus === "PAUSED") {
+                    if (spinnerIcon) {
+                        spinnerIcon.style.display = 'block';
+                    }
+                    updateTaskStatus(taskId, "resume", event.target);
+                }
+            }
+
+        });
+        function updateTaskStatus(taskId, action, buttonElement) {
+            fetch(`/task-${action}/${taskId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        toastr.success(`Task ${action}d!`);
+                        // Update button text and status
+                        const newStatus = action === "pause" ? "PAUSED" : "RESUMED";
+                        buttonElement.setAttribute("data-status", newStatus);
+                        const iconElement = buttonElement.querySelector("i");
+                        if (iconElement) {
+                            iconElement.className = action === "pause" ? "fa fa-fw" : "fa fa-fw";
+                            iconElement.setAttribute("title", action === "pause" ? "Resume Task" : "Pause Task");
+                            iconElement.innerHTML = action === "pause" ? "" : ""; // Update icon content
+                        }
+                        // buttonElement.textContent = action === "pause" ? "Resume" : "Pause";
+                    } else {
+                        toastr.error(`Failed to ${action} the task.`);
+                    }
+                })
+                .catch(error => {
+                    console.error(`Error during task ${action}:`, error);
+                });
+        }
+        function pauseTask(taskId, buttonElement) {
+            fetch(`/task-pause/${taskId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        toastr.success("Task paused!")
+                        // Hide the pause button
+                        buttonElement.style.display = 'none';
+                        // Show the resume button (next sibling)
+                        const resumeButton = document.querySelector(`.resume-task[data-task-id="${taskId}"]`);
+                        if (resumeButton) {
+                            resumeButton.style.display = 'block';
+                        }
+                    } else {
+                        toastr.error('The task cannot stop');
+                    }
+                })
+                .catch(error => {
+                    console.log('Error pausing task:', error);
+                });
+        }
+
+        function resumeTask(taskId, buttonElement) {
+            fetch(`/task-resume/${taskId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        toastr.success("Task resumed!")
+                        // Hide the resume button
+                        buttonElement.style.display = 'none';
+                        // Show the pause button (previous sibling)
+                        const pauseButton = document.querySelector(`.pause-task[data-task-id="${taskId}"]`);
+                        console.log(pauseButton)
+                        if (pauseButton) {
+                            pauseButton.style.display = 'block';
+                        }
+                    } else {
+                        toastr.error('The task cannot resume');
+                    }
+                })
+                .catch(error => {
+                    console.log('Error resuming task:', error);
+                });
+        }
+        // compare Aide Database
+        //const compareButton = document.getElementById('CompareDatabase');
+        //compareButton.addEventListener("click", function(){
+        //  console.log("Runnning compare command!")
+        // fetch('/compare-aide-database', { method: 'POST' })
+        //  .then(response => response.json())
+        //  .then(data => {
+        //      toastr.success("Running compare command successfully!");
+        //       console.log(data);
+        //    })
+        //    .catch(error => {
+        //        toastr.error("Error running command: ", error);
+        //        console.log("Error running command: ", error);
+        //    });
+        // })
+
+
+    });
+    //compare database
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const compareButton = document.getElementById('CompareDatabase');
+        compareButton.addEventListener("click", function () {
+            console.log("Runnning compare command!")
+            fetch('/compare-aide-database', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    toastr.success("Running compare command successfully!");
+                    //console.log(data);
+                })
+                .catch(error => {
+                    toastr.error("Error running command: ", error);
+                    console.log("Error running command: ", error);
+                });
+        })
+        const resultButton = document.getElementById('CompareResult');
+        resultButton.addEventListener("click", function () {
+            console.log("Viewing compare result!")
+            fetch('/view-compare-result', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.content)
+
+                    ContentTable(data.content.changed, "changedEntriesTableCompare");
+                    ContentTable(data.content.added, "addedEntriesTableCompare");
+                    ContentTable(data.content.removed, "removedEntriesTableCompare");
+
+                    document.getElementById("totalEntriesCompare").innerText = data.content.number_of_entries.total;
+                    document.getElementById("removedEntriesCompare").innerText = data.content.number_of_entries.removed;
+                    document.getElementById("addedEntriesCompare").innerText = data.content.number_of_entries.added;
+                    document.getElementById("changedEntriesCompare").innerText = data.content.number_of_entries.changed;
+
+                    populateDetailChangeTable(data.content.details, "detailChangeCompareTable");
+
+                    const runTime = data.content.run_time_seconds;
+                    document.getElementById("runTime").textContent = runTime + " seconds";
+                    const startTime = new Date(data.content.start_time);
+                    const endTime = new Date(data.content.end_time);
+
+                    const formattedData = formatDateTime(startTime, endTime);
+
+                    // Gán giá trị vào HTML
+                    document.getElementById("startDate").textContent = formattedData.formattedStartDate;
+                    document.getElementById("startTime").textContent = formattedData.formattedStartTime;
+                    document.getElementById("endDate").textContent = formattedData.formattedEndDate;
+                    document.getElementById("endTime").textContent = formattedData.formattedEndTime;
+                    
+                
+
+                    const cardHeader = document.getElementById("aideStatus");
+
+                    if (cardHeader && data.content && data.content.outline) {
+                        cardHeader.textContent = data.content.outline;
+                    }
+
+                    const tableBody = document.getElementById("CompareTBody");
+                    tableBody.innerHTML = "";
+                    const db1 = data.content.databases["/var/lib/aide/aide.db"];
+                    const db2 = data.content.databases["/var/lib/aide/aide.db.new"];
+
+                    const hashAlgorithms = Object.keys(db1);
+
+                    hashAlgorithms.forEach((algo) => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td><strong>${algo}</strong></td>
+                            <td style="max-width: 300px;">${db1[algo]}</td>
+                            <td style="max-width: 300px;">${db2[algo]}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+
+                })
+                .catch(error => {
+                    toastr.error("Error viewing result: ", error);
+                    console.log("Error viewing result: ", error);
+                });
+        })
+
+
+
+
+    });
+
+    
+    function populateDetailChangeTable(details, tableId) {
+        const table = document.getElementById(tableId);
+        if (!table) {
+            console.error(`Table with ID '${tableId}' not found!`);
+            return;
+        }
+    
+        const tbody = table.querySelector("tbody");
+        tbody.innerHTML = ""; // Xóa nội dung cũ
+    
+        // Kiểm tra nếu details là chuỗi JSON thì parse
+        if (typeof details === "string") {
+            try {
+                details = JSON.parse(details);
+            } catch (error) {
+                console.error("JSON parsing error:", error);
+                return;
+            }
+        }
+    
+        let index = 1; // Đánh số thứ tự
+    
+        Object.entries(details).forEach(([path, times]) => {
+            let firstRow = true; // Đánh dấu để merge ô Path
+    
+            Object.entries(times).forEach(([key, values]) => {
+                const row = document.createElement("tr");
+    
+                // Cột # (số thứ tự)
+                const thIndex = document.createElement("th");
+                thIndex.scope = "row";
+                thIndex.textContent = index;
+                row.appendChild(thIndex);
+    
+                // Cột loại thời gian (modify_time, access_time, change_time, ...)
+                const thType = document.createElement("th");
+                thType.scope = "row";
+                thType.textContent = key;
+                row.appendChild(thType);
+    
+                // Cột Path (chỉ hiển thị một lần)
+                if (firstRow) {
+                    const tdPath = document.createElement("td");
+                    tdPath.style.maxWidth = "380px";
+                    tdPath.rowSpan = Object.keys(times).length;
+                    tdPath.textContent = path;
+                    row.appendChild(tdPath);
+                    firstRow = false;
+                }
+    
+                // Format thời gian
+                const oldTime = new Date(values.old);
+                const newTime = new Date(values.new);
+                const formattedData = formatDateTime(oldTime, newTime);
+    
+                const oldTimeFinal = `${formattedData.formattedStartTime} ${formattedData.formattedStartDate}`;
+                const newTimeFinal = `${formattedData.formattedEndTime} ${formattedData.formattedEndDate}`;
+    
+                // Cột thời gian cũ (old)
+                const tdOld = document.createElement("td");
+                tdOld.style.maxWidth = "100px";
+                tdOld.textContent = oldTimeFinal;
+                row.appendChild(tdOld);
+    
+                // Cột thời gian mới (new)
+                const tdNew = document.createElement("td");
+                tdNew.style.maxWidth = "100px";
+                tdNew.textContent = newTimeFinal;
+                row.appendChild(tdNew);
+    
+                // Thêm dòng vào bảng
+                tbody.appendChild(row);
+            });
+    
+            index++; // Tăng số thứ tự
+        });
+    }
+
+    function ContentTable(data, tableId) {
+        const tableBody = document.getElementById(tableId);
+        if (!tableBody) {
+            console.error(`Table with ID '${tableId}' not found!`);
+            return;
+        }
+       tableBody.innerHTML = ""; // Xóa nội dung cũ trước khi cập nhật
+        
+        Object.entries(data).forEach(([path, attribute]) => {
+            const row = document.createElement("tr");
+    
+            const tdPath = document.createElement("td");
+            tdPath.textContent = path;
+            tdPath.style.maxWidth = "300px";
+            row.appendChild(tdPath);
+    
+            const tdAttribute = document.createElement("td");
+            tdAttribute.textContent = attribute;
+            row.appendChild(tdAttribute);
+    
+            tableBody.appendChild(row);
+        });
+    }
+    
+
+
+    function formatDateTime(startTime, endTime) {
+        const dateOptions = {
+            timeZone: "Asia/Ho_Chi_Minh",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        };
+    
+        const timeOptions = {
+            timeZone: "Asia/Ho_Chi_Minh",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+        };
+    
+        return {
+            formattedStartDate: new Intl.DateTimeFormat("en-US", dateOptions).format(startTime),
+            formattedStartTime: new Intl.DateTimeFormat("en-US", timeOptions).format(startTime),
+            formattedEndDate: new Intl.DateTimeFormat("en-US", dateOptions).format(endTime),
+            formattedEndTime: new Intl.DateTimeFormat("en-US", timeOptions).format(endTime)
+        };
+    }
+//update database
+    document.addEventListener("DOMContentLoaded", function () {
+        let firstChoice = null;
+        let secondChoice = null;
+    
+        let ovNewY = document.getElementById("ovNewY");
+        let ovNewNo = document.getElementById("ovNewNo");
+        let ovOldU = document.getElementById("ovOldU");
+        let ovOldNo = document.getElementById("ovOldNo");
+    
+        if (ovNewY && ovNewNo && ovOldU && ovOldNo) {
+            ovNewY.addEventListener("click", function () {
+                firstChoice = "yes";
+                console.log("User chose YES for Overwrite New");
+    
+                $("#overWriteNew").modal("hide");
+                setTimeout(() => {
+                    $("#overWriteOld").modal("show");
+                }, 500);
+            });
+    
+            ovNewNo.addEventListener("click", function () {
+                firstChoice = "no";
+                secondChoice = null; 
+                console.log("User chose NO for Overwrite New");
+                $("#overWriteNew").modal("hide");
+                    sendUpdateRequest(firstChoice, secondChoice);
+            });
+    
+            ovOldU.addEventListener("click", function () {
+                secondChoice = "yes";
+                console.log("User chose YES for Overwrite Old");
+                closeAllModalsAndSend();
+            });
+    
+            ovOldNo.addEventListener("click", function () {
+                secondChoice = "no";
+                console.log("User chose NO for Overwrite Old");
+                closeAllModalsAndSend();
+            });
+            function closeAllModalsAndSend() {
+                $(".modal").modal("hide");
+                setTimeout(() => {
+                    $(".modal-backdrop").remove();
+                    $("body").removeClass("modal-open");
+                }, 500);
+
+                sendUpdateRequest(firstChoice, secondChoice);
+            }
+        } else {
+            console.error("Không tìm thấy một hoặc nhiều phần tử modal!");
+        }
+    
+        function sendUpdateRequest(firstChoice, secondChoice) {
+            if (firstChoice === null) {
+                console.error("Missing firstChoice!");
+                toastr.error("You must make a choice before updating!");
+                return;
+            }
+    
+            console.log("Sending update command with:", firstChoice, secondChoice);
+
+            
+            fetch('/update-aide-database', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ firstChoice: firstChoice, secondChoice: secondChoice })
+            })
+            .then(response => response.json())
+            .then(data => {
+                toastr.success("Running update command successfully!");
+                setTimeout(function () {
+                    location.reload();
+                }, 1000);
+    
+                console.log("Server response:", data);
+            })
+            .catch(error => {
+                toastr.error("Error running command: " + error);
+                console.error("Error running command:", error);
+            });
+        }
+    });
+    
+</script>
+{% endblock %}

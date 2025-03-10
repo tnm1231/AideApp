@@ -1,0 +1,13 @@
+# Flask
+# Flask-SQLAlchemy
+# Flask-WTF
+# Flask-Migrate
+# python-dotenv
+flask-migrate
+celery
+redis
+pytz
+# pip install flask-migrate
+# pip install celery
+# pip install redis 
+# pip install pytz

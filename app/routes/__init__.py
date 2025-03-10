@@ -1,0 +1,78 @@
+from flask import Blueprint, render_template
+from .checks import CheckView
+from .homes import HomeView
+from .home2 import getViewHome
+from .taskHandle import TaskStatusView, task_pause, task_resume
+from .tasks import task_status
+from .aidecmd import compare, update, compareResult
+from .aideConfig import CustomConfigView
+from .aideConfig import check_config, view_configs, get_config_content, delete_config_file, select_config_files, save_config_content
+# from .cronJob import run_aide_cronjob
+from .mail_and_cronjob import MailView
+from .cronJob import CronJobView
+
+routes_blueprint = Blueprint('routes', __name__)
+
+#trang master để check 
+routes_blueprint.add_url_rule('/', view_func=HomeView.as_view('home'))
+
+#view check page method GET, check method POST create task (post form)
+check_view =CheckView.as_view('check')
+routes_blueprint.add_url_rule('/check', view_func=check_view, methods=['GET', 'POST'])
+
+#status này chưa làm được
+# routes_blueprint.add_url_rule('/task-status/<task_id>', view_func=TaskStatusView.as_view('task_status'))
+
+#delete task
+task_view = TaskStatusView.as_view('delete')
+routes_blueprint.add_url_rule('/delete-task/<string:task_id>', view_func=task_view, methods=['DELETE'])
+
+#suspend/resume task
+routes_blueprint.add_url_rule('/task-pause/<string:task_id>', 'task_pause', task_pause, methods=['POST'])
+routes_blueprint.add_url_rule('/task-resume/<string:task_id>','task_resume', task_resume, methods=['POST'])
+
+# view result taskcd 
+routes_blueprint.add_url_rule('/get-result/<string:task_id>', view_func=TaskStatusView.as_view('getTask'), methods=['GET'])
+#task status 
+routes_blueprint.add_url_rule('/task-status/<string:task_id>', view_func=task_status, methods=['GET'])
+
+config_view = CustomConfigView.as_view('config')
+routes_blueprint.add_url_rule('/config', view_func=config_view, methods=['GET', 'POST'])
+routes_blueprint.add_url_rule('/check-config', view_func=check_config, methods=['POST'])
+#list config file 
+routes_blueprint.add_url_rule('/select-config', view_func=select_config_files, methods=['GET'])
+routes_blueprint.add_url_rule('/view-config', view_func=view_configs, methods=['GET'])
+routes_blueprint.add_url_rule('/get-config-content', view_func=get_config_content, methods=['GET'])
+routes_blueprint.add_url_rule('/save-config-content', view_func=save_config_content, methods=['POST'])
+
+routes_blueprint.add_url_rule('/delete-config-file', view_func=delete_config_file, methods=['GET'])
+
+#crobjob
+# routes_blueprint.add_url_rule('/cronjob', view_func=run_aide_cronjob, methods=['POST'])
+routes_blueprint.add_url_rule('/cron-job', view_func=CronJobView.as_view("cron_job"), methods=['GET','POST'])
+routes_blueprint.add_url_rule('/cron-job-delete/<string:cronId>', view_func=CronJobView.as_view("cron_job_delete"), methods=['DELETE'])
+
+# routes_blueprint.add_url_rule('/delete-cron-job/<string:cronId>', view_func=CronJobView.as_view("cron_job"), methods=['DELETE'])  # Use CronJobView
+# routes_blueprint.add_url_rule('/delete-task/<string:task_id>', view_func=task_view, methods=['DELETE'])
+
+# routes_blueprint.add_url_rule('/cron-job', view_func=CronJobView.as_view("cron_job"))  # Use the new class name
+
+
+
+
+routes_blueprint.add_url_rule('/compare-aide-database', 'compare', compare, methods=['POST'])
+routes_blueprint.add_url_rule('/view-compare-result', 'result', compareResult, methods=['GET'])
+
+routes_blueprint.add_url_rule('/update-aide-database', 'update', update, methods=['POST'])
+
+
+routes_blueprint.add_url_rule('/mail', view_func=MailView.as_view('mail'))
+# routes_blueprint.add_url_rule('/tasks', view_func=TaskAPI.as_view('tasks')
+# routes_blueprint.add_url_rule('/tasks/<task_id>', view_func=TaskAPI.as_view('task_status'))
+# routes_blueprint.add_url_rule('tasks/<task_id>/control', view_func=TaskControlAPI.as_view('task_control'))
+# routes_blueprint.add_url_rule('/check', view_func=CheckView.as_view('checks'))
+
+
+
+
+#route mail

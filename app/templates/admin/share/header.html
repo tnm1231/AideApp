@@ -1,0 +1,121 @@
+<div class="app-header header-shadow">
+  <div class="app-header__logo">
+    <div class="logo-src"></div>
+    <div class="header__pane ml-auto">
+      <div><button type="button" class="hamburger close-sidebar-btn hamburger--elastic"
+          data-class="closed-sidebar"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button>
+      </div>
+    </div>
+  </div>
+  <div class="app-header__mobile-menu">
+    <div><button type="button" class="hamburger hamburger--elastic mobile-toggle-nav"><span class="hamburger-box"><span
+            class="hamburger-inner"></span></span></button></div>
+  </div>
+  <div class="app-header__menu"><span><button type="button"
+        class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav"><span class="btn-icon-wrapper"><i
+            class="fa fa-ellipsis-v fa-w-6"></i></span></button></span></div>
+  <div class="app-header__content">
+    <div class="app-header-left">
+      <ul class="header-menu nav">
+        <li class="nav-item"><a href="javascript:void(0);" class="nav-link" id="UpdateDatebase" data-toggle="modal"
+            data-target="#overWriteNew"><i class="nav-link-icon fa fa-database"></i> Update </a></li>
+        <!-- <li class="nav-item"><a href="javascript:void(0);" class="nav-link" id="CompareDatabase"><i class="nav-link-icon fa fa-clipboard"></i>
+             Compare </a>
+          </li> -->
+        <li class="nav-item dropdown d-inline-block">
+          <a href="javascript:void(0);" class="nav-link dropdown-toggle btn btn-outline-link" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="nav-link-icon pe-7s-note2"></i> Compare
+          </a>
+          <div class="dropdown-menu">
+            
+            <button type="button" id="CompareDatabase" class="dropdown-item">Run Compare</button>
+            <button type="button" id="CompareResult" data-toggle="modal" data-target="#showCompareResult"
+              class="dropdown-item">View result</button>
+          </div>
+        </li>
+
+        <!-- <li class="btn-group nav-item">
+          <a class="nav-link" data-toggle="dropdown" aria-expanded="true">
+            <i class="nav-link-icon pe-7s-note2"></i>Compare
+              <i class="fa fa-angle-down ml-2 opacity-5"></i>
+          </a>
+          <div tabindex="-1" role="menu" aria-hidden="true" class="rm-pointers dropdown-menu" style=""> -->
+              <!-- <div class="dropdown-menu-header">
+                  <div class="dropdown-menu-header-inner bg-secondary">
+                      <div class="menu-header-image opacity-5" style="background-image: url('assets/images/dropdown-header/abstract2.jpg');"></div>
+                      <div class="menu-header-content">
+                          <h5 class="menu-header-title">Overview</h5>
+                          <h6 class="menu-header-subtitle">Dropdown menus for everyone</h6>
+                      </div>
+                  </div>
+              </div> -->
+              <!-- <div class="scroll-area-xs">
+                  <div class="scrollbar-container ps"> -->
+                      <!-- <h6 tabindex="-1" class="dropdown-header">Key Figures</h6> -->
+                      <!-- <button type="button" tabindex="0" class="dropdown-item">Run Compare</button>
+                      <button type="button" tabindex="0" class="dropdown-item" > View result</button> -->
+                      <!-- <div tabindex="-1" class="dropdown-divider"></div>
+                      <button type="button" tabindex="0" class="dropdown-item">Products</button>
+                      <button type="button" tabindex="0" class="dropdown-item">Rollup Queries</button> -->
+                  <!-- <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+              </div> -->
+              <!-- <ul class="nav flex-column">
+                  <li class="nav-item-divider nav-item"></li>
+                  <li class="nav-item-btn nav-item">
+                      <button class="btn-wide btn-shadow btn btn-danger btn-sm">Cancel</button>
+                  </li>
+              </ul> -->
+          <!-- </div>
+      </li> -->
+
+
+
+
+
+
+
+
+
+
+
+        <!-- <li class="dropdown nav-item"><a href="javascript:void(0);" class="nav-link"><i class="nav-link-icon fa fa-cog"></i> Settings </a></li> -->
+        <li class="btn-group nav-item"><a href="javascript:void(0);" class="nav-link create-task" data-toggle="modal"
+            data-target="#createScan"><i class="nav-link-icon fa fa-edit"></i> Run Scan </a></li>
+        <!-- <li class="btn-group nav-item"><a href="javascript:void(0);" class="nav-link create-task" data-toggle="modal" data-target="#createCronJob"><i class="nav-link-icon fa fa-fw" aria-hidden="true" title="Copy to use calendar"></i> Cron Job </a></li> -->
+      </ul>
+    </div>
+
+    <div class="app-header-right">
+      <div class="header-btn-lg pr-0">
+        <div class="widget-content p-0">
+          <div class="widget-content-wrapper">
+            <div class="widget-content-left">
+              <div class="btn-group"><a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  class="p-0 btn"><img width="42" class="rounded-circle"
+                    src="{{ url_for('static', filename='assets/images/avatars/1.jpg') }}" alt=""><i
+                    class="fa fa-angle-down ml-2 opacity-8"></i></a>
+                <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right"><button
+                    type="button" tabindex="0" class="dropdown-item">User Account</button><button type="button"
+                    tabindex="0" class="dropdown-item">Settings</button>
+                  <h6 tabindex="-1" class="dropdown-header">Header</h6><button type="button" tabindex="0"
+                    class="dropdown-item">Actions</button>
+                  <div tabindex="-1" class="dropdown-divider"></div><button type="button" tabindex="0"
+                    class="dropdown-item">Dividers</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="widget-content-left  ml-3 header-user-info">
+              <div class="widget-heading"> Alina Mclourd </div>
+              <div class="widget-subheading"> VP People Manager </div>
+            </div>
+            <div class="widget-content-right header-user-info ml-3"><button type="button"
+                class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example"><i
+                  class="fa text-white fa-calendar pr-1 pl-1"></i></button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

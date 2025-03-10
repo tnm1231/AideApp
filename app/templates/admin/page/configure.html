@@ -1,0 +1,1138 @@
+{% extends 'admin/share/master.html' %}
+{% block body %}
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-wallet icon-gradient bg-plum-plate">
+                </i>
+            </div>
+            <h3>AIDE Custom Configuration</h3>
+        </div>
+        <div class="page-title-actions">
+            <button type="button" data-toggle="tooltip" title="" data-placement="bottom"
+                class="btn-shadow mr-3 btn btn-dark" data-original-title="Example Tooltip">
+                <i class="fa fa-star"></i>
+            </button>
+            <div class="d-inline-block dropdown">
+                <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    class="btn-shadow dropdown-toggle btn btn-info">
+                    <span class="btn-icon-wrapper pr-2 opacity-7">
+                        <i class="fa fa-business-time fa-w-20"></i>
+                    </span>
+                    Buttons
+                </button>
+                <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a href="javascript:void(0);" class="nav-link">
+                                <i class="nav-link-icon lnr-inbox"></i>
+                                <span>
+                                    Inbox
+                                </span>
+                                <div class="ml-auto badge badge-pill badge-secondary">86</div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0);" class="nav-link">
+                                <i class="nav-link-icon lnr-book"></i>
+                                <span>
+                                    Book
+                                </span>
+                                <div class="ml-auto badge badge-pill badge-danger">5</div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript:void(0);" class="nav-link">
+                                <i class="nav-link-icon lnr-picture"></i>
+                                <span>
+                                    Picture
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a disabled="" href="javascript:void(0);" class="nav-link disabled">
+                                <i class="nav-link-icon lnr-file-empty"></i>
+                                <span>
+                                    File Disabled
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-card mb-12 card">
+    <div class="card-body">
+        <!-- <h1>AIDE Custom Configuration</h1> -->
+        <form class="needs-validation" novalidate="" id="configForm">
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <!-- <h4>Environment Settings</h4>
+                    <div class="divider"></div> -->
+                    <!-- <label>UPAC Settings Directory</label>
+                    <input type="text" class="form-control" id="upac_settings" placeholder="/etc/aide/aide.settings.d"
+                        required>
+                    <br> -->
+                    <!-- <label>Path Environment Variable</label> -->
+                    <!-- <input type="text" class="form-control" id="environment_path" placeholder="/bin:/usr/bin" required> -->
+
+                    <!-- <br>
+                    <br> -->
+
+                    <h4>Rules</h4>
+                    <div class="divider"></div>
+                    <!-- <lable>Predefined Rules</lable> -->
+                    <table>
+                        <tr>
+                            <th>Rule Name</th>
+                            <th>Attributes</th>
+                            <th>Description</th>
+                            <th>Select</th>
+                        </tr>
+                        <tr>
+                            <td>NORMAL</td>
+                            <td>p+i+n+u+g+s+m+c+sha256</td>
+                            <td>A commonly used rule for normal checks.</td>
+                            <td><input type="checkbox" id="normal_rule_button" name="normal_rule_button" value="true"
+                                    style="margin-left: 12px"></td>
+                        </tr>
+                        <tr></tr>
+                        <td>DATAONLY</td>
+                        <td>p+u+g+s+xattrs+sha256</td>
+                        <td>Checks file contents only, ignoring metadata like inode and access times.</td>
+                        <!-- <td><button type="checked" class="btn btn-primary" id="dataonly_rule_button">Add</button></td> -->
+                        <td><input type="checkbox" id="dataonly_rule_button" name="dataonly_rule_button" value="true"
+                                style="margin-left: 12px"></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <label>Available Rule Attributes</label>
+                    <table>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>p</td>
+                            <td>Permissions</td>
+                        </tr>
+                        <tr>
+                            <td>i</td>
+                            <td>Inode</td>
+                        </tr>
+                        <tr>
+                            <td>n</td>
+                            <td>Number of links</td>
+                        </tr>
+                        <tr>
+                            <td>u</td>
+                            <td>User</td>
+                        </tr>
+                        <tr>
+                            <td>g</td>
+                            <td>Group</td>
+                        </tr>
+                        <tr>
+                            <td>s</td>
+                            <td>Size</td>
+                        </tr>
+                        <tr>
+                            <td>b</td>
+                            <td>Block count</td>
+                        </tr>
+                        <tr>
+                            <td>m</td>
+                            <td>Modification time</td>
+                        </tr>
+                        <tr>
+                            <td>a</td>
+                            <td>Access time</td>
+                        </tr>
+                        <tr>
+                            <td>c</td>
+                            <td>Change time</td>
+                        </tr>
+                        <tr>
+                            <td>xattrs</td>
+                            <td>Extended file attributes</td>
+                        </tr>
+                        <tr>
+                            <td>md5</td>
+                            <td>MD5 checksum</td>
+                        </tr>
+                        <tr>
+                            <td>sha256</td>
+                            <td>SHA-256 checksum</td>
+                        </tr>
+                        <tr>
+                            <td>sha512</td>
+                            <td>SHA-512 checksum</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <!-- <label>Rules</label>
+                    <input type="text" class="form-control" id="custom_rules" placeholder="Define your own rules here."> -->
+
+                    <div class="form-row">
+                        <div class="col-md-8">
+                            <label>Rule Name</label>
+                            <input type="text" class="form-control" id="ruleName" placeholder="CUSTOM"
+                                required>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Rules</label>
+                            <input type="text" class="form-control" id="rules" placeholder="p+i+n" required>
+                        </div>
+                        <div class="col-md-9" style="margin-top: 15px">
+                            <input id="ruleDemo" type="text" class="form-control" readonly placeholder="">
+                        </div>
+                        <div class="col-md-2" style="margin-top: 20px; margin-left: 6px;">
+                            <button class="mb-2 mr-2 btn-transition btn btn-outline-info" id="addRuleBtn"
+                                type="button">
+                                Add
+                            </button>
+                        </div>    
+                    </div>
+                    <div class="form-row" style="margin-top: 12px; margin-left: 2px;" id="ruleList">
+                        <!-- <button class="mb-2 mr-2 btn-transition btn btn-outline-info " type="button">/root <i class="pe-7s-close btn-icon-wrapper"> </i></button> -->
+                    </div>
+                    
+                    
+
+
+
+
+                    
+                    <!-- <div class="col-md-4 mb-3"> -->
+                    <br>
+                    <br>
+                    <h4>Report and Logging Settings</h4>
+                    <div class="divider"></div>
+                    <!-- <label>Report URL </label>
+                        <input type="text" class="form-control" id="report_url" placeholder="file:/var/log/aide.log"
+                            required>
+                        <br> -->
+                    <!-- <label>Log Level</label>
+                        <input type="text" class="form-control" id="log_level" placeholder="">
+                        <p>If there are multiple
+                            <b>log_level</b>
+                            lines then the first one is used. Can be left blank. The following log levels are available:
+                        </p>
+                        <ul>
+                            <li><b>error</b>: show unrecoverable issues that have to be handled by the user. Errors are
+                                fatal to the AIDE process.</li>
+                            <li><b>warning</b>: additionally show recoverable issues that most likely lead to unexpected
+                                behaviour and should be handled by the user.</li>
+                            <li><b>notice</b>: additionally show recoverable issues that sometimes lead to unexpected
+                                behaviour and might be handled by the user.</li>
+                            <li><b>info</b>: additionally show informational messages.</li>
+                            <li><b>compare</b>: additionally show messages to help to debug file comparison and (special)
+                                attribute handling.</li>
+                        </ul> -->
+                    <!-- <label>Report Level</label>
+                        <input type="text" class="form-control" id="report_level" placeholder="">
+                        <p>Can be left blank. The following report levels are available:</p>
+                        <ul>
+                            <li><b>minimal</b>: print single line whether AIDE found differences to the database.</li>
+                            <li><b>summary</b>: additionally print number of added,rueruleru removed and changed files.</li>
+                            <li><b>database_attributes</b>: additionally print database checksums.</li>
+                            <li><b>list_entries</b>: additionally print lists of added, removed and changed entries.</li>
+                            <li><b>changed_attributes</b>: additionally print details about changed entries.</li>
+                        </ul>
+                        <br> -->
+
+                    <label>Report Base16</label>
+                    <p>Base16 encode the checksums in the report. The default is to report checksums in base64 encoding.
+                        Default value is <b>false</b></p>
+                    <!-- <input type="radio" class="form-control" id="base16True" name="report_base16" value="True"><label>True</label> -->
+                    <fieldset class="position-relative form-group">
+                        <div class="position-relative form-check">
+                            <label class="form-check-label" for="base64-true">
+                                <input id="base64-true" name="radio1" type="radio" class="form-check-input"
+                                    value="true">
+                                True
+                            </label>
+                        </div>
+                        <div class="position-relative form-check">
+                            <label class="form-check-label" for="base64-false">
+                                <input id="base64-false" name="radio1" type="radio" class="form-check-input"
+                                    value="false">
+                                False
+                            </label>
+                        </div>
+                    </fieldset>
+
+
+                    <!-- </div> -->
+
+
+                </div>
+                <br><br>
+                <div class="col-md-6 mb-3">
+
+                    <!-- <label>Database Directory</label>
+                    <input type="text" class="form-control" id="database" placeholder="/var/lib/aide/aide.db" required>
+                    <br> -->
+                    <!-- <label>Database Output Directory</label>
+                    <input type="text" class="form-control" id="database_out" placeholder="/var/lib/aide/aide.db.new"
+                        required>
+                    <br>
+                    <label>New Database Directory</label>
+                    <input type="text" class="form-control" id="database_new" placeholder="/var/lib/aide/aide.db.new"
+                        required>
+                    <br> -->
+
+                
+                    <h4>Directories</h4>
+                    <div class="divider"></div>
+
+                    <div class="form-row">
+                        <div class="col-md-5">
+                            <label>Directory</label>
+                            <input type="text" class="form-control" id="include_directories" placeholder="/boot "
+                                required>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="position-relative form-group">
+                                <label for="exampleSelect">Select</label>
+                                <select name="select" id="includeSelect" class="form-control">
+                                    <option value="">None</option>
+                                    <option value="f R">Only Files</option>
+                                    <option value="d R">Only Directories</option>
+                                    <option value="R">Both</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Rule</label>
+                            <input type="text" class="form-control" id="include_rule" placeholder="R-m-c" required>
+                        </div>
+                        <div class="col-md-9">
+                            <input id="addDirDemo" type="text" class="form-control" readonly placeholder="">
+                        </div>
+                        <div class="col-md-2" style="margin-top: 5px; margin-left: 6px;">
+                            <button class="mb-2 mr-2 btn-transition btn btn-outline-info" id="addDirectoryBtn"
+                                type="button">
+                                Include
+                            </button>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row" style="margin-top: 12px; margin-left: 2px;" id="directoryList">
+                        <!-- <button class="mb-2 mr-2 btn-transition btn btn-outline-info " type="button">/root <i class="pe-7s-close btn-icon-wrapper"> </i></button> -->
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="col-md-8">
+                            <label>Exclude Directories</label>
+                            <input type="text" class="form-control" id="exclude_directories" placeholder="!/tmp"
+                                required>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label for="exampleSelect">Select</label>
+                                <select name="select" id="excludeSelect" class="form-control">
+                                    <option value="">None</option>
+                                    <option value="f">Only Files</option>
+                                    <option value="d">Only Directories</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <input id="exDirDemo" type="text" class="form-control" readonly placeholder="">
+                        </div>
+                        <div class="col-md-2" style="margin-top: 5px; margin-left: 6px;">
+                            <button class="mb-2 mr-2 btn-transition btn btn-outline-warning" id="excludeDirectoryBtn"
+                                type="button">Exclude</button>
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-top: 12px; margin-left: 2px;" id="directoryListExclude">
+                        <!-- <button class="mb-2 mr-2 btn-transition btn btn-outline-warning" type="button">/root <i class="pe-7s-close btn-icon-wrapper"> </i></button> -->
+                    </div>
+
+                    <br>
+                    <h4>Checksum Algorithms</h4>
+                    <div class="divider"></div>
+                    <div>
+                        <input type="checkbox" id="whirlpool" name="whirlpool" value="true">
+                        <label style="margin-right: 10px;">WHIRLPOOL</label>
+
+                        <input type="checkbox" id="sha1" name="sha1" value="true">
+                        <label style="margin-right: 10px;">SHA1</label>
+
+                        <input type="checkbox" id="sha256" name="sha256" value="true">
+                        <label style="margin-right: 10px;">SHA256</label>
+
+                        <input type="checkbox" id="sha512" name="sha512" value="true">
+                        <label style="margin-right: 10px;">SHA512</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="rmd160" name="rmd160" value="true">
+                        <label style="margin-right: 10px;">RMD160</label>
+
+                        <input type="checkbox" id="tiger" name="tiger" value="true">
+                        <label style="margin-right: 10px;">TIGER</label>
+
+                        <input type="checkbox" id="crc32" name="crc32" value="true">
+                        <label style="margin-right: 10px;">CRC32</label>
+
+                        <input type="checkbox" id="haval" name="haval" value="true">
+                        <label style="margin-right: 10px;">HAVAL</label>
+
+                        <input type="checkbox" id="md5" name="md5" value="true">
+                        <label style="margin-right: 10px;">MD5</label>
+                    </div>
+                    <div class="form-row">
+                        <input id="checkSumDemo" type="text" class="form-control" readonly placeholder="">
+                    </div>
+        
+
+
+                    <!-- <input type="text" class="form-control" id="checksum_algorithms" placeholder="SHA512 SHA256" required> -->
+                    <br>
+                    <h4>File name</h4>
+                    <div class="divider"></div>
+                    <label>Set configuration file name</label>
+                    <input type="text" class="form-control" id="config_file_name" placeholder="custom.aide.conf"
+                        required>
+
+
+                    <br>
+                    <br>    
+                    <h4>Database Configurations</h4>
+                    <div class="divider"></div>
+                    <input type="checkbox" id="gzip_db_out" name="compressDatabaseOutput" value="true"
+                        style="margin-right: 6px; margin-left: 6px"><label>Compress output Database using gzip.</label>
+                    <br>
+                    <br>
+                    <h4>Additional Options</h4>
+                    <div class="divider"></div>
+                    <input type="checkbox" id="report_summarize_changes" name="additional_options"
+                        value="true"><label>Summarize Changes in Report</label><br>
+                    <input type="checkbox" id="report_grouped" name="additional_options" value="true"><label>Group Files
+                        in Report</label><br>
+                    <input type="checkbox" id="database_add_metadata" name="additional_options" value="true"><label>Add
+                        Metadata to Database</label>
+
+                </div>
+                <br><br>
+
+                <br><br>
+                <!-- <div class="col-md-4 mb-3">
+                    <h2>Rules</h2>
+                    <lable>Predefined Rules</lable>
+                    <table>
+                        <tr>
+                            <th>Rule Name</th>
+                            <th>Attributes</th>
+                            <th>Description</th>
+                            <th>Select</th>
+                        </tr>
+                        <tr>
+                            <td>NORMAL</td>
+                            <td>p+i+n+u+g+s+m+c+sha256</td>
+                            <td>A commonly used rule for normal checks.</td>
+                            <td><button class="btn btn-primary" onclick="normalButton()" id="normal_rule_button">Add</button></td>
+                        </tr>
+                        <tr>
+                            <td>DATAONLY</td>
+                            <td>p+u+g+s+xattrs+sha256</td>
+                            <td>Checks file contents only, ignoring metadata like inode and access times.</td>
+                            <td><button class="btn btn-primary" onclick="dataButton()" id="dataonly_rule_button">Add</button></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <label>Available Rule Attributes</label>
+                    <table>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>p</td>
+                            <td>Permissions</td>
+                        </tr>
+                        <tr>
+                            <td>i</td>
+                            <td>Inode</td>
+                        </tr>
+                        <tr>
+                            <td>n</td>
+                            <td>Number of links</td>
+                        </tr>
+                        <tr>
+                            <td>u</td>
+                            <td>User</td>
+                        </tr>
+                        <tr>
+                            <td>g</td>
+                            <td>Group</td>
+                        </tr>
+                        <tr>
+                            <td>s</td>
+                            <td>Size</td>
+                        </tr>
+                        <tr>
+                            <td>b</td>
+                            <td>Block count</td>
+                        </tr>
+                        <tr>
+                            <td>m</td>
+                            <td>Modification time</td>
+                        </tr>
+                        <tr>
+                            <td>a</td>
+                            <td>Access time</td>
+                        </tr>
+                        <tr>
+                            <td>c</td>
+                            <td>Change time</td>
+                        </tr>
+                        <tr>
+                            <td>xattrs</td>
+                            <td>Extended file attributes</td>
+                        </tr>
+                        <tr>
+                            <td>md5</td>
+                            <td>MD5 checksum</td>
+                        </tr>
+                        <tr>
+                            <td>sha256</td>
+                            <td>SHA-256 checksum</td>
+                        </tr>
+                        <tr>
+                            <td>sha512</td>
+                            <td>SHA-512 checksum</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <label>Rules</label>
+                    <input type="text" class="form-control" id="custom_rules" placeholder="Define your own rules here." required>
+                </div>
+                <br><br>
+                <div class="col-md-4 mb-3">
+                    <h2>Directories</h2>
+                    <label>Include Directories</label>
+                    <input type="text" class="form-control" id="include_directories" placeholder="/boot /bin" required><br>
+                    <label>Exclude Directories</label>
+                    <input type="text" class="form-control" id="exclude_directories" placeholder="!/usr/src !/usr/tmp" required>
+                </div>
+                <br><br>
+                <div class="col-md-4 mb-3">
+                    <h2>Checksum Algorithms</h2>
+                    <label>Checksum Algorithms</label>
+                    <input type="text" class="form-control" id="checksum_algorithms" placeholder="SHA512 SHA256" required>
+                </div>
+                <br><br>
+                <div class="col-md-4 mb-3">
+                    <h2>File name</h2>
+                    <label>Set configuration file name</label>
+                    <input type="text" class="form-control" id="config_file_name" placeholder="custom.aide.conf" required>
+                </div> -->
+
+                <!-- <div class="col-md-4 mb-3"> -->
+
+
+
+
+
+
+            </div>
+            <button type="button" class="btn btn-warning" data-toggle="modal" id="previewConfiguration"
+                data-target="#exampleModalLong">Preview</button>
+            <!-- <button type="button" class="btn mr-2 mb-2 btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                Long Content
+            </button> -->
+            <button class="btn btn-primary" type="submit">Create</button>
+        </form>
+        <br>
+    </div>
+</div>
+<br><br>
+<div class="main-card mb-12 card">
+    <div class="card-body">
+        <h1>Documentation</h1>
+        <p>For more information on how to write rules and configure AIDE, please refer to the <a>AIDE Configuration
+                Documentation</a>.</p>
+    </div>
+</div>
+{% endblock %}
+{% block modal %}
+<div class="modal bd-example-modal-lg fade show" id="exampleModalLong" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLongTitle" style="display: none; padding-right: 15px;" aria-modal="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:lavenderblush">
+                <h5 class="modal-title" id="exampleModalLongTitle" style="font-weight: bold;">Aide configuration file
+                    preview</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="previewConfig">
+                <!-- NORMAL = p+i+n+u+g+s+m+c+sha256
+                <br>
+                DATAONLY = p+u+g+s+xattrs+sha256<br>
+                <br>
+                @@x_include_setenv UPAC_settingsd /etc/aide/aide.settings.d<br>
+                @@x_include_setenv PATH /bin:/usr/bin<br>
+                @@define DBDIR /var/lib/aide/aide.db<br>
+                @@define LOGDIR /var/lib/aide/aide.db.new<br>
+                database_in=file:/var/lib/aide/aide.db<br>
+                database_out=file:/var/lib/aide/aide.db.new<br>
+                database_new=file:/var/lib/aide/aide.db.new<br>
+                gzip_dbout=yes<br>
+                report_url=file:/var/log/aide.log<br>
+                log_level=warning<br>
+                report_level=minimal -->
+
+            </div>
+            <!-- <div class="col-lg-12" style="background-color:red">
+               ERROR
+            </div> -->
+            <div class="col-lg-12" style="background-color:gainsboro; white-space: nowrap;" id="errorConfig">
+                <!-- <p style="color:red">
+                    ERROR: (stdin):18: invalid log level: 'warning@@' (line: 'log_level=warning@@')
+                </p>
+                <p style="color:red">
+                    ERROR: (stdin):18: invalid log level: 'warning@@' (line: 'log_level=warning@@')
+                </p>
+                  -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="checkConfig">Check Config</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+
+    
+
+    
+        function updateRule() {
+            const ruleName = document.getElementById('ruleName').value.trim();
+            const rules = document.getElementById('rules').value.trim();
+
+            const command = `${ruleName} = ${rules}`;
+            document.getElementById('ruleDemo').value = command;
+        }
+        document.getElementById('ruleName').addEventListener('input', updateRule);
+        document.getElementById('rules').addEventListener('input', updateRule);
+
+        let includeRule = [];
+        document.getElementById("addRuleBtn").addEventListener("click", function () {
+            var inputField = document.getElementById("ruleDemo");
+            var inputValue = inputField.value.trim();
+
+            if (inputValue === "") {
+                toastr.error("Please enter a valid rule", "Error");
+                inputField.focus();
+                return;
+            }
+            if (includeRule.includes(inputValue)) {
+                toastr.warning("Rule already added", "Warning");
+                inputField.focus();
+                return;
+            }
+            includeRule.push(inputValue);
+
+            var newButton = document.createElement("button");
+            newButton.className = "mb-2 mr-2 btn-transition btn btn-outline-info";
+            newButton.innerHTML = inputValue + ' <i class="pe-7s-close btn-icon-wrapper"> </i>';
+            newButton.addEventListener("click", function () {
+                includeRule = includeRule.filter((item) => item !== inputValue);
+                this.remove();
+            });
+            document.getElementById("ruleList").appendChild(newButton);
+            inputField.value = '';
+            inputField.focus();
+        });
+
+
+
+
+        
+        function updateCommand() {
+            const directory = document.getElementById('include_directories').value;
+            const rule = document.getElementById('include_rule').value;
+            const select = document.getElementById('includeSelect').value;
+
+            const command = `${directory} ${select} ${rule}`;
+
+            document.getElementById('addDirDemo').value = command;
+        }
+
+
+        document.getElementById('include_directories').addEventListener('input', updateCommand);
+        document.getElementById('includeSelect').addEventListener('change', updateCommand);
+        document.getElementById('include_rule').addEventListener('input', updateCommand);
+
+        document.getElementById('include_directories').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                updateCommand();
+            }
+        });
+        document.getElementById('include_rule').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                updateCommand();
+            }
+        });
+        document.getElementById('includeSelect').addEventListener('change', updateCommand);
+
+
+
+
+        function updateCommandEx() {
+            const directory = document.getElementById('exclude_directories').value;
+            // const rule = document.getElementById('include_rule').value;
+            const select = document.getElementById('excludeSelect').value;
+
+            const command = `${directory} ${select}`;
+
+            document.getElementById('exDirDemo').value = command;
+        }
+
+        document.getElementById('exclude_directories').addEventListener('input', updateCommandEx);
+        document.getElementById('excludeSelect').addEventListener('change', updateCommandEx);
+        // document.getElementById('include_rule').addEventListener('input', updateCommand);
+
+        document.getElementById('exclude_directories').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                updateCommandEx();
+            }
+        });
+        // document.getElementById('include_rule').addEventListener('keypress', function(e) {
+        //     if (e.key === 'Enter') {
+        //         updateCommand();
+        //     }
+        // });
+        document.getElementById('excludeSelect').addEventListener('change', updateCommand);
+
+
+
+
+        let includeDir = [];
+        document.getElementById("addDirectoryBtn").addEventListener("click", function () {
+            var inputField = document.getElementById("addDirDemo");
+            var inputValue = inputField.value.trim();
+
+            if (inputValue === "") {
+                toastr.error("Please enter a directory path", "Error");
+                inputField.focus();
+                return;
+            }
+            if (includeDir.includes(inputValue)) {
+                toastr.warning("Directory already added", "Warning");
+                inputField.focus();
+                return;
+            }
+            includeDir.push(inputValue);
+
+            var newButton = document.createElement("button");
+            newButton.className = "mb-2 mr-2 btn-transition btn btn-outline-info";
+            newButton.innerHTML = inputValue + ' <i class="pe-7s-close btn-icon-wrapper"> </i>';
+            newButton.addEventListener("click", function () {
+                includeDir = includeDir.filter((item) => item !== inputValue);
+                this.remove();
+            });
+            document.getElementById("directoryList").appendChild(newButton);
+            inputField.value = '';
+            inputField.focus();
+        });
+        let excludeDir = [];
+        document.getElementById("excludeDirectoryBtn").addEventListener("click", function () {
+            var inputField = document.getElementById("exDirDemo");
+            var inputValue = inputField.value.trim().replace(/^!+/, ""); // Xóa tất cả dấu ! ở đầu chuỗi
+            // var inputValue = inputField.value.trim();
+
+            if (inputValue === "") {
+                toastr.error("Please enter a directory path", "Error");
+                inputField.focus();
+                return;
+            }
+            if (excludeDir.includes(inputValue)) {
+                toastr.warning("Directory already added", "Warning");
+                inputField.focus();
+                return;
+            }
+            excludeDir.push(inputValue);
+
+            var newButton = document.createElement("button");
+            newButton.className = "mb-2 mr-2 btn-transition btn btn-outline-warning";
+            newButton.innerHTML = '!' + inputValue + ' <i class="pe-7s-close btn-icon-wrapper"> </i>';
+            newButton.addEventListener("click", function () {
+                excludeDir = excludeDir.filter((item) => item !== inputValue);
+                this.remove();
+            });
+            document.getElementById("directoryListExclude").appendChild(newButton);
+            inputField.value = '';
+            inputField.focus();
+        });
+        // Environment Settings
+        // var upac_settings = document.getElementById('upac_settings');
+        // var environment_path = document.getElementById('environment_path');
+
+        // const selectedValue = document.querySelector('input[name="radio1"]:checked')?.value;
+        let selectedBase16 = ''
+        document.querySelectorAll('input[name="radio1"]').forEach((radio) => {
+            radio.addEventListener('change', (event) => {
+                selectedBase16 = event.target.value;
+            });
+        });
+
+
+
+        //Database Configuration
+        // var database = document.getElementById('database');
+        // var database_out = document.getElementById('database_out');
+        // var database_new = document.getElementById('database_new');
+        var gzip_db_out = document.getElementById('gzip_db_out').checked ? "yes" : "no";
+        document.getElementById('gzip_db_out').addEventListener('change', function () {
+            gzip_db_out = this.checked ? "yes" : "no";
+            console.log("gzip db out", gzip_db_out)
+        })
+        var normal_rule_button = document.getElementById('normal_rule_button').checked;
+        document.getElementById('normal_rule_button').addEventListener('change', function () {
+            normal_rule_button = this.checked;
+            console.log("normal_rule_button", normal_rule_button)
+        });
+        var dataonly_rule_button = document.getElementById('dataonly_rule_button').checked;
+        document.getElementById('dataonly_rule_button').addEventListener('change', function () {
+            dataonly_rule_button = this.checked;
+            console.log("dataonly_rule_button", dataonly_rule_button)
+        })
+
+        var report_url = document.getElementById('report_url');
+        var log_level = document.getElementById('log_level');
+        var report_level = document.getElementById('report_level');
+
+
+        // let report_base16 = document.getElementById('base16True').checked;
+        let report_summarize_changes = document.getElementById('report_summarize_changes').checked;
+        let report_grouped = document.getElementById('report_grouped').checked;
+        let database_add_metadata = document.getElementById('database_add_metadata').checked;
+
+        // document.getElementById('base16True').addEventListener('change', function() {
+        //     report_base16 = this.checked;
+        // })
+        document.getElementById('report_summarize_changes').addEventListener('change', function () {
+            report_summarize_changes = this.checked;
+        });
+
+        document.getElementById('report_grouped').addEventListener('change', function () {
+            report_grouped = this.checked;
+        });
+        document.getElementById('database_add_metadata').addEventListener('change', function () {
+            database_add_metadata = this.checked;
+        });
+
+
+        // var custom_rules = document.getElementById('custom_rules');
+        ruleName  = document.getElementById('ruleName')
+        rules = document.getElementById('rules')
+      
+        // Directories
+        // var include_directories = document.getElementById('include_directories');
+        // var exclude_directories = document.getElementById('exclude_directories');
+
+
+        const algorithms = ['md5', 'sha1', 'sha256', 'sha512', 'rmd160', 'tiger', 'crc32', 'haval', 'whirlpool'];
+
+        let selectedAlgorithms = {};
+        let checksum_algorithms = '';
+        algorithms.forEach((algorithm) => {
+            const checkbox = document.getElementById(algorithm);
+            selectedAlgorithms[algorithm] = checkbox.checked;
+
+            checkbox.addEventListener('change', function () {
+                selectedAlgorithms[algorithm] = this.checked;
+                console.log(algorithm, this.checked);
+                updateChecksum(); // Gọi hàm cập nhật chuỗi checksum
+            });
+        });
+
+        function updateChecksum() {
+            const activeAlgorithms = Object.keys(selectedAlgorithms)
+                .filter((key) => selectedAlgorithms[key])
+                .map((key) => key.toUpperCase());
+
+            checksum_algorithms = activeAlgorithms.join('+');
+            document.getElementById('checkSumDemo').value = 'Checksums = ' +  checksum_algorithms.toLocaleLowerCase()
+            // console.log('Checksum:  ', checksum_algorithms);
+        }
+        
+
+
+
+        // File name
+        var config_file_name = document.getElementById('config_file_name');
+
+        // Form
+        var configForm = document.getElementById('configForm');
+        var custom_rules = ruleName.value.trim() + " = " + rules.value.trim()
+
+
+        document.getElementById("previewConfiguration").addEventListener("click", function () {
+            // console.log(custom_rules)
+            let error = document.getElementById('errorConfig');
+            error.innerHTML = "";
+
+            
+
+            previewField = document.getElementById("previewConfig");
+            previewField.innerHTML = "";
+            let text = "";
+
+            text += "@@x_include_setenv UPAC_settingsd /etc/aide/aide.settings.d" + "\n";
+            text += "@@x_include_setenv PATH /bin:/usr/bins" + "\n";
+            text += "@@define DBDIR /var/lib/aide/aide.db" + "\n";
+            text += "@@define LOGDIR /var/lib/aide/aide.db.new" + "\n";
+            text += "database_in=file:DBDIR" + "\n";
+            text += "database_out=file:LOGDIR" + "\n";
+            text += "database_new=file:LOGDIR" + "\n";
+            text += "log_level=warning" + "\n";
+            text += "report_level=changed_attributes" + "\n";
+            text += "report_format=json" + "\n"; 
+
+            // var dbDir = database.value.trim();
+            // if(dbDir !== ""){
+            //     text += "@@define DBDIR "+ dbDir + "\n";
+            //     // text += "file:" + database.value + "\n";
+            // }
+            // var dbOutDir = database_out.value.trim();
+            // if(dbOutDir !== ""){
+            //     text += "@@define LOGDIR "+ dbOutDir + "\n\n";
+            //     // text += "file:" + database_out.value + "\n";
+            // }
+            // if(dbDir !== ""){
+            //     text += "database_in=file:" + dbDir + "\n\n";
+            // }
+            // if(dbOutDir !== ""){
+            //     text +="# The location of the database to be written.\n"
+            //     text += "database_out=file:" + dbOutDir + "\n";
+            // }
+
+            // var dbNew = database_new.value.trim(); 
+            // if(dbNew !== ""){
+            //     text += "database_new=file:" + dbNew + "\n\n";
+            // }
+            // var envPath = environment_path.value.trim();
+            // if(envPath !== ""){
+            //     text+= "@@x_include_setenv PATH " + envPath + "\n";
+            // }
+
+            // var upacSet = upac_settings.value.trim(); 
+            // if(upacSet !== ""){
+            //     text += "@@x_include_setenv UPAC_settingsd " + upacSet + "\n\n";
+            // }
+            if (typeof gzip_db_out !== 'undefined' && gzip_db_out !== "no") {
+                text += "# Whether to gzip the output to database\n"
+                text += "gzip_dbout=" + gzip_db_out + "\n\n";
+            }
+
+
+            // text=+ "\n";
+            var checkSum = checksum_algorithms.trim();
+            if (checkSum !== "") {
+                text += "# Checksum Algorithms\n";
+                text += "Checksums = " + checkSum.toLowerCase() + "\n";
+            }
+
+
+            // var reportUrl = report_url.value.trim();
+            // if (reportUrl !== "") {
+            //     text += "report_url=" + reportUrl + "\n\n";
+            // }
+
+            // var logLevel = log_level.value.trim();
+            // if (logLevel !== "") {
+            //     text += "log_level=" + logLevel + "\n";
+            // }
+
+            // var reportLevel = report_level.value.trim();
+            // if (reportLevel !== "") {
+            //     text += "report_level=" + reportLevel + "\n";
+            // }
+
+            if (typeof selectedBase16 !== 'undefined' && selectedBase16 !== "") {
+                text += "report_base16=" + selectedBase16 + "\n";
+            }
+
+            if (typeof report_summarize_changes !== 'undefined' && report_summarize_changes !== false) {
+                text += "report_summarize_changes=" + report_summarize_changes + "\n";
+            }
+
+            if (typeof report_grouped !== 'undefined' && report_grouped !== false) {
+                text += "report_grouped=" + report_grouped + "\n";
+            }
+            if (typeof database_add_metadata !== 'undefined' && database_add_metadata !== false) {
+                text += "database_add_metadata=" + database_add_metadata + "\n\n";
+            }
+
+            // var customRules = custom_rules.value.trim();
+            // if (customRules !== "") {
+            //     text += customRules + "\n\n";
+            // }
+            // var custom_rules = ruleName.value.trim() + " = " + rules.value.trim()
+            // if (custom_rules !== "") {
+            //     text += custom_rules + "\n\n";
+            // }
+            if (normal_rule_button === true) {
+                text += "NORMAL = p+i+n+u+g+s+m+c+sha256\n";
+            }
+
+            if (dataonly_rule_button === true) {
+                text += "DATAONLY = p+u+g+s+xattrs+sha256\n\n";
+            }
+            if (typeof includeRule !== 'undefined' && Array.isArray(includeRule) && includeRule.length > 0) {
+                text += "# Custom Rules\n";
+                includeRule.forEach((rule) => {
+                    text += rule + "\n";
+                });
+            }
+            if (typeof includeDir !== 'undefined' && Array.isArray(includeDir) && includeDir.length > 0) {
+                text += "# Next decide what directories/files you want in the database.\n";
+                includeDir.forEach((dir) => {
+                    text += dir + "\n";
+                });
+            }
+            // text=+ "\n";
+            if (typeof excludeDir !== 'undefined' && Array.isArray(excludeDir) && excludeDir.length > 0) {
+                // text += "# Exclude Directories\n";
+                text += "# These are too volatile\n";
+                excludeDir.forEach((dir) => {
+                    text += "!" + dir + "\n";
+                });
+            }
+
+
+            // Replace newline characters with <br>
+            // previewField.innerHTML = text.replace(/\n/g, "<br>");
+            // Chia text thành từng dòng
+            let lines = text.split("\n");
+
+            // Nếu dòng cuối cùng trống, xóa nó đi
+            if (lines[lines.length - 1] === "") {
+                lines.pop();
+            }
+
+            // Đánh số thứ tự nhưng giữ các dòng trống ở giữa
+            let numberedText = lines.map((line, index) => line !== "" ? `${index + 1}  &nbsp;  ${line}` : "").join("<br>");
+
+
+
+
+
+            previewField.innerHTML = numberedText;
+
+            document.getElementById("checkConfig").addEventListener("click", function () {
+                fetch('/check-config', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ config_text: text }),
+                })
+                    .then(response => response.json())
+                    .then((data) => {
+                        // console.log("data: ", data);
+                        if (data.errors.length === 0) {
+                            toastr.success('Config file is valid!')
+                        } else {
+                            let errorContainer = document.getElementById('errorConfig');
+                            errorContainer.innerHTML = "";
+
+                            data.errors.forEach((error) => {
+                                // console.log(`Error: ${error}`);
+                                let p = document.createElement('p');
+                                p.style.color = "red";
+                                p.innerHTML = `${error}`;
+                                errorContainer.appendChild(p);
+                            })
+                        }
+                    })
+                    .catch((error) => {
+                        toastr.error(`Error: ${error.message}`);
+                    });
+            });
+
+            // console.log(text);
+
+        });
+
+
+
+        configForm.addEventListener('submit', function (event) {
+            console.log("click click submit!")
+            event.preventDefault();
+            var configFormData = new FormData();
+            configFormData.append('dataonly_rule_button', dataonly_rule_button);
+            configFormData.append('normal_rule_button', normal_rule_button);
+            // configFormData.append('upac_settings', upac_settings.value);
+            // configFormData.append('environment_path', environment_path.value);
+            // configFormData.append('database', database.value);
+            // configFormData.append('database_out', database_out.value);
+            // configFormData.append('database_new', database_new.value);
+            configFormData.append('gzip_db_out', gzip_db_out);
+            configFormData.append('report_url', report_url.value);
+            configFormData.append('log_level', log_level.value);
+            configFormData.append('report_level', report_level.value);
+            configFormData.append('report_base16', selectedBase16);
+            configFormData.append('report_summarize_changes', report_summarize_changes);
+            configFormData.append('report_grouped', report_grouped);
+            configFormData.append('database_add_metadata', database_add_metadata);
+            configFormData.append('custom_rules', includeRule);
+            configFormData.append('include_directories', includeDir);
+            configFormData.append('exclude_directories', excludeDir);
+            configFormData.append('checksum_algorithms', checksum_algorithms);
+            configFormData.append('config_file_name', config_file_name.value);
+
+            configForm.reset();
+
+            fetch('/config', {
+                method: 'POST',
+                body: configFormData,
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.error) {
+                        toastr.error(`Error: ${data.error}`)
+                        console.log(data.error)
+                    } else {
+                        toastr.success('Config file created successfully!')
+                        //  location.reload()
+                    }
+                })
+                .catch((error) => {
+                    toastr.error(`Error: ${error.message}`);
+                });
+        });
+    });
+
+
+    // function normalButton() {
+    //     document.getElementById('custom_rules').innerHTML = "NORMAL = p+i+n+u+g+s+m+c+sha256";
+    // }
+    // function dataButton() {
+    //     document.getElementById('custom_rules').innerHTML = "DATAONLY = p+u+g+s+xattrs+sha256";
+    // }
+</script>
+{% endblock %}
