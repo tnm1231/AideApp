@@ -461,7 +461,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="addedShow" style="display: none;">
                         <div class="main-card mb-3 card">
                             <div class="card-body">
                                 <h5 class="card-title">Added entries</h5>
@@ -489,7 +489,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="removedShow" style="display: none;">
                         <div class="main-card mb-3 card">
                             <div class="card-body">
                                 <h5 class="card-title">Removed entries</h5>
@@ -517,10 +517,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="changedShow" style="display: none;">
                         <div class="main-card mb-3 card">
                             <div class="card-body">
-                                <h5 class="card-title">Removed entries</h5>
+                                <h5 class="card-title">Changed entries</h5>
                                 <div class="scroll-area-md">
                                     <ul class="list-group scrollbar-container ps">
                                         <table class="mb-0 table table-striped">
@@ -545,7 +545,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12">
+                    <div class="col-lg-12" id="detailsChangeCompare" style="display: none;">
                         <div class="main-card mb-3 card">
                             <div class="card-body"><h5 class="card-title">Detail change</h5>
                                 <table id="detailChangeCompareTable" class="mb-0 table table-bordered">
@@ -777,7 +777,7 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="col-md-6" style="display: block">
+                            <div class="col-md-6" id="showAddedResult" style="display: none">
                                 <div class="main-card mb-3 card">
                                     <div class="card-body">
                                         <h5 class="card-title">Added entries</h5>
@@ -807,7 +807,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6" style="display: block">
+                            <div class="col-md-6" id="showRemovedResult" style="display: none">
                                 <div class="main-card mb-3 card">
                                     <div class="card-body">
                                         <h5 class="card-title">Removed entries</h5>
@@ -837,10 +837,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6" style="display: block">
+                            <div class="col-md-6" id="showChangedResult" style="display: none">
                                 <div class="main-card mb-3 card">
                                     <div class="card-body">
-                                        <h5 class="card-title">Removed entries</h5>
+                                        <h5 class="card-title">Changed entries</h5>
                                         <div class="scroll-area-md">
                                             <ul class="list-group scrollbar-container ps--active-y ps">
                                                 <table class="mb-0 table table-striped">
@@ -898,7 +898,6 @@
                                                             <div class="widget-numbers text-primary" id="endTimeResult">10:41:46</div>
                                                         </div>
                                                     </div>
-        
                                                 </div>
                                             </div>
                                         </li>
@@ -914,14 +913,13 @@
                                                             <div class="widget-numbers text-danger" id="runTimeResult">1 seconds</div>
                                                         </div>
                                                     </div>
-        
                                                 </div>
                                             </div>
                                         </li>
                                     </ul>
                                 </div>
                             </div>  
-                            <div class="col-lg-12">
+                            <div class="col-lg-12" id="showResultDetails" style="display: none;">
                                 <div class="main-card mb-3 card">
                                     <div class="card-body"><h5 class="card-title">Detail change</h5>
                                         <table id="detailChangeTable" class="mb-0 table table-bordered">
@@ -952,88 +950,7 @@
                                     </div>
                                 </div>
                             </div>  
-                            <!-- <div class="col-md-4" style="display: block">
-                                <div class="main-card mb-3 card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Added entries</h5>
-                                        <div class="scroll-area-md">
-                                            <ul class="list-group scrollbar-container ps--active-y ps"
-                                                id="listAddedEntries">
-                                            </ul>
-                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
-                                                </div>
-                                            </div>
-                                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
-                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4" style="display: block">
-                                <div class="main-card mb-3 card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Removed entries</h5>
-                                        <div class="scroll-area-md">
-                                            <ul class="list-group scrollbar-container ps--active-y ps"
-                                                id="listRemovedEntries">
-                                            </ul>
-                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
-                                                </div>
-                                            </div>
-                                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
-                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4" style="display: block">
-                                <div class="main-card mb-3 card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Changed entries</h5>
-                                        <div class="scroll-area-md">
-                                            <ul class="list-group scrollbar-container ps--active-y ps"
-                                                id="listChangedEntries">
-                                            </ul>
-                                            <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-                                                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;">
-                                                </div>
-                                            </div>
-                                            <div class="ps__rail-y" style="top: 0px; height: 200px; right: 0px;">
-                                                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 45px;">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
-                      
-                            <!-- <div class="col-md-6">
-                            <div class="main-card mb-3 card">
-                                <div class="card-body">
-                                    <div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-                                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
-        
-                                            </div>
-                                        </div>
-                                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                            <div style="position:absolute;width:200%;height:200%;left:0; top:0">
-        
-                                        </div>
-                                    </div>
-                                </div>
-                                    <h5 class="card-title">Pie Chart</h5>
-                                    <canvas id="chart-area" width="604" height="301" style="display: block; height: 201px; width: 403px;" class="chartjs-render-monitor"></canvas>
-                                </div>
-                            </div>
-                        </div>   -->
                             <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
                                 <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
                             </div>
@@ -1710,8 +1627,10 @@
                         const taskData = data.data;
                         console.log(taskData.details);
                         
-                        populateDetailChangeTable(taskData.details, "detailChangeTable");
-
+                        if(taskData.details){
+                            populateDetailChangeTable(taskData.details, "detailChangeTable");
+                            document.getElementById("showResultDetails").style.display = "block";
+                        }
  
                         document.getElementById("totalEntries").innerText = taskData.total_entries;
                         document.getElementById("addedEntries").innerText = taskData.added_entries;
@@ -1733,21 +1652,21 @@
                         document.getElementById("endDateResult").textContent = formattedData.formattedEndDate;
                         document.getElementById("endTimeResult").textContent = formattedData.formattedEndTime;
 
-
-           
-                        //updateList("listAddedEntries", taskData.added_files);
-                        //updateList("listRemovedEntries", taskData.removed_files);
-                        //updateList("listChangedEntries", taskData.changed_files);
-
-
-                        console.log(taskData.algorithm);
                         displayHashes(taskData.algorithm, "AlgorithmHash");
 
-                        displayHashes(taskData.changed_files, "changedEntriesTable");
-                        displayHashes(taskData.added_files, "addedEntriesTable");
-                        displayHashes(taskData.removed_files, "removedEntriesTable");
-                        console.log(taskData.changed_files);
-                        
+                        if(taskData.changed_files){
+                            displayHashes(taskData.changed_files, "changedEntriesTable");
+                            document.getElementById("showChangedResult").style.display = "block";
+                        }
+                        if(taskData.added_files){
+                            displayHashes(taskData.added_files, "addedEntriesTable");
+                            document.getElementById("showAddedResult").style.display = "block";
+                        }
+                        if(taskData.removed_files){
+                            displayHashes(taskData.removed_files, "removedEntriesTable");
+                            document.getElementById("showRemovedResult").style.display = "block";
+                        }
+                                              
                      
                     })
             })
@@ -1830,34 +1749,7 @@
                 index++; // Tăng số thứ tự
             });
         }
-        function displayEntries(data, tableId) {
-            const tableBody = document.getElementById(tableId);
-            if (!tableBody) {
-                console.error(`❌ Table with ID '${tableId}' not found.`);
-                return;
-            }
-        
-            tableBody.innerHTML = ""; 
-        
-            if (typeof data !== "object" || data === null) {
-                console.error("❌ Invalid data format:", data);
-                return;
-            }
-        
-            Object.entries(data).forEach(([filePath, status]) => {
-                const row = document.createElement("tr");
-        
-                const pathCell = document.createElement("td");
-                pathCell.textContent = filePath;
-                row.appendChild(pathCell);
-        
-                const statusCell = document.createElement("td");
-                statusCell.textContent = status;
-                row.appendChild(statusCell);
-        
-                tableBody.appendChild(row);
-            });
-        }
+    
         function displayHashes(hashDataArray, tableId) {
             const tableBody = document.getElementById(tableId);
             if (!tableBody) {
@@ -2056,21 +1948,6 @@
                     console.log('Error resuming task:', error);
                 });
         }
-        // compare Aide Database
-        //const compareButton = document.getElementById('CompareDatabase');
-        //compareButton.addEventListener("click", function(){
-        //  console.log("Runnning compare command!")
-        // fetch('/compare-aide-database', { method: 'POST' })
-        //  .then(response => response.json())
-        //  .then(data => {
-        //      toastr.success("Running compare command successfully!");
-        //       console.log(data);
-        //    })
-        //    .catch(error => {
-        //        toastr.error("Error running command: ", error);
-        //        console.log("Error running command: ", error);
-        //    });
-        // })
 
 
     });
@@ -2097,18 +1974,31 @@
             fetch('/view-compare-result', { method: 'GET' })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data.content)
-
-                    ContentTable(data.content.changed, "changedEntriesTableCompare");
-                    ContentTable(data.content.added, "addedEntriesTableCompare");
-                    ContentTable(data.content.removed, "removedEntriesTableCompare");
-
+        
+                    if (data.content.changed) {
+                        ContentTable(data.content.changed, "changedEntriesTableCompare");
+                        document.getElementById("changedShow").style.display = "block";
+                    }
+                    if (data.content.added) {
+                        ContentTable(data.content.added, "addedEntriesTableCompare");
+                        document.getElementById("addedShow").style.display = "block";
+                    }
+                    if (data.content.removed) {
+                        ContentTable(data.content.removed, "removedEntriesTableCompare");
+                        document.getElementById("removedShow").style.display = "block";
+                    }
+          
+            
                     document.getElementById("totalEntriesCompare").innerText = data.content.number_of_entries.total;
                     document.getElementById("removedEntriesCompare").innerText = data.content.number_of_entries.removed;
                     document.getElementById("addedEntriesCompare").innerText = data.content.number_of_entries.added;
                     document.getElementById("changedEntriesCompare").innerText = data.content.number_of_entries.changed;
 
-                    populateDetailChangeTable(data.content.details, "detailChangeCompareTable");
+                    if(data.content.details){
+                        populateDetailChangeTable(data.content.details, "detailChangeCompareTable");
+                        document.getElementById("detailsChangeCompare").style.display = "block";
+                    }
+                    //populateDetailChangeTable(data.content.details, "detailChangeCompareTable");
 
                     const runTime = data.content.run_time_seconds;
                     document.getElementById("runTime").textContent = runTime + " seconds";
