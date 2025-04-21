@@ -1,0 +1,93 @@
+# These settings are mainly for the wrapper scripts around aide,
+# such as aideinit and dailyaidecheck
+
+# Main configuration file
+CONFIG="/etc/aide/aide.conf"
+
+# Set this to no to disable daily aide runs
+#CRON_DAILY_RUN=yes
+
+# The following variables control the sending of e-mail reports from
+# the daily aide check. See /usr/share/doc/aide-common/README.Debian
+# for detailed documentaton. Commented out settings are the default.
+FQDN=AIDEServer
+MAILSUBJ="Daily AIDE report for $FQDN"
+MAILTO="hacermuden@gmail.com"
+MAILCMD="s-nail"
+MAILWIDTH=990
+
+# Set this to yes to suppress mailings when no changes have been
+# detected during the AIDE run and no error output was given.
+#QUIETREPORTS=no
+
+# Set this to yes to suppress mailings under all circumstances
+# This option implies QUIETREPORTS=yes
+#SILENTREPORTS=no
+
+# Set this to no if you have figlet installed but do not want figlet
+# output in your daily aide check mail
+#FIGLET=yes
+
+# This parameter defines which AIDE command to run from the daily aide check.
+# Sensible values are "update" and "check".
+# Default is "check", ensuring backwards compatibility.
+# Since "update" does not take any longer, it is recommended to use "update",
+# so that a new database is created every day. The new database needs to be
+# manually copied over the current one, though.
+COMMAND=update
+
+# This parameter defines what to do with a new database created by
+# COMMAND=update. It is ignored if COMMAND!=update.
+# no: Do not copy new database to old database. This is the default.
+# yes: Copy new database to old database. This means that changes to the
+#   file system are only reported once. Possibly dangerous.
+# ifnochange: Copy new database to old database if no changes have
+#   been reported. This is needed for ANF/ARF to work reliably.
+COPYNEWDB=no
+
+# Set this to yes to truncate the detailed changes part in the mail. The full
+# output will still be listed in the log file.
+TRUNCATEDETAILS=no
+
+# Set this to yes to suppress file changes by package and security
+# updates from appearing in the e-mail report. Filtered file changes will
+# still be listed in the log file. This option parses the /var/log/dpkg.log
+# file and implies TRUNCATEDETAILS=yes
+FILTERUPDATES=no
+
+# Set this to yes to suppress file changes by package installations
+# from appearing in the e-mail report. Filtered file changes will still
+# be listed in the log file. This option parses the /var/log/dpkg.log file and
+# implies TRUNCATEDETAILS=yes.
+FILTERINSTALLATIONS=no
+
+# This parameter defines how many lines to return per e-mail. Output longer
+# than this value will be truncated in the e-mail sent out.
+# Set value to "0" to disable this option.
+LINES=1000
+
+# This parameter gives a grep regular expression. If given, all output lines
+# that _don't_ match the regexp are listed first in the script's output. This
+# allows to easily remove noise from the AIDE report.
+NOISE=""
+
+# This parameter defines which options are given to aide in the daily
+# aide check. The default is "-V4".
+AIDEARGS=""
+
+# Set this to a command that will be executed before the daily aide check
+# exits. This can be used to postprocess the generated report.
+# If the command is not in /sbin:/usr/sbin:/bin:/usr/bin (see PATH
+# setting in the daily aide check), you need to give a fully qualified
+# path. The script is executed before the aide lock is released.
+# The hook is called with a single parameter meaning:
+#    signal: The daily aide check was terminated by a signal
+#    fatal: There was a fatal error
+#    nolock: The lock could not be obtained
+#    cantmovetmp: It was not possible to move away the temporary directory
+#    cantcreatetmp: It was not possible to create the temporary directory
+#    success: aide finished successfully and gave meaningful results
+#    unknown: onexit was called with an illegal reason (should not happen)
+# If the daily aide check aborted before the environment was fully set up,
+# "early-" is prepended to the reason.
+CRONEXITHOOK=""

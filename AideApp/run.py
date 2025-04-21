@@ -6,8 +6,10 @@ from flask_migrate import Migrate
 from app import create_app
 
 app, celery = create_app()
-# app = Flask(__name__)
+
 app = Flask(__name__, template_folder="app/templates", static_folder="app/static")
+
+app.secret_key = 'your_secret_key_here'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aide_checks.db'
 
@@ -15,8 +17,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-# with app.app_context():
-#     db.create_all()
 migrate = Migrate(app, db)
 app.register_blueprint(routes_blueprint)
 
@@ -24,4 +24,3 @@ app.register_blueprint(routes_blueprint)
 if __name__ == "__main__":
     with app.app_context():
         app.run(debug=True)
-    # print(app.config['SQLALCHEMY_DATABASE_URI'])

@@ -1,27 +1,23 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-{% include 'admin/share/head-css.html'%}
-<body>
-    <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-        {% include 'admin/share/header.html' %}
-                    <div class="app-main">
-                {% include 'admin/share/left-menu.html' %} 
-                  <div class="app-main__outer">
-                    <div class="app-main__inner">
-                             {% block body%}
-                             {% endblock %}
-                    </div>
-                    <!-- {% include 'admin/share/footer.html' %} -->
-                    </div>
+  {% include 'admin/share/head-css.html'%}
+  <body>
+    <div
+      class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
+    >
+      {% include 'admin/share/header.html' %}
+      <div class="app-main">
+        {% include 'admin/share/left-menu.html' %}
+        <div class="app-main__outer">
+          <div class="app-main__inner">
+            {% block body%} 
+            {% endblock %}
+          </div>
+          {% include 'admin/share/footer.html' %}
         </div>
+      </div>
     </div>
-    {% include 'admin/share/foot-css.html' %}
-    {% block script %}
-   
-    {% endblock %}
-</body>
+    {% include 'admin/share/foot-css.html' %} {% block script %} {% endblock %}
+  </body>
 </html>
-{% block modal %}
-    
-{% endblock %}
+{% block modal %} {% endblock %}

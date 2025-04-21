@@ -1,10 +1,8 @@
 from flask import render_template, request, jsonify
 from flask.views import MethodView
 from .tasks import run_scan_task
-from app.models.models import db, TaskRecord, ResultScan
+from app.models.models import db, TaskRecord
 from app.routes.taskHandle import TaskStatusView
-from .tasks import wait_for_pid, task_pid_map
-import time
 
 # redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 class CheckView(MethodView):
@@ -18,13 +16,6 @@ class CheckView(MethodView):
         specific_file = request.form.get('specificFile')
         custom_config = request.form.get('customConfig')
 
-        # validate_error = self.validate_paths(specific_file)
-        # if validate_error:
-        #     return validate_error
-
-        # validate_error = self.validate_paths(custom_config)
-        # if validate_error:
-        #     return validate_error
 
         validate_error = self.checkType(check_type)
         if validate_error:
@@ -59,9 +50,7 @@ class CheckView(MethodView):
         db.session.add(task_record)
         db.session.commit()
         print("task id in check: ", task.id)
-        # time.sleep(5)
-        # pid = wait_for_pid(task.id, timeout=10)
-        # print("Retrieved PID: ", pid)
+   
         
         result = task.get()
         view = TaskStatusView
